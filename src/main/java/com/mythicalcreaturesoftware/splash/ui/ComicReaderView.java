@@ -125,7 +125,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         nextPage.disableProperty().bind(viewModel.getNextPageCommand().executableProperty().not());
 
         pageSelector.setMax(viewModel.getTotalPagesProperty().doubleValue());
-        pageSelector.valueProperty().bind(viewModel.getCurrentPageProperty());
+        pageSelector.valueProperty().bindBidirectional(viewModel.getCurrentPageProperty());
         pageSelector.valueProperty().addListener((ov, oldVal, newVal) -> {
             logger.debug("Updating current page");
             viewModel.getCurrentPageProperty().setValue(newVal);
