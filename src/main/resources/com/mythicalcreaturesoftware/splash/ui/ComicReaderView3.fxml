@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<?import java.net.URL?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView">
+    <children>
+        <BorderPane prefHeight="13.0" prefWidth="50.0">
+            <left>
+                <Label text="Label" BorderPane.alignment="CENTER" />
+            </left>
+            <right>
+                <HBox alignment="TOP_RIGHT" prefHeight="14.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="minimizeButton" mnemonicParsing="false" onMouseClicked="#minimizeAction">
+                            <graphic>
+                                <MaterialDesignIconView glyphName="WINDOW_MINIMIZE" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="maximizeButton" mnemonicParsing="false" onMouseClicked="#maximizeAction">
+                            <graphic>
+                                <MaterialDesignIconView glyphName="WINDOW_MAXIMIZE" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="closeButton" mnemonicParsing="false" onMouseClicked="#closeAction">
+                            <graphic>
+                                <MaterialDesignIconView glyphName="WINDOW_CLOSE" size="18px" />
+                            </graphic>
+                        </Button>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets right="3.0" top="1.0" />
+                    </BorderPane.margin>
+                </HBox>
+            </right>
+        </BorderPane>
+        <BorderPane prefHeight="22.0" prefWidth="590.0">
+            <left>
+                <HBox prefHeight="25.0" prefWidth="136.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="previousPage" mnemonicParsing="false" onMouseClicked="#previousPageAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="CHEVRON_LEFT" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="nextPage" mnemonicParsing="false" onMouseClicked="#nextPageAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="CHEVRON_RIGHT" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                            <HBox.margin>
+                                <Insets left="2.0" right="2.0" />
+                            </HBox.margin>
+                        </Separator>
+                        <Button fx:id="readingDirection" mnemonicParsing="false" onMouseClicked="#readingDirectionAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="IMPORT" size="18px" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </left>
+            <right>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="pagePerView" mnemonicParsing="false" onMouseClicked="#pagePerViewAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="FILE" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                            <HBox.margin>
+                                <Insets left="2.0" right="2.0" />
+                            </HBox.margin>
+                        </Separator>
+                        <Button fx:id="zoomIn" mnemonicParsing="false" onMouseClicked="#zoomInAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="MAGNIFY_PLUS" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Label fx:id="zoomPercentageLabel" />
+                        <Button fx:id="zoomOut" mnemonicParsing="false" onMouseClicked="#zoomOutAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="MAGNIFY_MINUS" size="18px" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </right>
+            <VBox.margin>
+                <Insets bottom="5.0" top="15.0" />
+            </VBox.margin>
+        </BorderPane>
+        <StackPane fx:id="mainImageContainer" styleClass="imageView" VBox.vgrow="NEVER">
+        </StackPane>
+        <BorderPane prefHeight="20.0" prefWidth="590.0">
+            <left>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="280.0" BorderPane.alignment="CENTER_LEFT">
+                    <children>
+                        <Label fx:id="pageIndicatorLabel" >
+                            <HBox.margin>
+                                <Insets right="3.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Slider fx:id="pageSelector" min="1" blockIncrement="1" prefHeight="16.0" prefWidth="200.0" />
+                    </children>
+                </HBox>
+            </left>
+            <right>
+                <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="68.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="fullscreen"  mnemonicParsing="false" onMouseClicked="#fullscreenAction" >
+                            <graphic>
+                                <MaterialDesignIconView glyphName="FULLSCREEN" size="18px" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </right>
+            <VBox.margin>
+                <Insets top="5.0" />
+            </VBox.margin>
+        </BorderPane>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+    <stylesheets>
+        <URL value="@ComicReaderView.css"/>
+    </stylesheets>
+</VBox>
