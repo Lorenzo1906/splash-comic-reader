@@ -31,6 +31,7 @@ public class ComicReaderViewModel implements ViewModel {
     private IntegerProperty totalPagesProperty;
 
     private StringProperty fileNameProperty;
+    private StringProperty filePathProperty;
 
     public ComicReaderViewModel () {
         logger.info("Initializing comic reader view model");
@@ -53,6 +54,7 @@ public class ComicReaderViewModel implements ViewModel {
         totalPagesProperty = new SimpleIntegerProperty(15);
 
         fileNameProperty = new SimpleStringProperty("");
+        filePathProperty = new SimpleStringProperty("");
     }
 
     private void initializeCommands () {
@@ -132,6 +134,10 @@ public class ComicReaderViewModel implements ViewModel {
 
     StringProperty getFileNameProperty(){
         return fileNameProperty;
+    }
+
+    StringProperty getFilePathProperty(){
+        return filePathProperty;
     }
 
     BooleanProperty getIsTwoPagesProperty(){
@@ -214,6 +220,6 @@ public class ComicReaderViewModel implements ViewModel {
 
     private void openFile() {
         logger.debug("Opening file");
-        fileNameProperty.setValue("TEST");
+        fileNameProperty.setValue(filePathProperty.getValue());
     }
 }

@@ -19,10 +19,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -140,7 +142,25 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void openFileAction() {
-        viewModel.getOpenFileCommand().execute();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle(resourceBundle.getString("fileChooser.title"));
+        chooser.setInitialDirectory(
+            new File(System.getProperty("user.home"))
+        );
+        chooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter(resourceBundle.getString("fileChooser.allFiles"), "*.cbr", "*.cbr", "*.cbz", "*.cbt", "*.cb7", "*.cba", "*.CBR", "*.CBZ", "*.CBT", "*.CB7", "*.CBA"),
+            new FileChooser.ExtensionFilter("CBR", "*.cbr", "*.CBR"),
+            new FileChooser.ExtensionFilter("CBZ", "*.cbz", "*.CBZ"),
+            new FileChooser.ExtensionFilter("CBT", "*.cbt", "*.CBT"),
+            new FileChooser.ExtensionFilter("CB7", "*.cb7", "*.CB7"),
+            new FileChooser.ExtensionFilter("CBA", "*.cba", "*.CBA")
+        );
+
+        File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
+        if (file != null) {
+            viewModel.getFilePathProperty().setValue(file.getAbsolutePath());
+            viewModel.getOpenFileCommand().execute();
+        }
     }
 
     @FXML
