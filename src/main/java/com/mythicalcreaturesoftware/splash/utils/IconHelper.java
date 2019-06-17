@@ -5,6 +5,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,10 @@ public class IconHelper {
         container.getChildren().addAll(rightIcon, leftIcon);
 
         return new SimpleObjectProperty<>(container);
+    }
+
+    public static ImageView getNullImageView(){
+        return null;
     }
 
     public static ObjectProperty<Node> createSimplePageIconProperty () {

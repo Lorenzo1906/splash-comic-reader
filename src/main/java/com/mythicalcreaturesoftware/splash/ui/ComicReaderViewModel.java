@@ -41,6 +41,7 @@ public class ComicReaderViewModel implements ViewModel {
     private StringProperty filePathProperty;
 
     private ObjectProperty<Image> leftImageProperty;
+    private ObjectProperty<Image> rightImageProperty;
 
     private FileService fileService;
 
@@ -70,7 +71,8 @@ public class ComicReaderViewModel implements ViewModel {
         fileNameProperty = new SimpleStringProperty("");
         filePathProperty = new SimpleStringProperty("");
 
-        leftImageProperty = new SimpleObjectProperty<>(new Image("https://www.hawtcelebs.com/wp-content/uploads/2018/05/melissa-benoist-chyler-leigh-amy-jacnkson-and-erica-durance-on-the-set-of-supergirl-in-vancouver-05-02-2018-7.jpg", true));
+        leftImageProperty = new SimpleObjectProperty<>(new Image("/placeholder.png", true));
+        rightImageProperty = new SimpleObjectProperty<>(new Image("/placeholder.png", true));
     }
 
     private void initializeCommands () {
@@ -185,6 +187,10 @@ public class ComicReaderViewModel implements ViewModel {
 
     ObjectProperty<Image> getLeftImageProperty(){
         return leftImageProperty;
+    }
+
+    ObjectProperty<Image> getRightImageProperty(){
+        return rightImageProperty;
     }
 
     BooleanProperty getIsTwoPagesProperty(){

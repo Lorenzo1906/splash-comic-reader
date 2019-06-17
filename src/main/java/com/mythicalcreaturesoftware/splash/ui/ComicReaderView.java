@@ -15,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -40,9 +39,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     private ImageView rightImageViewer;
-
-    @FXML
-    private Image rightImage;
 
     @FXML
     private BorderPane borderPane;
@@ -110,8 +106,10 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     private void initializeImageViewer () {
 
         leftImageViewer.imageProperty().bind(viewModel.getLeftImageProperty());
+        rightImageViewer.imageProperty().bind(viewModel.getRightImageProperty());
 
-        rightImageViewer.visibleProperty().bind(viewModel.getIsTwoPagesProperty());
+        borderPane.rightProperty().bind(Bindings.when(viewModel.getIsTwoPagesProperty()).then(rightImageViewer).otherwise(IconHelper.getNullImageView()));
+
         mainImageContainer.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
         mainImageContainer.minHeightProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getHeight(), scrollPane.viewportBoundsProperty()));
     }

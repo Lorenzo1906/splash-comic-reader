@@ -88,7 +88,6 @@
                                 </left>
                                 <right>
                                     <ImageView fx:id="rightImageViewer" preserveRatio="true">
-                                        <Image fx:id="rightImage" url="https://www.digitalcitizen.life/sites/default/files/styles/img_u_large/public/featured/2016-08/photo_gallery.jpg" />
                                     </ImageView>
                                 </right>
                             </BorderPane>
