@@ -17,14 +17,15 @@ import org.slf4j.LoggerFactory;
 public class ComicReaderViewModel implements ViewModel {
     private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
 
-    private Command previousPageCommand;
-    private Command nextPageCommand;
     private Command readingDirectionCommand;
     private Command pagePerViewCommand;
     private Command zoomInCommand;
     private Command zoomOutCommand;
     private Command openFileCompleteCommand;
-    private Command loadImagesCommand;
+    private Command loadPreviousPageCommand;
+    private Command loadNextPageCommand;
+    private Command previousPageCommand;
+    private Command nextPageCommand;
 
     private BooleanProperty zoomInButton = new SimpleBooleanProperty();
     private BooleanProperty zoomOutButton = new SimpleBooleanProperty();
@@ -75,20 +76,6 @@ public class ComicReaderViewModel implements ViewModel {
     private void initializeCommands () {
         logger.info("Initializing commands");
 
-        previousPageCommand = new DelegateCommand(() -> new Action() {
-            @Override
-            protected void action() throws Exception {
-                previousPage();
-            }
-        }, createEnablePreviousPageButtonProperty(), false);
-
-        nextPageCommand = new DelegateCommand(() -> new Action() {
-            @Override
-            protected void action() throws Exception {
-                nextPage();
-            }
-        }, createEnableNextPageButtonProperty(), false);
-
         readingDirectionCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
@@ -117,6 +104,13 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, zoomOutButton, false);
 
+        Command loadImagesCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                loadImages();
+            }
+        }, false);
+
         Command openFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
@@ -138,14 +132,25 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, false);
 
-        loadImagesCommand = new DelegateCommand(() -> new Action() {
+        previousPageCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
-                loadImages();
+                previousPage();
             }
-        }, false);
+        }, createEnablePreviousPageButtonProperty(), false);
+
+        nextPageCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                nextPage();
+            }
+        }, createEnableNextPageButtonProperty(), false);
 
         openFileCompleteCommand = new CompositeCommand(openFileCommand, loadImagesCommand, totalPageCommand, currentPageCommand);
+
+        loadNextPageCommand = new CompositeCommand(getNextPageCommand(), loadImagesCommand);
+
+        loadPreviousPageCommand = new CompositeCommand(getPreviousPageCommand(), loadImagesCommand);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -206,12 +211,12 @@ public class ComicReaderViewModel implements ViewModel {
         return totalPagesProperty;
     }
 
-    Command getPreviousPageCommand() {
-        return previousPageCommand;
+    Command getLoadPreviousPageCommand() {
+        return loadPreviousPageCommand;
     }
 
-    Command getNextPageCommand() {
-        return nextPageCommand;
+    Command getLoadNextPageCommand() {
+        return loadNextPageCommand;
     }
 
     Command getReadingDirectionCommand() {
@@ -234,54 +239,74 @@ public class ComicReaderViewModel implements ViewModel {
         return openFileCompleteCommand;
     }
 
+    public Command getPreviousPageCommand() {
+        return previousPageCommand;
+    }
+
+    public Command getNextPageCommand() {
+        return nextPageCommand;
+    }
+
     private void previousPage() {
         logger.debug("Previous Page");
+
+        fileService.setCurrentPage(currentPageProperty.getValue() - 1);
         currentPageProperty.setValue(currentPageProperty.getValue() - 1);
     }
 
     private void nextPage() {
         logger.debug("Next Page");
+
+        fileService.setCurrentPage(currentPageProperty.getValue() + 1);
         currentPageProperty.setValue(currentPageProperty.getValue() + 1);
     }
 
     private void changeReadingDirection() {
         logger.debug("Change Reading Direction");
+
         readingDirectionRightProperty.setValue(!readingDirectionRightProperty.getValue());
     }
 
     private void setPagesPerView() {
         logger.debug("Set pages per view");
+
         isTwoPagesProperty.setValue(!isTwoPagesProperty.getValue());
     }
 
     private void zoomIn() {
         logger.debug("Zooming in image");
+
         zoomLevelProperty.setValue(zoomLevelProperty.getValue() + 1);
     }
 
     private void zoomOut() {
         logger.debug("Zooming out image");
+
         zoomLevelProperty.setValue(zoomLevelProperty.getValue() - 1);
     }
 
     private void openFile() {
         logger.debug("Opening file");
+
         fileNameProperty.setValue(fileService.loadFile(filePathProperty.getValue()));
         enableAll.setValue(true);
     }
 
     private void loadImages () {
         logger.debug("Loading images");
+
         leftImageProperty.set(new Image(fileService.getCurrentPath(), true));
     }
 
     private void updateTotalPages () {
         logger.debug("Updating total page");
+
         totalPagesProperty.setValue(fileService.getTotalPages());
     }
 
     private void updateCurrentPage() {
         logger.debug("Updating current page");
+
         currentPageProperty.setValue(fileService.getCurrentPage());
     }
 }

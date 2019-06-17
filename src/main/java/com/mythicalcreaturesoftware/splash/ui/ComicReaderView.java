@@ -174,12 +174,12 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void previousPageAction() {
-        viewModel.getPreviousPageCommand().execute();
+        viewModel.getLoadPreviousPageCommand().execute();
     }
 
     @FXML
     public void nextPageAction() {
-        viewModel.getNextPageCommand().execute();
+        viewModel.getLoadNextPageCommand().execute();
     }
 
     @FXML

@@ -5,4 +5,5 @@ public interface FileService {
     String getCurrentPath();
     Integer getTotalPages();
     Integer getCurrentPage();
+    void setCurrentPage(Integer pageNumber);
 }

@@ -47,7 +47,16 @@ public class FileServiceImpl implements FileService {
             return 1;
         }
 
-        return fileReader.getIndex();
+        return fileReader.getIndex() + 1;
+    }
+
+    @Override
+    public void setCurrentPage(Integer pageNumber) {
+        if (fileReader == null) {
+            return;
+        }
+
+        fileReader.setIndex(pageNumber - 1);
     }
 
     private String getFilenameFromPath(String path) {
