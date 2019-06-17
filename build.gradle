@@ -25,6 +25,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.2'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
     compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-11'
     compile 'de.jensd:fontawesomefx-materialicons:2.2.0-11'

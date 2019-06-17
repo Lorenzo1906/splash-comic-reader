@@ -1,30 +1,36 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.mythicalcreaturesoftware.splash.service.FileService;
+import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ComicReaderViewModel implements ViewModel {
     private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
 
-    private Command openFileCommand;
     private Command previousPageCommand;
     private Command nextPageCommand;
     private Command readingDirectionCommand;
     private Command pagePerViewCommand;
     private Command zoomInCommand;
     private Command zoomOutCommand;
+    private Command openFileCompleteCommand;
+    private Command loadImagesCommand;
 
     private BooleanProperty zoomInButton = new SimpleBooleanProperty();
     private BooleanProperty zoomOutButton = new SimpleBooleanProperty();
     private BooleanProperty readingDirectionRightProperty;
     private BooleanProperty isTwoPagesProperty;
+    private BooleanProperty enableAll;
 
     private IntegerProperty zoomLevelProperty;
     private IntegerProperty currentPageProperty;
@@ -33,8 +39,14 @@ public class ComicReaderViewModel implements ViewModel {
     private StringProperty fileNameProperty;
     private StringProperty filePathProperty;
 
+    private ObjectProperty<Image> leftImageProperty;
+
+    private FileService fileService;
+
     public ComicReaderViewModel () {
         logger.info("Initializing comic reader view model");
+
+        fileService = new FileServiceImpl();
 
         initializeDefaultProperties();
         initializeCommands();
@@ -45,16 +57,19 @@ public class ComicReaderViewModel implements ViewModel {
 
         isTwoPagesProperty = new SimpleBooleanProperty(false);
         readingDirectionRightProperty = new SimpleBooleanProperty(true);
+        enableAll = new SimpleBooleanProperty(false);
 
         zoomInButton.bind(new SimpleBooleanProperty(true));
         zoomOutButton.bind(new SimpleBooleanProperty(true));
 
         zoomLevelProperty = new SimpleIntegerProperty(100);
         currentPageProperty = new SimpleIntegerProperty(1);
-        totalPagesProperty = new SimpleIntegerProperty(15);
+        totalPagesProperty = new SimpleIntegerProperty(1);
 
         fileNameProperty = new SimpleStringProperty("");
         filePathProperty = new SimpleStringProperty("");
+
+        leftImageProperty = new SimpleObjectProperty<>(new Image("https://www.hawtcelebs.com/wp-content/uploads/2018/05/melissa-benoist-chyler-leigh-amy-jacnkson-and-erica-durance-on-the-set-of-supergirl-in-vancouver-05-02-2018-7.jpg", true));
     }
 
     private void initializeCommands () {
@@ -102,12 +117,35 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, zoomOutButton, false);
 
-        openFileCommand = new DelegateCommand(() -> new Action() {
+        Command openFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
                 openFile();
             }
         }, false);
+
+        Command totalPageCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+               updateTotalPages();
+            }
+        }, false);
+
+        Command currentPageCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                updateCurrentPage();
+            }
+        }, false);
+
+        loadImagesCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                loadImages();
+            }
+        }, false);
+
+        openFileCompleteCommand = new CompositeCommand(openFileCommand, loadImagesCommand, totalPageCommand, currentPageCommand);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -115,7 +153,7 @@ public class ComicReaderViewModel implements ViewModel {
 
         BooleanProperty enableNextPageButton = new SimpleBooleanProperty();
 
-        BooleanBinding nextPageBinding = Bindings.when(currentPageProperty.greaterThanOrEqualTo(totalPagesProperty.getValue())).then(false).otherwise(true);
+        BooleanBinding nextPageBinding = Bindings.when(currentPageProperty.greaterThanOrEqualTo(totalPagesProperty)).then(false).otherwise(true);
         enableNextPageButton.bind(nextPageBinding);
 
         return enableNextPageButton;
@@ -140,12 +178,20 @@ public class ComicReaderViewModel implements ViewModel {
         return filePathProperty;
     }
 
+    ObjectProperty<Image> getLeftImageProperty(){
+        return leftImageProperty;
+    }
+
     BooleanProperty getIsTwoPagesProperty(){
         return isTwoPagesProperty;
     }
 
     BooleanProperty getReadingDirectionRightProperty(){
         return readingDirectionRightProperty;
+    }
+
+    BooleanProperty getEnableAll() {
+        return enableAll;
     }
 
     IntegerProperty getZoomLevelProperty(){
@@ -158,10 +204,6 @@ public class ComicReaderViewModel implements ViewModel {
 
     IntegerProperty getTotalPagesProperty(){
         return totalPagesProperty;
-    }
-
-    Command getOpenFileCommand() {
-        return openFileCommand;
     }
 
     Command getPreviousPageCommand() {
@@ -186,6 +228,10 @@ public class ComicReaderViewModel implements ViewModel {
 
     Command getZoomOutCommand() {
         return zoomOutCommand;
+    }
+
+    Command getOpenFileCompleteCommand() {
+        return openFileCompleteCommand;
     }
 
     private void previousPage() {
@@ -220,6 +266,22 @@ public class ComicReaderViewModel implements ViewModel {
 
     private void openFile() {
         logger.debug("Opening file");
-        fileNameProperty.setValue(filePathProperty.getValue());
+        fileNameProperty.setValue(fileService.loadFile(filePathProperty.getValue()));
+        enableAll.setValue(true);
+    }
+
+    private void loadImages () {
+        logger.debug("Loading images");
+        leftImageProperty.set(new Image(fileService.getCurrentPath(), true));
+    }
+
+    private void updateTotalPages () {
+        logger.debug("Updating total page");
+        totalPagesProperty.setValue(fileService.getTotalPages());
+    }
+
+    private void updateCurrentPage() {
+        logger.debug("Updating current page");
+        currentPageProperty.setValue(fileService.getCurrentPage());
     }
 }

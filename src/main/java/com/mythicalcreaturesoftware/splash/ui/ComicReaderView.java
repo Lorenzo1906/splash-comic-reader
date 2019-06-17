@@ -36,6 +36,15 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     private StackPane mainImageContainer;
 
     @FXML
+    private ImageView leftImageViewer;
+
+    @FXML
+    private ImageView rightImageViewer;
+
+    @FXML
+    private Image rightImage;
+
+    @FXML
     private BorderPane borderPane;
 
     @FXML
@@ -93,27 +102,27 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("Initializing comic reader view");
 
+        initializeDisableBindings();
         initializeUiComponentsBindings();
+        initializeImageViewer();
+    }
 
-        Image image = new Image("http://images6.fanpop.com/image/photos/40700000/Melissa-Benoist-supergirl-2015-tv-series-40753099-1280-1920.jpg");
-        ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
+    private void initializeImageViewer () {
 
-        imageView.setFitHeight(600);
-        imageView.setFitWidth(800);
+        leftImageViewer.imageProperty().bind(viewModel.getLeftImageProperty());
 
-        Image image2 = new Image("https://www.hawtcelebs.com/wp-content/uploads/2017/07/melissa-benoist-on-the-set-of-supergirl-in-new-westminster-07-27-2017_6.jpg");
-        ImageView imageView2 = new ImageView(image2);
-        imageView2.setPreserveRatio(true);
-
-        imageView2.setFitHeight(600);
-        imageView2.setFitWidth(800);
-
-        borderPane.setLeft(imageView);
-        borderPane.setRight(imageView2);
-
+        rightImageViewer.visibleProperty().bind(viewModel.getIsTwoPagesProperty());
         mainImageContainer.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
         mainImageContainer.minHeightProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getHeight(), scrollPane.viewportBoundsProperty()));
+    }
+
+    private void initializeDisableBindings () {
+        nextPage.disableProperty().bind(viewModel.getEnableAll().not());
+        readingDirection.disableProperty().bind(viewModel.getEnableAll().not());
+        pagePerView.disableProperty().bind(viewModel.getEnableAll().not());
+        zoomIn.disableProperty().bind(viewModel.getEnableAll().not());
+        zoomOut.disableProperty().bind(viewModel.getEnableAll().not());
+        fullscreen.disableProperty().bind(viewModel.getEnableAll().not());
     }
 
     private void initializeUiComponentsBindings () {
@@ -126,7 +135,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         previousPage.disableProperty().bind(viewModel.getPreviousPageCommand().executableProperty().not());
         nextPage.disableProperty().bind(viewModel.getNextPageCommand().executableProperty().not());
 
-        pageSelector.setMax(viewModel.getTotalPagesProperty().doubleValue());
+        pageSelector.maxProperty().bindBidirectional(viewModel.getTotalPagesProperty());
         pageSelector.valueProperty().bindBidirectional(viewModel.getCurrentPageProperty());
         pageSelector.valueProperty().addListener((ov, oldVal, newVal) -> {
             logger.debug("Updating current page");
@@ -159,7 +168,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
         if (file != null) {
             viewModel.getFilePathProperty().setValue(file.getAbsolutePath());
-            viewModel.getOpenFileCommand().execute();
+            viewModel.getOpenFileCompleteCommand().execute();
         }
     }
 

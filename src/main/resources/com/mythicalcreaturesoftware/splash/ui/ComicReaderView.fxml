@@ -7,6 +7,8 @@
 <?import java.net.URL?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
     <children>
         <AnchorPane prefHeight="23.0" prefWidth="790.0">
@@ -80,6 +82,15 @@
                     <ScrollPane fx:id="scrollPane" VBox.vgrow="ALWAYS" >
                         <StackPane fx:id="mainImageContainer" styleClass="imageView" >
                             <BorderPane fx:id="borderPane" maxWidth="0" maxHeight="0">
+                                <left>
+                                    <ImageView fx:id="leftImageViewer" preserveRatio="true">
+                                    </ImageView>
+                                </left>
+                                <right>
+                                    <ImageView fx:id="rightImageViewer" preserveRatio="true">
+                                        <Image fx:id="rightImage" url="https://www.digitalcitizen.life/sites/default/files/styles/img_u_large/public/featured/2016-08/photo_gallery.jpg" />
+                                    </ImageView>
+                                </right>
                             </BorderPane>
                         </StackPane>
                     </ScrollPane>
