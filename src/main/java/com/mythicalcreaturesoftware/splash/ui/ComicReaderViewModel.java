@@ -26,6 +26,7 @@ public class ComicReaderViewModel implements ViewModel {
     private Command loadNextPageCommand;
     private Command previousPageCommand;
     private Command nextPageCommand;
+    private Command loadSliderPage;
 
     private BooleanProperty zoomInButton = new SimpleBooleanProperty();
     private BooleanProperty zoomOutButton = new SimpleBooleanProperty();
@@ -106,6 +107,13 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, zoomOutButton, false);
 
+        Command updateCurrentFromUiCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                updateCurrentFromUi();
+            }
+        }, false);
+
         Command loadImagesCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
@@ -150,9 +158,11 @@ public class ComicReaderViewModel implements ViewModel {
 
         openFileCompleteCommand = new CompositeCommand(openFileCommand, loadImagesCommand, totalPageCommand, currentPageCommand);
 
-        loadNextPageCommand = new CompositeCommand(getNextPageCommand(), loadImagesCommand);
+        loadNextPageCommand = new CompositeCommand(nextPageCommand, loadImagesCommand);
 
-        loadPreviousPageCommand = new CompositeCommand(getPreviousPageCommand(), loadImagesCommand);
+        loadPreviousPageCommand = new CompositeCommand(previousPageCommand, loadImagesCommand);
+
+        loadSliderPage = new CompositeCommand(updateCurrentFromUiCommand, loadImagesCommand);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -245,12 +255,16 @@ public class ComicReaderViewModel implements ViewModel {
         return openFileCompleteCommand;
     }
 
-    public Command getPreviousPageCommand() {
+    Command getPreviousPageCommand() {
         return previousPageCommand;
     }
 
-    public Command getNextPageCommand() {
+    Command getNextPageCommand() {
         return nextPageCommand;
+    }
+
+    Command getLoadSliderPage() {
+        return loadSliderPage;
     }
 
     private void previousPage() {
@@ -314,5 +328,11 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Updating current page");
 
         currentPageProperty.setValue(fileService.getCurrentPage());
+    }
+
+    private void updateCurrentFromUi() {
+        logger.debug("Updating current page");
+
+        fileService.setCurrentPage(currentPageProperty.getValue());
     }
 }

@@ -135,9 +135,11 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         pageSelector.maxProperty().bindBidirectional(viewModel.getTotalPagesProperty());
         pageSelector.valueProperty().bindBidirectional(viewModel.getCurrentPageProperty());
-        pageSelector.valueProperty().addListener((ov, oldVal, newVal) -> {
-            logger.debug("Updating current page");
-            viewModel.getCurrentPageProperty().setValue(newVal);
+        pageSelector.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue && !newValue) {
+                viewModel.getCurrentPageProperty().setValue(pageSelector.getValue());
+                viewModel.getLoadSliderPage().execute();
+            }
         });
 
         ObjectBinding<Node> readingDirectionChanged = Bindings.when(viewModel.getReadingDirectionRightProperty().not()).then(IconHelper.createReadingDirectionIconProperty(true)).otherwise(IconHelper.createReadingDirectionIconProperty(false));
