@@ -18,7 +18,6 @@ public class ComicReaderViewModel implements ViewModel {
     private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
 
     private Command readingDirectionCommand;
-    private Command pagePerViewCommand;
     private Command zoomInCommand;
     private Command zoomOutCommand;
     private Command openFileCompleteCommand;
@@ -26,7 +25,8 @@ public class ComicReaderViewModel implements ViewModel {
     private Command loadNextPageCommand;
     private Command previousPageCommand;
     private Command nextPageCommand;
-    private Command loadSliderPage;
+    private Command loadSliderPageCommand;
+    private Command updatePagesPerViewPageCommand;
 
     private BooleanProperty zoomInButton = new SimpleBooleanProperty();
     private BooleanProperty zoomOutButton = new SimpleBooleanProperty();
@@ -86,13 +86,6 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, false);
 
-        pagePerViewCommand = new DelegateCommand(() -> new Action() {
-            @Override
-            protected void action() throws Exception {
-                setPagesPerView();
-            }
-        }, false);
-
         zoomInCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
@@ -106,6 +99,13 @@ public class ComicReaderViewModel implements ViewModel {
                 zoomOut();
             }
         }, zoomOutButton, false);
+
+        Command pagePerViewCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                setPagesPerView();
+            }
+        }, false);
 
         Command updateCurrentFromUiCommand = new DelegateCommand(() -> new Action() {
             @Override
@@ -162,7 +162,9 @@ public class ComicReaderViewModel implements ViewModel {
 
         loadPreviousPageCommand = new CompositeCommand(previousPageCommand, loadImagesCommand);
 
-        loadSliderPage = new CompositeCommand(updateCurrentFromUiCommand, loadImagesCommand);
+        loadSliderPageCommand = new CompositeCommand(updateCurrentFromUiCommand, loadImagesCommand);
+
+        updatePagesPerViewPageCommand = new CompositeCommand(pagePerViewCommand, loadImagesCommand);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -239,8 +241,8 @@ public class ComicReaderViewModel implements ViewModel {
         return readingDirectionCommand;
     }
 
-    Command getPagePerViewCommand() {
-        return pagePerViewCommand;
+    Command getUpdatePagesPerViewPageCommand() {
+        return updatePagesPerViewPageCommand;
     }
 
     Command getZoomInCommand() {
@@ -263,8 +265,8 @@ public class ComicReaderViewModel implements ViewModel {
         return nextPageCommand;
     }
 
-    Command getLoadSliderPage() {
-        return loadSliderPage;
+    Command getLoadSliderPageCommand() {
+        return loadSliderPageCommand;
     }
 
     private void previousPage() {
@@ -316,6 +318,11 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Loading images");
 
         leftImageProperty.set(new Image(fileService.getCurrentPath(), true));
+        if (isTwoPagesProperty.getValue() && (currentPageProperty.getValue() + 1) <= totalPagesProperty.getValue()) {
+            rightImageProperty.set(new Image(fileService.getPath(fileService.getCurrentPage() + 1), true));
+        } else {
+            rightImageProperty.set(new Image("/placeholder.png"));
+        }
     }
 
     private void updateTotalPages () {

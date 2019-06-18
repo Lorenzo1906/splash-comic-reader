@@ -138,7 +138,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         pageSelector.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue && !newValue) {
                 viewModel.getCurrentPageProperty().setValue(pageSelector.getValue());
-                viewModel.getLoadSliderPage().execute();
+                viewModel.getLoadSliderPageCommand().execute();
             }
         });
 
@@ -189,7 +189,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void pagePerViewAction() {
-        viewModel.getPagePerViewCommand().execute();
+        viewModel.getUpdatePagesPerViewPageCommand().execute();
     }
 
     @FXML

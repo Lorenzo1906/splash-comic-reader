@@ -26,6 +26,10 @@ public abstract class FileReader {
         return fileEntries[index];
     }
 
+    public String getPath (Integer pageNumber){
+        return fileEntries[pageNumber];
+    }
+
     public FileReaderType getType() {
         return type;
     }

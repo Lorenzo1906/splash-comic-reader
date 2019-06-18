@@ -33,6 +33,15 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public String getPath(Integer pageNumber) {
+        if (fileReader == null) {
+            return "";
+        }
+
+        return fileReader.getPath(pageNumber - 1);
+    }
+
+    @Override
     public Integer getTotalPages() {
         if (fileReader == null) {
             return 1;
