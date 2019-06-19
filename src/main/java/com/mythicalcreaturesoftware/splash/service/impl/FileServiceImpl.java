@@ -4,8 +4,12 @@ import com.mythicalcreaturesoftware.splash.exception.UnsupportedFileTypeExceptio
 import com.mythicalcreaturesoftware.splash.filereader.FileReader;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderFactory;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
+import com.mythicalcreaturesoftware.splash.model.Spread;
 import com.mythicalcreaturesoftware.splash.service.FileService;
+import com.mythicalcreaturesoftware.splash.ui.Keys;
 import org.apache.commons.io.FilenameUtils;
+
+import java.security.Key;
 
 public class FileServiceImpl implements FileService {
 
@@ -24,21 +28,54 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String getCurrentPath() {
-        if (fileReader == null) {
-            return "";
+    public String getCurrentRecto() {
+        String result = Keys.DEFAULT_IMAGE_PATH;
+
+        if (fileReader != null) {
+
+            Spread spread = fileReader.getCurrentPath();
+
+            if (spread != null && spread.getRecto() != null) {
+                result = spread.getRecto();
+            }
         }
 
-        return fileReader.getCurrentPath();
+        return result;
+    }
+
+    @Override
+    public String getCurrentVerso() {
+        String result = Keys.DEFAULT_IMAGE_PATH;
+
+        if (fileReader != null) {
+
+            Spread spread = fileReader.getCurrentPath();
+
+            if (spread != null && spread.getVerso() != null) {
+                result = spread.getVerso();
+            }
+        }
+
+        return result;
     }
 
     @Override
     public String getPath(Integer pageNumber) {
-        if (fileReader == null) {
-            return "";
+        String result = Keys.DEFAULT_IMAGE_PATH;
+
+        if (fileReader != null) {
+            Spread spread = fileReader.getPath(pageNumber);
+
+            if (spread != null && spread.getVersoPageNumber() != null && spread.getVersoPageNumber().equals(pageNumber)) {
+                result = spread.getVerso();
+            }
+
+            if (spread != null && spread.getRectoPageNumber() != null && spread.getRectoPageNumber().equals(pageNumber)) {
+                result = spread.getRecto();
+            }
         }
 
-        return fileReader.getPath(pageNumber - 1);
+        return result;
     }
 
     @Override
@@ -56,7 +93,7 @@ public class FileServiceImpl implements FileService {
             return 1;
         }
 
-        return fileReader.getIndex() + 1;
+        return fileReader.getIndex();
     }
 
     @Override
@@ -65,7 +102,7 @@ public class FileServiceImpl implements FileService {
             return;
         }
 
-        fileReader.setIndex(pageNumber - 1);
+        fileReader.setIndex(pageNumber);
     }
 
     private String getFilenameFromPath(String path) {

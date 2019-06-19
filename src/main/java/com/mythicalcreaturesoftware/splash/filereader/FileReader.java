@@ -1,16 +1,15 @@
 package com.mythicalcreaturesoftware.splash.filereader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.mythicalcreaturesoftware.splash.model.Spread;
+
+import java.util.Map;
 
 public abstract class FileReader {
 
-    private static Logger logger = LoggerFactory.getLogger(FileReader.class);
-
-    protected String[] fileEntries;
+    protected Map<Integer, Spread> fileEntries;
     protected String filePath;
-    private int index;
     protected int totalPages;
+    protected Integer index;
 
     protected abstract void construct();
 
@@ -19,15 +18,15 @@ public abstract class FileReader {
     public FileReader (FileReaderType type, String filePath) {
         this.type = type;
         this.filePath = filePath;
-        setIndex(0);
+        this.index = 1;
     }
 
-    public String getCurrentPath (){
-        return fileEntries[index];
+    public Spread getCurrentPath (){
+        return fileEntries.get(index);
     }
 
-    public String getPath (Integer pageNumber){
-        return fileEntries[pageNumber];
+    public Spread getPath (Integer pageNumber){
+        return fileEntries.get(pageNumber);
     }
 
     public FileReaderType getType() {
@@ -42,11 +41,11 @@ public abstract class FileReader {
         return totalPages;
     }
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(Integer index) {
         this.index = index;
     }
 }

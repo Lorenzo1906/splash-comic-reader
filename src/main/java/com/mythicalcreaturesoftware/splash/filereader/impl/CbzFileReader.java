@@ -2,6 +2,7 @@ package com.mythicalcreaturesoftware.splash.filereader.impl;
 
 import com.mythicalcreaturesoftware.splash.filereader.FileReader;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
+import com.mythicalcreaturesoftware.splash.model.Spread;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -29,7 +30,7 @@ public class CbzFileReader extends FileReader {
 
         ZipInputStream zipIs = null;
         try {
-            List<String> paths = new ArrayList<>();
+            Map<Integer, Spread> spreads = new HashMap<>();
 
             Path mainDirectory = Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
             mainDirectory.toFile().deleteOnExit();
@@ -39,21 +40,53 @@ public class CbzFileReader extends FileReader {
                 BufferedInputStream bis = new BufferedInputStream(fis);
                 ZipInputStream stream = new ZipInputStream(bis)) {
 
+                int pageIndex = 1;
+                boolean isFirst = true;
+                Spread spread = null;
                 ZipEntry entry;
                 while ((entry = stream.getNextEntry()) != null) {
                     Path filePath = processFileEntry(mainDirectory, entry, stream);
-                    paths.add(filePath.toUri().toURL().toString());
+                    String url = filePath.toUri().toURL().toString();
+
+                    //The first one is always alone on the spread
+                    if (isFirst) {
+                        spread = new Spread();
+                        spread.setRecto(url);
+                        spread.setRectoPageNumber(pageIndex);
+
+                        spreads.put(pageIndex, spread);
+
+                        isFirst = false;
+                        spread = null;
+                    } else {
+                        if (spread == null) {
+                            spread = new Spread();
+                            spread.setVerso(url);
+                            spread.setVersoPageNumber(pageIndex);
+
+                            spreads.put(pageIndex, spread);
+                        } else {
+                            spread.setRecto(url);
+                            spread.setRectoPageNumber(pageIndex);
+
+                            spreads.put(pageIndex, spread);
+                            spread = null;
+                        }
+                    }
+
+                    totalPages++;
+                    pageIndex++;
                 }
             }
 
-            fileEntries = new String[paths.size()];
-            fileEntries = paths.toArray(fileEntries);
-            totalPages = paths.size();
+            fileEntries = spreads;
         } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {
             try {
-                zipIs.close();
+                if (zipIs != null) {
+                    zipIs.close();
+                }
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }

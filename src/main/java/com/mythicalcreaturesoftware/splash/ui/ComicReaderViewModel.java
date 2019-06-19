@@ -58,7 +58,7 @@ public class ComicReaderViewModel implements ViewModel {
     private void initializeDefaultProperties () {
         logger.info("Initializing default properties");
 
-        isTwoPagesProperty = new SimpleBooleanProperty(false);
+        isTwoPagesProperty = new SimpleBooleanProperty(true);
         readingDirectionRightProperty = new SimpleBooleanProperty(true);
         enableAll = new SimpleBooleanProperty(false);
 
@@ -317,12 +317,8 @@ public class ComicReaderViewModel implements ViewModel {
     private void loadImages () {
         logger.debug("Loading images");
 
-        leftImageProperty.set(new Image(fileService.getCurrentPath(), true));
-        if (isTwoPagesProperty.getValue() && (currentPageProperty.getValue() + 1) <= totalPagesProperty.getValue()) {
-            rightImageProperty.set(new Image(fileService.getPath(fileService.getCurrentPage() + 1), true));
-        } else {
-            rightImageProperty.set(new Image("/placeholder.png"));
-        }
+        leftImageProperty.set(new Image(fileService.getCurrentVerso(), true));
+        rightImageProperty.set(new Image(fileService.getCurrentRecto(), true));
     }
 
     private void updateTotalPages () {
