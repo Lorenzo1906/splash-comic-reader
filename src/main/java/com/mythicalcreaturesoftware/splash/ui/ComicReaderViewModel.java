@@ -33,6 +33,7 @@ public class ComicReaderViewModel implements ViewModel {
     private BooleanProperty readingDirectionRightProperty;
     private BooleanProperty isTwoPagesProperty;
     private BooleanProperty enableAll;
+    private BooleanProperty enableNextPage;
 
     private IntegerProperty zoomLevelProperty;
     private IntegerProperty currentPageProperty;
@@ -61,6 +62,7 @@ public class ComicReaderViewModel implements ViewModel {
         isTwoPagesProperty = new SimpleBooleanProperty(true);
         readingDirectionRightProperty = new SimpleBooleanProperty(true);
         enableAll = new SimpleBooleanProperty(false);
+        enableNextPage = new SimpleBooleanProperty(false);
 
         zoomInButton.bind(new SimpleBooleanProperty(true));
         zoomOutButton.bind(new SimpleBooleanProperty(true));
@@ -72,8 +74,8 @@ public class ComicReaderViewModel implements ViewModel {
         fileNameProperty = new SimpleStringProperty("");
         filePathProperty = new SimpleStringProperty("");
 
-        leftImageProperty = new SimpleObjectProperty<>(new Image("/placeholder.png", true));
-        rightImageProperty = new SimpleObjectProperty<>(new Image("/placeholder.png", true));
+        leftImageProperty = new SimpleObjectProperty<>(new Image(Keys.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty = new SimpleObjectProperty<>(new Image(Keys.DEFAULT_IMAGE_PATH, true));
     }
 
     private void initializeCommands () {
@@ -172,7 +174,7 @@ public class ComicReaderViewModel implements ViewModel {
 
         BooleanProperty enableNextPageButton = new SimpleBooleanProperty();
 
-        BooleanBinding nextPageBinding = Bindings.when(currentPageProperty.greaterThanOrEqualTo(totalPagesProperty)).then(false).otherwise(true);
+        BooleanBinding nextPageBinding = Bindings.when(enableNextPage).then(true).otherwise(false);
         enableNextPageButton.bind(nextPageBinding);
 
         return enableNextPageButton;
@@ -272,15 +274,15 @@ public class ComicReaderViewModel implements ViewModel {
     private void previousPage() {
         logger.debug("Previous Page");
 
-        fileService.setCurrentPage(currentPageProperty.getValue() - 1);
-        currentPageProperty.setValue(currentPageProperty.getValue() - 1);
+        fileService.updatePreviousPage(isTwoPagesProperty.getValue());
+        currentPageProperty.setValue(fileService.getCurrentPageNumber());
     }
 
     private void nextPage() {
         logger.debug("Next Page");
 
-        fileService.setCurrentPage(currentPageProperty.getValue() + 1);
-        currentPageProperty.setValue(currentPageProperty.getValue() + 1);
+        fileService.updateNextPage(isTwoPagesProperty.getValue());
+        currentPageProperty.setValue(fileService.getCurrentPageNumber());
     }
 
     private void changeReadingDirection() {
@@ -291,6 +293,9 @@ public class ComicReaderViewModel implements ViewModel {
 
     private void setPagesPerView() {
         logger.debug("Set pages per view");
+
+        leftImageProperty.set(new Image(Keys.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty.set(new Image(Keys.DEFAULT_IMAGE_PATH, true));
 
         isTwoPagesProperty.setValue(!isTwoPagesProperty.getValue());
     }
@@ -317,8 +322,14 @@ public class ComicReaderViewModel implements ViewModel {
     private void loadImages () {
         logger.debug("Loading images");
 
-        leftImageProperty.set(new Image(fileService.getCurrentVerso(), true));
-        rightImageProperty.set(new Image(fileService.getCurrentRecto(), true));
+        if (isTwoPagesProperty.getValue()) {
+            leftImageProperty.set(new Image(fileService.getCurrentVerso(), true));
+            rightImageProperty.set(new Image(fileService.getCurrentRecto(), true));
+        } else {
+            leftImageProperty.set(new Image(fileService.getCurrentPage(), true));
+        }
+
+        enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
     }
 
     private void updateTotalPages () {
@@ -330,7 +341,7 @@ public class ComicReaderViewModel implements ViewModel {
     private void updateCurrentPage() {
         logger.debug("Updating current page");
 
-        currentPageProperty.setValue(fileService.getCurrentPage());
+        currentPageProperty.setValue(fileService.getCurrentPageNumber());
     }
 
     private void updateCurrentFromUi() {

@@ -4,8 +4,11 @@ public interface FileService {
     String loadFile(String path);
     String getCurrentRecto();
     String getCurrentVerso();
-    String getPath(Integer pageNumber);
+    String getCurrentPage();
     Integer getTotalPages();
-    Integer getCurrentPage();
+    Integer getCurrentPageNumber();
+    boolean canChangeToNextPage(boolean isTwoPage);
     void setCurrentPage(Integer pageNumber);
+    void updateNextPage(boolean isTwoPage);
+    void updatePreviousPage(boolean isTwoPage);
 }
