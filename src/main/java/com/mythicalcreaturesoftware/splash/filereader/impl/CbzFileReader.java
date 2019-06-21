@@ -45,37 +45,42 @@ public class CbzFileReader extends FileReader {
                 Spread spread = null;
                 ZipEntry entry;
                 while ((entry = stream.getNextEntry()) != null) {
-                    Path filePath = processFileEntry(mainDirectory, entry, stream);
-                    String url = filePath.toUri().toURL().toString();
-
-                    //The first one is always alone on the spread
-                    if (isFirst) {
-                        spread = new Spread();
-                        spread.setRecto(url);
-                        spread.setRectoPageNumber(pageIndex);
-
-                        spreads.put(pageIndex, spread);
-
-                        isFirst = false;
-                        spread = null;
+                    if (entry.isDirectory()) {
+                        Files.createDirectory(mainDirectory.resolve(entry.getName()));
                     } else {
-                        if (spread == null) {
-                            spread = new Spread();
-                            spread.setVerso(url);
-                            spread.setVersoPageNumber(pageIndex);
 
-                            spreads.put(pageIndex, spread);
-                        } else {
+                        Path filePath = processFileEntry(mainDirectory, entry, stream);
+                        String url = filePath.toUri().toURL().toString();
+
+                        //The first one is always alone on the spread
+                        if (isFirst) {
+                            spread = new Spread();
                             spread.setRecto(url);
                             spread.setRectoPageNumber(pageIndex);
 
                             spreads.put(pageIndex, spread);
-                            spread = null;
-                        }
-                    }
 
-                    totalPages++;
-                    pageIndex++;
+                            isFirst = false;
+                            spread = null;
+                        } else {
+                            if (spread == null) {
+                                spread = new Spread();
+                                spread.setVerso(url);
+                                spread.setVersoPageNumber(pageIndex);
+
+                                spreads.put(pageIndex, spread);
+                            } else {
+                                spread.setRecto(url);
+                                spread.setRectoPageNumber(pageIndex);
+
+                                spreads.put(pageIndex, spread);
+                                spread = null;
+                            }
+                        }
+
+                        totalPages++;
+                        pageIndex++;
+                    }
                 }
             }
 
