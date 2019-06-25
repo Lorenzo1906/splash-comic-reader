@@ -1,6 +1,7 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
+import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
 import com.mythicalcreaturesoftware.splash.utils.ScreenHelper;
 import com.sun.javafx.binding.SelectBinding;
@@ -8,10 +9,6 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.*;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -143,21 +140,21 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         previousPage.disableProperty().bind(viewModel.getPreviousPageCommand().executableProperty().not());
         nextPage.disableProperty().bind(viewModel.getNextPageCommand().executableProperty().not());
 
-        BooleanBinding enableZoomIn = Bindings.when(viewModel.getEnableAll().not().or(viewModel.getScaleLevelProperty().greaterThanOrEqualTo(2))).then(true).otherwise(false);
+        BooleanBinding enableZoomIn = Bindings.when(viewModel.getEnableAll().not().or(viewModel.getScaleLevelProperty().greaterThanOrEqualTo(DefaultValues.MAXIMUM_SCALE_LEVEL))).then(true).otherwise(false);
         zoomIn.disableProperty().bind(enableZoomIn);
 
-        BooleanBinding enableZoomOut = Bindings.when(viewModel.getEnableAll().not().or(viewModel.getScaleLevelProperty().lessThan(.01))).then(true).otherwise(false);
+        BooleanBinding enableZoomOut = Bindings.when(viewModel.getEnableAll().not().or(viewModel.getScaleLevelProperty().lessThan(DefaultValues.MINIMUM_SCALE_LEVEL))).then(true).otherwise(false);
         zoomOut.disableProperty().bind(enableZoomOut);
     }
 
     private void initializeUiComponentsBindings () {
-        StringBinding headerBinding = Bindings.when(viewModel.getFileNameProperty().isNotEqualTo("")).then(viewModel.getFileNameProperty()).otherwise(resourceBundle.getString("header.default.text"));
+        StringBinding headerBinding = Bindings.when(viewModel.getFileNameProperty().isNotEqualTo("")).then(viewModel.getFileNameProperty()).otherwise(resourceBundle.getString(DefaultValues.HEADER_TEXT_KEY));
         headerButton.textProperty().bind(headerBinding);
 
         DoubleBinding scaleBinding = viewModel.getScaleLevelProperty().multiply(100);
         IntegerBinding integerBinding = new SelectBinding.AsInteger(scaleBinding);
         zoomPercentageLabel.textProperty().bind(Bindings.concat(integerBinding, " %"));
-        pageIndicatorLabel.textProperty().bind(Bindings.concat(resourceBundle.getString("ui.page"), " ", viewModel.getCurrentPageProperty(), "/", viewModel.getTotalPagesProperty()));
+        pageIndicatorLabel.textProperty().bind(Bindings.concat(resourceBundle.getString(DefaultValues.PAGE_TEXT_KEY), " ", viewModel.getCurrentPageProperty(), "/", viewModel.getTotalPagesProperty()));
 
         pageSelector.maxProperty().bindBidirectional(viewModel.getTotalPagesProperty());
         pageSelector.valueProperty().bindBidirectional(viewModel.getCurrentPageProperty());
@@ -178,9 +175,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     @FXML
     public void openFileAction() {
         FileChooser chooser = new FileChooser();
-        chooser.setTitle(resourceBundle.getString("fileChooser.title"));
+        chooser.setTitle(resourceBundle.getString(DefaultValues.FILE_CHOOSER_TEXT_KEY));
         chooser.setInitialDirectory(
-            new File(System.getProperty("user.home"))
+            new File(System.getProperty(DefaultValues.HOME_FOLDER_KEY))
         );
         chooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter(resourceBundle.getString("fileChooser.allFiles"), "*.cbr", "*.cbr", "*.cbz", "*.cbt", "*.cb7", "*.cba", "*.CBR", "*.CBZ", "*.CBT", "*.CB7", "*.CBA"),

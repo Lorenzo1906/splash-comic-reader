@@ -2,6 +2,7 @@ package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.service.FileService;
 import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
+import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -80,8 +81,8 @@ public class ComicReaderViewModel implements ViewModel {
         fileNameProperty = new SimpleStringProperty("");
         filePathProperty = new SimpleStringProperty("");
 
-        leftImageProperty = new SimpleObjectProperty<>(new Image(Keys.DEFAULT_IMAGE_PATH, true));
-        rightImageProperty = new SimpleObjectProperty<>(new Image(Keys.DEFAULT_IMAGE_PATH, true));
+        leftImageProperty = new SimpleObjectProperty<>(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty = new SimpleObjectProperty<>(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
 
         leftImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
         rightImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
@@ -311,8 +312,8 @@ public class ComicReaderViewModel implements ViewModel {
     private void setPagesPerView() {
         logger.debug("Set pages per view");
 
-        leftImageProperty.set(new Image(Keys.DEFAULT_IMAGE_PATH, true));
-        rightImageProperty.set(new Image(Keys.DEFAULT_IMAGE_PATH, true));
+        leftImageProperty.set(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty.set(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
 
         isTwoPagesProperty.setValue(!isTwoPagesProperty.getValue());
     }
@@ -320,16 +321,16 @@ public class ComicReaderViewModel implements ViewModel {
     private void zoomIn() {
         logger.debug("Zooming in image");
 
-        if (scaleLevelProperty.getValue() <= 2) {
-            scaleLevelProperty.setValue(scaleLevelProperty.getValue() + .01);
+        if (scaleLevelProperty.getValue() <= DefaultValues.MAXIMUM_SCALE_LEVEL) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() + DefaultValues.SCALE_DELTA);
         }
     }
 
     private void zoomOut() {
         logger.debug("Zooming out image");
 
-        if (scaleLevelProperty.getValue() >= .01) {
-            scaleLevelProperty.setValue(scaleLevelProperty.getValue() - .01);
+        if (scaleLevelProperty.getValue() >= DefaultValues.MINIMUM_SCALE_LEVEL) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() - DefaultValues.SCALE_DELTA);
         }
     }
 
