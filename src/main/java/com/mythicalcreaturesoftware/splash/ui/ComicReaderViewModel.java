@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+
 public class ComicReaderViewModel implements ViewModel {
     private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
 
@@ -35,15 +37,18 @@ public class ComicReaderViewModel implements ViewModel {
     private BooleanProperty enableAll;
     private BooleanProperty enableNextPage;
 
-    private IntegerProperty zoomLevelProperty;
     private IntegerProperty currentPageProperty;
     private IntegerProperty totalPagesProperty;
+
+    private DoubleProperty scaleLevelProperty;
 
     private StringProperty fileNameProperty;
     private StringProperty filePathProperty;
 
     private ObjectProperty<Image> leftImageProperty;
     private ObjectProperty<Image> rightImageProperty;
+    private ObjectProperty<Dimension> leftImageDimensionProperty;
+    private ObjectProperty<Dimension> rightImageDimensionProperty;
 
     private FileService fileService;
 
@@ -67,7 +72,8 @@ public class ComicReaderViewModel implements ViewModel {
         zoomInButton.bind(new SimpleBooleanProperty(true));
         zoomOutButton.bind(new SimpleBooleanProperty(true));
 
-        zoomLevelProperty = new SimpleIntegerProperty(100);
+        scaleLevelProperty = new SimpleDoubleProperty(1);
+
         currentPageProperty = new SimpleIntegerProperty(1);
         totalPagesProperty = new SimpleIntegerProperty(1);
 
@@ -76,6 +82,9 @@ public class ComicReaderViewModel implements ViewModel {
 
         leftImageProperty = new SimpleObjectProperty<>(new Image(Keys.DEFAULT_IMAGE_PATH, true));
         rightImageProperty = new SimpleObjectProperty<>(new Image(Keys.DEFAULT_IMAGE_PATH, true));
+
+        leftImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
+        rightImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
     }
 
     private void initializeCommands () {
@@ -207,6 +216,14 @@ public class ComicReaderViewModel implements ViewModel {
         return rightImageProperty;
     }
 
+    ObjectProperty<Dimension> getLeftImageDimensionProperty(){
+        return leftImageDimensionProperty;
+    }
+
+    ObjectProperty<Dimension> getRightImageDimensionProperty(){
+        return rightImageDimensionProperty;
+    }
+
     BooleanProperty getIsTwoPagesProperty(){
         return isTwoPagesProperty;
     }
@@ -219,8 +236,8 @@ public class ComicReaderViewModel implements ViewModel {
         return enableAll;
     }
 
-    IntegerProperty getZoomLevelProperty(){
-        return zoomLevelProperty;
+    DoubleProperty getScaleLevelProperty(){
+        return scaleLevelProperty;
     }
 
     IntegerProperty getCurrentPageProperty(){
@@ -303,13 +320,17 @@ public class ComicReaderViewModel implements ViewModel {
     private void zoomIn() {
         logger.debug("Zooming in image");
 
-        zoomLevelProperty.setValue(zoomLevelProperty.getValue() + 1);
+        if (scaleLevelProperty.getValue() <= 2) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() + .01);
+        }
     }
 
     private void zoomOut() {
         logger.debug("Zooming out image");
 
-        zoomLevelProperty.setValue(zoomLevelProperty.getValue() - 1);
+        if (scaleLevelProperty.getValue() >= .01) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() - .01);
+        }
     }
 
     private void openFile() {
@@ -323,10 +344,19 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Loading images");
 
         if (isTwoPagesProperty.getValue()) {
+            Dimension leftImageDimension = fileService.getCurrentVersoSize();
+            Dimension rightImageDimension = fileService.getCurrentRectoSize();
+
             leftImageProperty.set(new Image(fileService.getCurrentVerso(), true));
             rightImageProperty.set(new Image(fileService.getCurrentRecto(), true));
+
+            leftImageDimensionProperty.set(leftImageDimension);
+            rightImageDimensionProperty.set(rightImageDimension);
         } else {
+            Dimension imageDimension = fileService.getCurrentPageSize();
+
             leftImageProperty.set(new Image(fileService.getCurrentPage(), true));
+            leftImageDimensionProperty.set(imageDimension);
         }
 
         enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));

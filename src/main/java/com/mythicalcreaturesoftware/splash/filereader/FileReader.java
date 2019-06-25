@@ -2,6 +2,14 @@ package com.mythicalcreaturesoftware.splash.filereader;
 
 import com.mythicalcreaturesoftware.splash.model.Spread;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.Map;
 
 public abstract class FileReader {
@@ -47,5 +55,30 @@ public abstract class FileReader {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+
+    protected Dimension getPageSize(Path file) {
+        Dimension dimension = new Dimension();
+
+        try {
+
+            ImageInputStream iis = ImageIO.createImageInputStream(file.toFile());
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+
+            if (readers.hasNext()) {
+
+                ImageReader reader = readers.next();
+                reader.setInput(iis, true);
+                int width = reader.getWidth(reader.getMinIndex());
+                int height = reader.getHeight(reader.getMinIndex());
+
+                dimension.setSize(width, height);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return dimension;
     }
 }

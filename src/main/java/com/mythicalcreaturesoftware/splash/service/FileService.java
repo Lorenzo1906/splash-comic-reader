@@ -1,10 +1,15 @@
 package com.mythicalcreaturesoftware.splash.service;
 
+import java.awt.*;
+
 public interface FileService {
     String loadFile(String path);
     String getCurrentRecto();
     String getCurrentVerso();
     String getCurrentPage();
+    Dimension getCurrentRectoSize();
+    Dimension getCurrentVersoSize();
+    Dimension getCurrentPageSize();
     Integer getTotalPages();
     Integer getCurrentPageNumber();
     boolean canChangeToNextPage(boolean isTwoPage);

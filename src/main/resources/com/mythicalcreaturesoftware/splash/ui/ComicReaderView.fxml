@@ -8,7 +8,6 @@
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
     <children>
         <AnchorPane prefHeight="23.0" prefWidth="790.0">
@@ -57,7 +56,7 @@
                         <Button fx:id="readingDirection" mnemonicParsing="false" onMouseClicked="#readingDirectionAction" />
                     </children>
                 </HBox>
-                <HBox alignment="CENTER_RIGHT" layoutX="634.0" layoutY="39.0" prefHeight="25.0" prefWidth="168.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="CENTER_RIGHT" layoutX="634.0" layoutY="39.0" prefHeight="25.0" prefWidth="182.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                     <children>
                         <Button fx:id="pagePerView" mnemonicParsing="false" onMouseClicked="#pagePerViewAction" />
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
@@ -66,7 +65,7 @@
                                 <MaterialDesignIconView glyphName="MAGNIFY_PLUS" size="18px" />
                             </graphic>
                         </Button>
-                        <Label fx:id="zoomPercentageLabel" />
+                        <Label fx:id="zoomPercentageLabel" prefWidth="42.0" />
                         <Button fx:id="zoomOut" mnemonicParsing="false" onMouseClicked="#zoomOutAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="MAGNIFY_MINUS" size="18px" />

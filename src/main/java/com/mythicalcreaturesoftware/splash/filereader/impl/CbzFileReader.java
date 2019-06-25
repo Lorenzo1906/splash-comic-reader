@@ -26,6 +26,7 @@ public class CbzFileReader extends FileReader {
 
     @Override
     protected void construct() {
+        long startTime = System.currentTimeMillis();
         logger.info("Constructing cbz file");
 
         ZipInputStream zipIs = null;
@@ -57,6 +58,7 @@ public class CbzFileReader extends FileReader {
                             spread = new Spread();
                             spread.setRecto(url);
                             spread.setRectoPageNumber(pageIndex);
+                            spread.setRectoSize(getPageSize(filePath));
 
                             spreads.put(pageIndex, spread);
 
@@ -67,11 +69,13 @@ public class CbzFileReader extends FileReader {
                                 spread = new Spread();
                                 spread.setVerso(url);
                                 spread.setVersoPageNumber(pageIndex);
+                                spread.setVersoSize(getPageSize(filePath));
 
                                 spreads.put(pageIndex, spread);
                             } else {
                                 spread.setRecto(url);
                                 spread.setRectoPageNumber(pageIndex);
+                                spread.setRectoSize(getPageSize(filePath));
 
                                 spreads.put(pageIndex, spread);
                                 spread = null;
@@ -96,6 +100,10 @@ public class CbzFileReader extends FileReader {
                 logger.error(e.getMessage());
             }
         }
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        logger.info("File loaded in {} milliseconds", elapsedTime);
     }
 
     private Path processFileEntry (Path directory, ZipEntry entry, ZipInputStream stream) throws IOException {

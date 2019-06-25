@@ -9,6 +9,8 @@ import com.mythicalcreaturesoftware.splash.service.FileService;
 import com.mythicalcreaturesoftware.splash.ui.Keys;
 import org.apache.commons.io.FilenameUtils;
 
+import java.awt.*;
+
 public class FileServiceImpl implements FileService {
 
     private FileReader fileReader;
@@ -70,6 +72,57 @@ public class FileServiceImpl implements FileService {
 
             if (spread != null && spread.getRectoPageNumber() != null && spread.getRectoPageNumber().equals(fileReader.getIndex())) {
                 result = spread.getRecto();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Dimension getCurrentRectoSize() {
+        Dimension result = new Dimension(1, 1);
+
+        if (fileReader != null) {
+
+            Spread spread = fileReader.getCurrentPath();
+
+            if (spread != null && spread.getRecto() != null) {
+                result = spread.getRectoSize();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Dimension getCurrentVersoSize() {
+        Dimension result = new Dimension(1, 1);
+
+        if (fileReader != null) {
+
+            Spread spread = fileReader.getCurrentPath();
+
+            if (spread != null && spread.getRecto() != null) {
+                result = spread.getVersoSize();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Dimension getCurrentPageSize() {
+        Dimension result = new Dimension(1, 1);
+
+        if (fileReader != null) {
+            Spread spread = fileReader.getPath(fileReader.getIndex());
+
+            if (spread != null && spread.getVersoPageNumber() != null && spread.getVersoPageNumber().equals(fileReader.getIndex())) {
+                result = spread.getVersoSize();
+            }
+
+            if (spread != null && spread.getRectoPageNumber() != null && spread.getRectoPageNumber().equals(fileReader.getIndex())) {
+                result = spread.getRectoSize();
             }
         }
 

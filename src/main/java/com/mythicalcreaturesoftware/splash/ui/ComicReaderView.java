@@ -1,13 +1,17 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
 import com.mythicalcreaturesoftware.splash.utils.ScreenHelper;
+import com.sun.javafx.binding.SelectBinding;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -104,6 +108,22 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     }
 
     private void initializeImageViewer () {
+        viewModel.getLeftImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue != null) {
+                ComponentHelper.setImageViewSize(leftImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
+            }
+        });
+
+        viewModel.getRightImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                ComponentHelper.setImageViewSize(rightImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
+            }
+        });
+
+        viewModel.getScaleLevelProperty().addListener((observable, oldValue, newValue) -> {
+            ComponentHelper.setImageViewSize(rightImageViewer, viewModel.getRightImageDimensionProperty().get(), newValue.doubleValue());
+            ComponentHelper.setImageViewSize(leftImageViewer, viewModel.getLeftImageDimensionProperty().get(), newValue.doubleValue());
+        });
 
         leftImageViewer.imageProperty().bind(viewModel.getLeftImageProperty());
         rightImageViewer.imageProperty().bind(viewModel.getRightImageProperty());
@@ -118,20 +138,26 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         nextPage.disableProperty().bind(viewModel.getEnableAll().not());
         readingDirection.disableProperty().bind(viewModel.getEnableAll().not());
         pagePerView.disableProperty().bind(viewModel.getEnableAll().not());
-        zoomIn.disableProperty().bind(viewModel.getEnableAll().not());
-        zoomOut.disableProperty().bind(viewModel.getEnableAll().not());
         fullscreen.disableProperty().bind(viewModel.getEnableAll().not());
+
+        previousPage.disableProperty().bind(viewModel.getPreviousPageCommand().executableProperty().not());
+        nextPage.disableProperty().bind(viewModel.getNextPageCommand().executableProperty().not());
+
+        BooleanBinding enableZoomIn = Bindings.when(viewModel.getEnableAll().not().or(viewModel.getScaleLevelProperty().greaterThanOrEqualTo(2))).then(true).otherwise(false);
+        zoomIn.disableProperty().bind(enableZoomIn);
+
+        BooleanBinding enableZoomOut = Bindings.when(viewModel.getEnableAll().not().or(viewModel.getScaleLevelProperty().lessThan(.01))).then(true).otherwise(false);
+        zoomOut.disableProperty().bind(enableZoomOut);
     }
 
     private void initializeUiComponentsBindings () {
         StringBinding headerBinding = Bindings.when(viewModel.getFileNameProperty().isNotEqualTo("")).then(viewModel.getFileNameProperty()).otherwise(resourceBundle.getString("header.default.text"));
         headerButton.textProperty().bind(headerBinding);
 
-        zoomPercentageLabel.textProperty().bind(Bindings.concat(viewModel.getZoomLevelProperty(), " %"));
+        DoubleBinding scaleBinding = viewModel.getScaleLevelProperty().multiply(100);
+        IntegerBinding integerBinding = new SelectBinding.AsInteger(scaleBinding);
+        zoomPercentageLabel.textProperty().bind(Bindings.concat(integerBinding, " %"));
         pageIndicatorLabel.textProperty().bind(Bindings.concat(resourceBundle.getString("ui.page"), " ", viewModel.getCurrentPageProperty(), "/", viewModel.getTotalPagesProperty()));
-
-        previousPage.disableProperty().bind(viewModel.getPreviousPageCommand().executableProperty().not());
-        nextPage.disableProperty().bind(viewModel.getNextPageCommand().executableProperty().not());
 
         pageSelector.maxProperty().bindBidirectional(viewModel.getTotalPagesProperty());
         pageSelector.valueProperty().bindBidirectional(viewModel.getCurrentPageProperty());
