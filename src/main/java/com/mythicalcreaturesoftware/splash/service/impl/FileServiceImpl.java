@@ -102,7 +102,7 @@ public class FileServiceImpl implements FileService {
 
             Spread spread = fileReader.getCurrentPath();
 
-            if (spread != null && spread.getRecto() != null) {
+            if (spread != null && spread.getVerso() != null) {
                 result = spread.getVersoSize();
             }
         }
