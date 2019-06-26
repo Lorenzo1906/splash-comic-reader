@@ -6,9 +6,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public abstract class FileReader {
     protected Map<Integer, Spread> fileEntries;
     protected String filePath;
     protected int totalPages;
-    protected Integer index;
+    private Integer index;
 
     protected abstract void construct();
 
@@ -57,6 +57,46 @@ public abstract class FileReader {
         this.index = index;
     }
 
+    protected Map<Integer, Spread> groupPages(Map<Integer, String> pages, Map<Integer, Dimension> dimensions) {
+        Map<Integer, Spread> spreads = new HashMap<>();
+
+        boolean isFirst = true;
+        Spread spread = null;
+
+        for (Integer index : pages.keySet()) {
+
+            //The first one is always alone on the spread
+            if (isFirst || shouldBeAlone(dimensions.get(index))) {
+                spread = new Spread();
+                spread.setRecto(pages.get(index));
+                spread.setRectoPageNumber(index);
+                spread.setRectoSize(dimensions.get(index));
+
+                spreads.put(index, spread);
+
+                isFirst = false;
+                spread = null;
+            } else {
+                if (spread == null) {
+                    spread = new Spread();
+                    spread.setVerso(pages.get(index));
+                    spread.setVersoPageNumber(index);
+                    spread.setVersoSize(dimensions.get(index));
+
+                    spreads.put(index, spread);
+                } else {
+                    spread.setRecto(pages.get(index));
+                    spread.setRectoPageNumber(index);
+                    spread.setRectoSize(dimensions.get(index));
+
+                    spreads.put(index, spread);
+                    spread = null;
+                }
+            }
+        }
+
+        return spreads;
+    }
 
     protected Dimension getPageSize(Path file) {
         Dimension dimension = new Dimension();
@@ -80,5 +120,15 @@ public abstract class FileReader {
         }
 
         return dimension;
+    }
+
+    private boolean shouldBeAlone (Dimension dimension) {
+        boolean result = false;
+
+        if (dimension.width > dimension.height) {
+            result = true;
+        }
+
+        return result;
     }
 }

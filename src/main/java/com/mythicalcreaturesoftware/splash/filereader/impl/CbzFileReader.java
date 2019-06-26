@@ -7,6 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +32,7 @@ public class CbzFileReader extends FileReader {
 
         ZipInputStream zipIs = null;
         try {
-            Map<Integer, Spread> spreads = new HashMap<>();
+            Map<Integer, Spread> spreads;
 
             Path mainDirectory = Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
             mainDirectory.toFile().deleteOnExit();
@@ -42,9 +43,10 @@ public class CbzFileReader extends FileReader {
                 ZipInputStream stream = new ZipInputStream(bis)) {
 
                 int pageIndex = 1;
-                boolean isFirst = true;
-                Spread spread = null;
                 ZipEntry entry;
+                Map<Integer, String> pages = new HashMap<>();
+                Map<Integer, Dimension> dimensions = new HashMap<>();
+
                 while ((entry = stream.getNextEntry()) != null) {
                     if (entry.isDirectory()) {
                         Files.createDirectory(mainDirectory.resolve(entry.getName()));
@@ -52,40 +54,17 @@ public class CbzFileReader extends FileReader {
 
                         Path filePath = processFileEntry(mainDirectory, entry, stream);
                         String url = filePath.toUri().toURL().toString();
+                        Dimension dimension = getPageSize(filePath);
 
-                        //The first one is always alone on the spread
-                        if (isFirst) {
-                            spread = new Spread();
-                            spread.setRecto(url);
-                            spread.setRectoPageNumber(pageIndex);
-                            spread.setRectoSize(getPageSize(filePath));
-
-                            spreads.put(pageIndex, spread);
-
-                            isFirst = false;
-                            spread = null;
-                        } else {
-                            if (spread == null) {
-                                spread = new Spread();
-                                spread.setVerso(url);
-                                spread.setVersoPageNumber(pageIndex);
-                                spread.setVersoSize(getPageSize(filePath));
-
-                                spreads.put(pageIndex, spread);
-                            } else {
-                                spread.setRecto(url);
-                                spread.setRectoPageNumber(pageIndex);
-                                spread.setRectoSize(getPageSize(filePath));
-
-                                spreads.put(pageIndex, spread);
-                                spread = null;
-                            }
-                        }
+                        pages.put(pageIndex, url);
+                        dimensions.put(pageIndex, dimension);
 
                         totalPages++;
                         pageIndex++;
                     }
                 }
+
+                spreads = groupPages(pages, dimensions);
             }
 
             fileEntries = spreads;
