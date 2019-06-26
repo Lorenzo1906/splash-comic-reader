@@ -127,6 +127,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         borderPane.rightProperty().bind(Bindings.when(viewModel.getIsTwoPagesProperty()).then(rightImageViewer).otherwise(IconHelper.getNullImageView()));
 
+        mainImageContainer.minHeightProperty().bindBidirectional(viewModel.getScreenHeightProperty());
+        mainImageContainer.minWidthProperty().bindBidirectional(viewModel.getScreenWidthProperty());
+
         mainImageContainer.minWidthProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
         mainImageContainer.minHeightProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getHeight(), scrollPane.viewportBoundsProperty()));
     }

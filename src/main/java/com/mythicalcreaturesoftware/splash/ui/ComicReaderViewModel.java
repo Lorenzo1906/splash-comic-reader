@@ -3,6 +3,7 @@ package com.mythicalcreaturesoftware.splash.ui;
 import com.mythicalcreaturesoftware.splash.service.FileService;
 import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
+import com.mythicalcreaturesoftware.splash.utils.MathHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -31,8 +32,8 @@ public class ComicReaderViewModel implements ViewModel {
     private Command loadSliderPageCommand;
     private Command updatePagesPerViewPageCommand;
 
-    private BooleanProperty zoomInButton = new SimpleBooleanProperty();
-    private BooleanProperty zoomOutButton = new SimpleBooleanProperty();
+    private BooleanProperty zoomInButton;
+    private BooleanProperty zoomOutButton;
     private BooleanProperty readingDirectionRightProperty;
     private BooleanProperty isTwoPagesProperty;
     private BooleanProperty enableAll;
@@ -42,6 +43,8 @@ public class ComicReaderViewModel implements ViewModel {
     private IntegerProperty totalPagesProperty;
 
     private DoubleProperty scaleLevelProperty;
+    private DoubleProperty screenWidthProperty;
+    private DoubleProperty screenHeightProperty;
 
     private StringProperty fileNameProperty;
     private StringProperty filePathProperty;
@@ -70,10 +73,12 @@ public class ComicReaderViewModel implements ViewModel {
         enableAll = new SimpleBooleanProperty(false);
         enableNextPage = new SimpleBooleanProperty(false);
 
-        zoomInButton.bind(new SimpleBooleanProperty(true));
-        zoomOutButton.bind(new SimpleBooleanProperty(true));
+        zoomInButton = new SimpleBooleanProperty(true);
+        zoomOutButton = new SimpleBooleanProperty(true);
 
         scaleLevelProperty = new SimpleDoubleProperty(1);
+        screenWidthProperty = new SimpleDoubleProperty(1);
+        screenHeightProperty = new SimpleDoubleProperty(1);
 
         currentPageProperty = new SimpleIntegerProperty(1);
         totalPagesProperty = new SimpleIntegerProperty(1);
@@ -241,6 +246,14 @@ public class ComicReaderViewModel implements ViewModel {
         return scaleLevelProperty;
     }
 
+    DoubleProperty getScreenWidthProperty(){
+        return screenWidthProperty;
+    }
+
+    DoubleProperty getScreenHeightProperty(){
+        return screenHeightProperty;
+    }
+
     IntegerProperty getCurrentPageProperty(){
         return currentPageProperty;
     }
@@ -344,9 +357,13 @@ public class ComicReaderViewModel implements ViewModel {
     private void loadImages () {
         logger.debug("Loading images");
 
+        double maxHeight;
+
         if (isTwoPagesProperty.getValue()) {
             Dimension leftImageDimension = fileService.getCurrentVersoSize();
             Dimension rightImageDimension = fileService.getCurrentRectoSize();
+
+            maxHeight = Math.max(leftImageDimension.height, rightImageDimension.height);
 
             leftImageProperty.set(new Image(fileService.getCurrentVerso(), true));
             rightImageProperty.set(new Image(fileService.getCurrentRecto(), true));
@@ -356,8 +373,15 @@ public class ComicReaderViewModel implements ViewModel {
         } else {
             Dimension imageDimension = fileService.getCurrentPageSize();
 
+            maxHeight = imageDimension.height;
+
             leftImageProperty.set(new Image(fileService.getCurrentPage(), true));
             leftImageDimensionProperty.set(imageDimension);
+        }
+
+        if (scaleLevelProperty.get() == 1) {
+            double test =MathHelper.percentage(maxHeight, getScreenHeightProperty().getValue());
+            scaleLevelProperty.set(test/100);
         }
 
         enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
