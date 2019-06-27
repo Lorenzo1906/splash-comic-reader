@@ -99,7 +99,7 @@
             <children>
                 <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="170.0" prefHeight="25.0" prefWidth="268.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Label fx:id="pageIndicatorLabel" prefWidth="74.0" >
+                        <Label fx:id="pageIndicatorLabel" prefWidth="108.0" >
                             <HBox.margin>
                                 <Insets right="4.0" />
                             </HBox.margin>
