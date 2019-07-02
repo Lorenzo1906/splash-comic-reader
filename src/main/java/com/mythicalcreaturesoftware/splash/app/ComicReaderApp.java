@@ -8,12 +8,10 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 import java.util.ResourceBundle;
 

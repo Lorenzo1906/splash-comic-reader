@@ -78,7 +78,7 @@
         <AnchorPane VBox.vgrow="ALWAYS">
             <children>
                 <StackPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                    <ScrollPane fx:id="scrollPane" VBox.vgrow="ALWAYS" >
+                    <ScrollPane fx:id="scrollPane" VBox.vgrow="ALWAYS" pannable="true" >
                         <StackPane fx:id="mainImageContainer" styleClass="imageView" >
                             <BorderPane fx:id="borderPane" maxWidth="0" maxHeight="0">
                                 <left>
