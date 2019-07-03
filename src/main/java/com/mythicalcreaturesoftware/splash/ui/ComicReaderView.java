@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
@@ -102,26 +103,10 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         initializeDisableBindings();
         initializeUiComponentsBindings();
         initializeImageViewer();
+        initializeListeners();
     }
 
     private void initializeImageViewer () {
-        viewModel.getLeftImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
-            if ( newValue != null) {
-                ComponentHelper.setImageViewSize(leftImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
-            }
-        });
-
-        viewModel.getRightImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                ComponentHelper.setImageViewSize(rightImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
-            }
-        });
-
-        viewModel.getScaleLevelProperty().addListener((observable, oldValue, newValue) -> {
-            ComponentHelper.setImageViewSize(rightImageViewer, viewModel.getRightImageDimensionProperty().get(), newValue.doubleValue());
-            ComponentHelper.setImageViewSize(leftImageViewer, viewModel.getLeftImageDimensionProperty().get(), newValue.doubleValue());
-        });
-
         leftImageViewer.imageProperty().bind(viewModel.getLeftImageProperty());
         rightImageViewer.imageProperty().bind(viewModel.getRightImageProperty());
 
@@ -161,6 +146,32 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         pageSelector.maxProperty().bindBidirectional(viewModel.getTotalPagesProperty());
         pageSelector.valueProperty().bindBidirectional(viewModel.getCurrentPageProperty());
+
+        ObjectBinding<Node> readingDirectionChanged = Bindings.when(viewModel.getReadingDirectionRightProperty().not()).then(IconHelper.createReadingDirectionIconProperty(true)).otherwise(IconHelper.createReadingDirectionIconProperty(false));
+        readingDirection.graphicProperty().bind(readingDirectionChanged);
+
+        ObjectBinding<Node> pageSelectorBinding = Bindings.when(viewModel.getIsTwoPagesProperty().not()).then(IconHelper.createSimplePageIconProperty()).otherwise(IconHelper.createDoublePageIconProperty());
+        pagePerView.graphicProperty().bind(pageSelectorBinding);
+    }
+
+    private void initializeListeners () {
+        viewModel.getLeftImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue != null) {
+                ComponentHelper.setImageViewSize(leftImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
+            }
+        });
+
+        viewModel.getRightImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                ComponentHelper.setImageViewSize(rightImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
+            }
+        });
+
+        viewModel.getScaleLevelProperty().addListener((observable, oldValue, newValue) -> {
+            ComponentHelper.setImageViewSize(rightImageViewer, viewModel.getRightImageDimensionProperty().get(), newValue.doubleValue());
+            ComponentHelper.setImageViewSize(leftImageViewer, viewModel.getLeftImageDimensionProperty().get(), newValue.doubleValue());
+        });
+
         pageSelector.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue && !newValue) {
                 viewModel.getCurrentPageProperty().setValue(pageSelector.getValue());
@@ -168,11 +179,16 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
             }
         });
 
-        ObjectBinding<Node> readingDirectionChanged = Bindings.when(viewModel.getReadingDirectionRightProperty().not()).then(IconHelper.createReadingDirectionIconProperty(true)).otherwise(IconHelper.createReadingDirectionIconProperty(false));
-        readingDirection.graphicProperty().bind(readingDirectionChanged);
+        scrollPane.addEventFilter(ScrollEvent.ANY, event -> {
+            event.consume();
 
-        ObjectBinding<Node> pageSelectorBinding = Bindings.when(viewModel.getIsTwoPagesProperty().not()).then(IconHelper.createSimplePageIconProperty()).otherwise(IconHelper.createDoublePageIconProperty());
-        pagePerView.graphicProperty().bind(pageSelectorBinding);
+            if (event.getDeltaY() > 0) {
+                viewModel.getZoomInCommand().execute();
+            }
+            if (event.getDeltaY() < 0) {
+                viewModel.getZoomOutCommand().execute();
+            }
+        });
     }
 
     @FXML
