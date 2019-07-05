@@ -54,4 +54,20 @@ public class IconHelper {
 
         return new SimpleObjectProperty<>(icon);
     }
+
+    public static ObjectProperty<Node> createExpandScaleIconProperty () {
+        logger.debug("Creating default expand scale icon property");
+
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.ARROW_EXPAND_ALL, "18px");
+
+        return new SimpleObjectProperty<>(icon);
+    }
+
+    public static ObjectProperty<Node> createCollapseScaleIconProperty () {
+        logger.debug("Creating default collapse scale icon property");
+
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.ARROW_COMPRESS_ALL, "18px");
+
+        return new SimpleObjectProperty<>(icon);
+    }
 }

@@ -31,6 +31,7 @@ public class ComicReaderViewModel implements ViewModel {
     private Command nextPageCommand;
     private Command loadSliderPageCommand;
     private Command updatePagesPerViewPageCommand;
+    private Command applyDefaultScaleCommand;
 
     private BooleanProperty zoomInButton;
     private BooleanProperty zoomOutButton;
@@ -45,6 +46,7 @@ public class ComicReaderViewModel implements ViewModel {
     private DoubleProperty scaleLevelProperty;
     private DoubleProperty screenWidthProperty;
     private DoubleProperty screenHeightProperty;
+    private DoubleProperty currentPageDefaultScaleLevelProperty;
 
     private StringProperty fileNameProperty;
     private StringProperty filePathProperty;
@@ -79,6 +81,7 @@ public class ComicReaderViewModel implements ViewModel {
         scaleLevelProperty = new SimpleDoubleProperty(1);
         screenWidthProperty = new SimpleDoubleProperty(1);
         screenHeightProperty = new SimpleDoubleProperty(1);
+        currentPageDefaultScaleLevelProperty = new SimpleDoubleProperty(1);
 
         currentPageProperty = new SimpleIntegerProperty(1);
         totalPagesProperty = new SimpleIntegerProperty(1);
@@ -116,6 +119,13 @@ public class ComicReaderViewModel implements ViewModel {
                 zoomOut();
             }
         }, zoomOutButton, false);
+
+        applyDefaultScaleCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                applyDefaultScale();
+            }
+        }, false);
 
         Command pagePerViewCommand = new DelegateCommand(() -> new Action() {
             @Override
@@ -254,6 +264,10 @@ public class ComicReaderViewModel implements ViewModel {
         return screenHeightProperty;
     }
 
+    DoubleProperty getCurrentPageDefaultScaleLevelProperty(){
+        return currentPageDefaultScaleLevelProperty;
+    }
+
     IntegerProperty getCurrentPageProperty(){
         return currentPageProperty;
     }
@@ -284,6 +298,10 @@ public class ComicReaderViewModel implements ViewModel {
 
     Command getZoomOutCommand() {
         return zoomOutCommand;
+    }
+
+    Command getApplyDefaultScaleCommand() {
+        return applyDefaultScaleCommand;
     }
 
     Command getOpenFileCompleteCommand() {
@@ -347,6 +365,12 @@ public class ComicReaderViewModel implements ViewModel {
         }
     }
 
+    private void applyDefaultScale() {
+        logger.debug("Applying default scale");
+
+        scaleLevelProperty.set(currentPageDefaultScaleLevelProperty.getValue());
+    }
+
     private void openFile() {
         logger.debug("Opening file");
 
@@ -379,9 +403,10 @@ public class ComicReaderViewModel implements ViewModel {
             leftImageDimensionProperty.set(imageDimension);
         }
 
+        double defaultScaleLevel = (MathHelper.percentage(maxHeight, getScreenHeightProperty().getValue()))/100;
+        currentPageDefaultScaleLevelProperty.set(defaultScaleLevel);
         if (scaleLevelProperty.get() == 1) {
-            double test =MathHelper.percentage(maxHeight, getScreenHeightProperty().getValue());
-            scaleLevelProperty.set(test/100);
+            scaleLevelProperty.set(defaultScaleLevel);
         }
 
         enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));

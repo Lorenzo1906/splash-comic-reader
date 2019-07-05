@@ -90,6 +90,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     @FXML
     private Button closeButton;
 
+    @FXML
+    private Button defaultScale;
+
     @InjectViewModel
     private ComicReaderViewModel viewModel;
 
@@ -124,6 +127,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         readingDirection.disableProperty().bind(viewModel.getEnableAll().not());
         pagePerView.disableProperty().bind(viewModel.getEnableAll().not());
         fullscreen.disableProperty().bind(viewModel.getEnableAll().not());
+        defaultScale.disableProperty().bind(viewModel.getEnableAll().not());
 
         previousPage.disableProperty().bind(viewModel.getPreviousPageCommand().executableProperty().not());
         nextPage.disableProperty().bind(viewModel.getNextPageCommand().executableProperty().not());
@@ -152,6 +156,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         ObjectBinding<Node> pageSelectorBinding = Bindings.when(viewModel.getIsTwoPagesProperty().not()).then(IconHelper.createSimplePageIconProperty()).otherwise(IconHelper.createDoublePageIconProperty());
         pagePerView.graphicProperty().bind(pageSelectorBinding);
+
+        ObjectBinding<Node> defaultScaleBinding = Bindings.when(viewModel.getCurrentPageDefaultScaleLevelProperty().greaterThanOrEqualTo(viewModel.getScaleLevelProperty())).then(IconHelper.createExpandScaleIconProperty()).otherwise(IconHelper.createCollapseScaleIconProperty());
+        defaultScale.graphicProperty().bind(defaultScaleBinding);
     }
 
     private void initializeListeners () {
@@ -243,6 +250,11 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     @FXML
     public void zoomOutAction() {
         viewModel.getZoomOutCommand().execute();
+    }
+
+    @FXML
+    public void setDefaultScale() {
+        viewModel.getApplyDefaultScaleCommand().execute();
     }
 
     @FXML
