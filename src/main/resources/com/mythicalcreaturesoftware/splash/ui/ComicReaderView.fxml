@@ -8,13 +8,13 @@
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
 <?import javafx.scene.image.ImageView?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
+<VBox fx:id="wrapper" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
     <children>
         <AnchorPane prefHeight="23.0" prefWidth="790.0">
             <children>
                 <HBox alignment="CENTER_LEFT" layoutY="-29.0" prefHeight="25.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Button fx:id="headerButton" mnemonicParsing="false" onMouseClicked="#openFileAction" />
+                        <Button fx:id="headerButton" onMouseClicked="#openFileAction" />
                     </children>
                 </HBox>
                 <HBox alignment="TOP_RIGHT" layoutX="576.0" layoutY="13.0" prefHeight="25.0" prefWidth="69.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
@@ -42,12 +42,12 @@
             <children>
                 <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="110.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
                     <children>
-                        <Button fx:id="previousPage" mnemonicParsing="false" onMouseClicked="#previousPageAction" >
+                        <Button fx:id="previousPage" onMouseClicked="#previousPageAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="CHEVRON_LEFT" size="18px" />
                             </graphic>
                         </Button>
-                        <Button fx:id="nextPage" mnemonicParsing="false" onMouseClicked="#nextPageAction" >
+                        <Button fx:id="nextPage" onMouseClicked="#nextPageAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="CHEVRON_RIGHT" size="18px" />
                             </graphic>

@@ -17,9 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ import java.util.ResourceBundle;
 public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initializable {
 
     private static Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
+
+    @FXML
+    private VBox wrapper;
 
     @FXML
     private StackPane mainImageContainer;
@@ -107,6 +111,10 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         initializeUiComponentsBindings();
         initializeImageViewer();
         initializeListeners();
+        initializeMnemonics();
+
+        wrapper.setFocusTraversable(true);
+        wrapper.requestFocus();
     }
 
     private void initializeImageViewer () {
@@ -198,6 +206,51 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         });
     }
 
+    public void initializeMnemonics () {
+        wrapper.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            KeyCombination headerKeyCombination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+            KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.KP_LEFT, KeyCombination.CONTROL_ANY);
+            KeyCombination nextPageKeyCombination = new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_ANY);
+            KeyCombination readingDirectionKeyCombination = new KeyCodeCombination(KeyCode.M, KeyCombination.CONTROL_ANY);
+            KeyCombination pagePerViewKeyCombination = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_ANY);
+            KeyCombination zoomOutKeyCombination = new KeyCodeCombination(KeyCode.SUBTRACT, KeyCombination.CONTROL_ANY);
+            KeyCombination zoomInKeyCombination = new KeyCodeCombination(KeyCode.ADD, KeyCombination.CONTROL_ANY);
+            KeyCombination defaultScaleKeyCombination = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_ANY);
+            KeyCombination fullscreenKeyCombination = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_ANY);
+
+            newValue.setOnKeyPressed(event -> {
+                if (headerKeyCombination.match(event)) {
+                    openFileAction();
+                }
+                if (previousPageKeyCombination.match(event)) {
+                    previousPageAction();
+                }
+                if (nextPageKeyCombination.match(event)) {
+                    nextPageAction();
+                }
+                if (readingDirectionKeyCombination.match(event)) {
+                    readingDirectionAction();
+                }
+                if (pagePerViewKeyCombination.match(event)) {
+                    pagePerViewAction();
+                }
+                if (zoomOutKeyCombination.match(event)) {
+                    zoomOutAction();
+                }
+                if (zoomInKeyCombination.match(event)) {
+                    zoomInAction();
+                }
+                if (defaultScaleKeyCombination.match(event)) {
+                    setDefaultScale();
+                }
+                if (fullscreenKeyCombination.match(event)) {
+                    fullscreenAction();
+                }
+            });
+
+        });
+    }
+
     @FXML
     public void openFileAction() {
         FileChooser chooser = new FileChooser();
@@ -277,6 +330,8 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         } else {
             ScreenHelper.maximize(stage);
         }
+
+        System.out.println(maximizeButton.getScene().getMnemonics());
     }
 
     @FXML
