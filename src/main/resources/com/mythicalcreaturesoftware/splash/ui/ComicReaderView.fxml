@@ -14,7 +14,11 @@
             <children>
                 <HBox alignment="CENTER_LEFT" layoutY="-29.0" prefHeight="25.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Button fx:id="headerButton" onMouseClicked="#openFileAction" />
+                        <Button fx:id="headerButton" onMouseClicked="#openFileAction" >
+                            <tooltip>
+                                <Tooltip text="%header.tooltip.text" />
+                            </tooltip>
+                        </Button>
                     </children>
                 </HBox>
                 <HBox alignment="TOP_RIGHT" layoutX="576.0" layoutY="13.0" prefHeight="25.0" prefWidth="69.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
@@ -46,32 +50,55 @@
                             <graphic>
                                 <MaterialDesignIconView glyphName="CHEVRON_LEFT" size="18px" />
                             </graphic>
+                            <tooltip>
+                                <Tooltip text="%previousPage.tooltip.text" />
+                            </tooltip>
                         </Button>
                         <Button fx:id="nextPage" onMouseClicked="#nextPageAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="CHEVRON_RIGHT" size="18px" />
                             </graphic>
+                            <tooltip>
+                                <Tooltip text="%nextPage.tooltip.text" />
+                            </tooltip>
                         </Button>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <Button fx:id="readingDirection" mnemonicParsing="false" onMouseClicked="#readingDirectionAction" />
+                        <Button fx:id="readingDirection" mnemonicParsing="false" onMouseClicked="#readingDirectionAction" >
+                            <tooltip>
+                                <Tooltip text="%readingDirection.tooltip.text" />
+                            </tooltip>
+                        </Button>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" layoutX="634.0" layoutY="39.0" prefHeight="25.0" prefWidth="208.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                     <children>
-                        <Button fx:id="pagePerView" mnemonicParsing="false" onMouseClicked="#pagePerViewAction" />
+                        <Button fx:id="pagePerView" mnemonicParsing="false" onMouseClicked="#pagePerViewAction" >
+                            <tooltip>
+                                <Tooltip text="%pagePerView.tooltip.text" />
+                            </tooltip>
+                        </Button>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <Button fx:id="zoomIn" mnemonicParsing="false" onMouseClicked="#zoomInAction" >
+                        <Button fx:id="zoomIn" onMouseClicked="#zoomInAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="MAGNIFY_PLUS" size="18px" />
                             </graphic>
+                            <tooltip>
+                                <Tooltip text="%zoomIn.tooltip.text" />
+                            </tooltip>
                         </Button>
                         <Label fx:id="zoomPercentageLabel" prefWidth="42.0" />
-                        <Button fx:id="zoomOut" mnemonicParsing="false" onMouseClicked="#zoomOutAction" >
+                        <Button fx:id="zoomOut" onMouseClicked="#zoomOutAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="MAGNIFY_MINUS" size="18px" />
                             </graphic>
+                            <tooltip>
+                                <Tooltip text="%zoomOut.tooltip.text" />
+                            </tooltip>
                         </Button>
-                        <Button fx:id="defaultScale" mnemonicParsing="false" onMouseClicked="#setDefaultScale" >
+                        <Button fx:id="defaultScale" onMouseClicked="#setDefaultScale" >
+                            <tooltip>
+                                <Tooltip text="%defaultScale.tooltip.text" />
+                            </tooltip>
                         </Button>
                     </children>
                 </HBox>
@@ -111,10 +138,13 @@
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" layoutX="749.0" layoutY="161.0" prefHeight="25.0" prefWidth="30.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Button fx:id="fullscreen" onMouseClicked="#fullscreenAction" mnemonicParsing="false" >
+                        <Button fx:id="fullscreen" onMouseClicked="#fullscreenAction" >
                             <graphic>
                                 <MaterialDesignIconView glyphName="FULLSCREEN" size="18px" />
                             </graphic>
+                            <tooltip>
+                                <Tooltip text="%fullscreen.tooltip.text" />
+                            </tooltip>
                         </Button>
                     </children>
                 </HBox>

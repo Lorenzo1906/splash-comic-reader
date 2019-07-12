@@ -209,7 +209,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     public void initializeMnemonics () {
         wrapper.sceneProperty().addListener((observable, oldValue, newValue) -> {
             KeyCombination headerKeyCombination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-            KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.KP_LEFT, KeyCombination.CONTROL_ANY);
+            KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_ANY);
             KeyCombination nextPageKeyCombination = new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_ANY);
             KeyCombination readingDirectionKeyCombination = new KeyCodeCombination(KeyCode.M, KeyCombination.CONTROL_ANY);
             KeyCombination pagePerViewKeyCombination = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_ANY);
