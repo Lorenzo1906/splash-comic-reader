@@ -7,6 +7,7 @@ public interface FileService {
     String getCurrentRecto();
     String getCurrentVerso();
     String getCurrentPage();
+    String getCurrentPageByPageNumber(Integer pageNumber);
     Dimension getCurrentRectoSize();
     Dimension getCurrentVersoSize();
     Dimension getCurrentPageSize();

@@ -61,16 +61,25 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getCurrentPage() {
+        return getPageByPageNumber(fileReader.getIndex());
+    }
+
+    @Override
+    public String getCurrentPageByPageNumber(Integer pageNumber) {
+        return getPageByPageNumber(pageNumber);
+    }
+
+    private String getPageByPageNumber(Integer pageNumber) {
         String result = DefaultValues.DEFAULT_IMAGE_PATH;
 
         if (fileReader != null) {
-            Spread spread = fileReader.getPath(fileReader.getIndex());
+            Spread spread = fileReader.getPath(pageNumber);
 
-            if (spread != null && spread.getVersoPageNumber() != null && spread.getVersoPageNumber().equals(fileReader.getIndex())) {
+            if (spread != null && spread.getVersoPageNumber() != null && spread.getVersoPageNumber().equals(pageNumber)) {
                 result = spread.getVerso();
             }
 
-            if (spread != null && spread.getRectoPageNumber() != null && spread.getRectoPageNumber().equals(fileReader.getIndex())) {
+            if (spread != null && spread.getRectoPageNumber() != null && spread.getRectoPageNumber().equals(pageNumber)) {
                 result = spread.getRecto();
             }
         }

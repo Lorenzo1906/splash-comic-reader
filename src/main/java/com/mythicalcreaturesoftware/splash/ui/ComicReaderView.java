@@ -1,5 +1,6 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
@@ -9,13 +10,12 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.*;
+import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
@@ -23,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,9 +205,29 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
                 viewModel.getZoomOutCommand().execute();
             }
         });
+
+        pageSelector.maxProperty().addListener((observable, oldValue, newValue) -> {
+            PreviewPopOver popOver = new PreviewPopOver(pageSelector.getScene().getWidth(), pageSelector.getScene().getHeight());
+            popOver.getImageView().imageProperty().bind(viewModel.getPreviewImageProperty());
+
+            if (newValue.doubleValue() > 0) {
+                pageSelector.valueChangingProperty().addListener((observable1, oldValue1, newValue1) -> {
+                    if (newValue1) {
+                        popOver.show(pageIndicatorLabel);
+                    } else {
+                        popOver.hide();
+                    }
+                });
+
+                pageSelector.valueProperty().addListener((observable1, oldValue1, newValue1) -> {
+                    viewModel.getCurrentPagePreviewProperty().setValue(newValue1);
+                    viewModel.getUpdatePreviewImageCommand().execute();
+                });
+            }
+        });
     }
 
-    public void initializeMnemonics () {
+    private void initializeMnemonics () {
         wrapper.sceneProperty().addListener((observable, oldValue, newValue) -> {
             KeyCombination headerKeyCombination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
             KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_ANY);
