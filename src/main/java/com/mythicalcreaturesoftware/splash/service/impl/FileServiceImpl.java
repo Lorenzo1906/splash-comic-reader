@@ -203,7 +203,7 @@ public class FileServiceImpl implements FileService {
             Spread currentSpread = fileReader.getCurrentPath();
             Spread nextSpread = fileReader.getPath(fileReader.getIndex() + 1);
 
-            if (currentSpread == nextSpread && fileReader.getIndex() + 2 <= fileReader.getTotalPages()) {
+            if (currentSpread.equals(nextSpread) && fileReader.getIndex() + 2 <= fileReader.getTotalPages()) {
                 fileReader.setIndex(fileReader.getIndex() + 2);
             } else if (fileReader.getIndex() + 1 <= fileReader.getTotalPages()) {
                 fileReader.setIndex(fileReader.getIndex() + 1);
@@ -221,7 +221,7 @@ public class FileServiceImpl implements FileService {
             Spread currentSpread = fileReader.getCurrentPath();
             Spread nextSpread = fileReader.getPath(fileReader.getIndex() - 1);
 
-            if (currentSpread == nextSpread) {
+            if (currentSpread.equals(nextSpread)) {
                 fileReader.setIndex(fileReader.getIndex() - 2);
             } else {
                 fileReader.setIndex(fileReader.getIndex() - 1);
@@ -246,6 +246,7 @@ public class FileServiceImpl implements FileService {
             case "cbz":
                 type = FileReaderType.CBZ;
                 break;
+            default:
         }
 
         return type;

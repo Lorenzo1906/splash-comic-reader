@@ -1,7 +1,7 @@
 package com.mythicalcreaturesoftware.splash.app;
 
 import com.mythicalcreaturesoftware.splash.ui.ComicReaderView;
-import com.mythicalcreaturesoftware.splash.ui.ComicReaderViewModel;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ResizeHelper;
 import com.mythicalcreaturesoftware.splash.utils.ScreenHelper;
 import de.saxsys.mvvmfx.FluentViewLoader;

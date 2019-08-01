@@ -1,7 +1,6 @@
 package com.mythicalcreaturesoftware.splash.utils;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 

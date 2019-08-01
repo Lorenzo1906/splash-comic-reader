@@ -19,9 +19,9 @@ public abstract class FileReader {
     protected int totalPages;
     private Integer index;
 
-    protected abstract void construct();
-
     private FileReaderType type = null;
+
+    protected abstract void construct();
 
     public FileReader (FileReaderType type, String filePath) {
         this.type = type;

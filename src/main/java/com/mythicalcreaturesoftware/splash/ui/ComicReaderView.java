@@ -1,6 +1,7 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
@@ -10,12 +11,10 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.*;
-import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
@@ -23,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

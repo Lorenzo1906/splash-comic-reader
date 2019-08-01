@@ -1,4 +1,4 @@
-package com.mythicalcreaturesoftware.splash.ui;
+package com.mythicalcreaturesoftware.splash.ui.viewmodel;
 
 import com.mythicalcreaturesoftware.splash.service.FileService;
 import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
@@ -228,119 +228,119 @@ public class ComicReaderViewModel implements ViewModel {
         return enablePreviousPageButton;
     }
 
-    StringProperty getFileNameProperty(){
+    public StringProperty getFileNameProperty(){
         return fileNameProperty;
     }
 
-    StringProperty getFilePathProperty(){
+    public StringProperty getFilePathProperty(){
         return filePathProperty;
     }
 
-    ObjectProperty<Image> getLeftImageProperty(){
+    public ObjectProperty<Image> getLeftImageProperty(){
         return leftImageProperty;
     }
 
-    ObjectProperty<Image> getRightImageProperty(){
+    public ObjectProperty<Image> getRightImageProperty(){
         return rightImageProperty;
     }
 
-    ObjectProperty<Image> getPreviewImageProperty() {
+    public ObjectProperty<Image> getPreviewImageProperty() {
         return previewImageProperty;
     }
 
-    ObjectProperty<Dimension> getLeftImageDimensionProperty(){
+    public ObjectProperty<Dimension> getLeftImageDimensionProperty(){
         return leftImageDimensionProperty;
     }
 
-    ObjectProperty<Dimension> getRightImageDimensionProperty(){
+    public ObjectProperty<Dimension> getRightImageDimensionProperty(){
         return rightImageDimensionProperty;
     }
 
-    BooleanProperty getIsTwoPagesProperty(){
+    public BooleanProperty getIsTwoPagesProperty(){
         return isTwoPagesProperty;
     }
 
-    BooleanProperty getReadingDirectionRightProperty(){
+    public BooleanProperty getReadingDirectionRightProperty(){
         return readingDirectionRightProperty;
     }
 
-    BooleanProperty getEnableAll() {
+    public BooleanProperty getEnableAll() {
         return enableAll;
     }
 
-    DoubleProperty getScaleLevelProperty(){
+    public DoubleProperty getScaleLevelProperty(){
         return scaleLevelProperty;
     }
 
-    DoubleProperty getScreenWidthProperty(){
+    public DoubleProperty getScreenWidthProperty(){
         return screenWidthProperty;
     }
 
-    DoubleProperty getScreenHeightProperty(){
+    public DoubleProperty getScreenHeightProperty(){
         return screenHeightProperty;
     }
 
-    DoubleProperty getCurrentPageDefaultScaleLevelProperty(){
+    public DoubleProperty getCurrentPageDefaultScaleLevelProperty(){
         return currentPageDefaultScaleLevelProperty;
     }
 
-    IntegerProperty getCurrentPageProperty(){
+    public IntegerProperty getCurrentPageProperty(){
         return currentPageProperty;
     }
 
-    IntegerProperty getCurrentPagePreviewProperty(){
+    public IntegerProperty getCurrentPagePreviewProperty(){
         return currentPagePreviewProperty;
     }
 
-    IntegerProperty getTotalPagesProperty(){
+    public IntegerProperty getTotalPagesProperty(){
         return totalPagesProperty;
     }
 
-    Command getLoadPreviousPageCommand() {
+    public Command getLoadPreviousPageCommand() {
         return loadPreviousPageCommand;
     }
 
-    Command getLoadNextPageCommand() {
+    public Command getLoadNextPageCommand() {
         return loadNextPageCommand;
     }
 
-    Command getReadingDirectionCommand() {
+    public Command getReadingDirectionCommand() {
         return readingDirectionCommand;
     }
 
-    Command getUpdatePagesPerViewPageCommand() {
+    public Command getUpdatePagesPerViewPageCommand() {
         return updatePagesPerViewPageCommand;
     }
 
-    Command getZoomInCommand() {
+    public Command getZoomInCommand() {
         return zoomInCommand;
     }
 
-    Command getZoomOutCommand() {
+    public Command getZoomOutCommand() {
         return zoomOutCommand;
     }
 
-    Command getApplyDefaultScaleCommand() {
+    public Command getApplyDefaultScaleCommand() {
         return applyDefaultScaleCommand;
     }
 
-    Command getOpenFileCompleteCommand() {
+    public Command getOpenFileCompleteCommand() {
         return openFileCompleteCommand;
     }
 
-    Command getPreviousPageCommand() {
+    public Command getPreviousPageCommand() {
         return previousPageCommand;
     }
 
-    Command getNextPageCommand() {
+    public Command getNextPageCommand() {
         return nextPageCommand;
     }
 
-    Command getLoadSliderPageCommand() {
+    public Command getLoadSliderPageCommand() {
         return loadSliderPageCommand;
     }
 
-    Command getUpdatePreviewImageCommand() {
+    public Command getUpdatePreviewImageCommand() {
         return updatePreviewImageCommand;
     }
 
