@@ -68,9 +68,9 @@ public abstract class FileReader {
             //The first one is always alone on the spread
             if (isFirst || shouldBeAlone(dimensions.get(index))) {
                 spread = new Spread();
-                spread.setRecto(pages.get(index));
-                spread.setRectoPageNumber(index);
-                spread.setRectoSize(dimensions.get(index));
+                spread.setVerso(pages.get(index));
+                spread.setVersoPageNumber(index);
+                spread.setVersoSize(dimensions.get(index));
 
                 spreads.put(index, spread);
 

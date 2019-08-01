@@ -104,9 +104,13 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     @InjectResourceBundle
     private ResourceBundle resourceBundle;
 
+    private PreviewPopOver popOver;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("Initializing comic reader view");
+
+        popOver = new PreviewPopOver();
 
         initializeDisableBindings();
         initializeUiComponentsBindings();
@@ -168,6 +172,10 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         ObjectBinding<Node> defaultScaleBinding = Bindings.when(viewModel.getCurrentPageDefaultScaleLevelProperty().greaterThanOrEqualTo(viewModel.getScaleLevelProperty())).then(IconHelper.createExpandScaleIconProperty()).otherwise(IconHelper.createCollapseScaleIconProperty());
         defaultScale.graphicProperty().bind(defaultScaleBinding);
+
+        popOver.getScaleLevelProperty().bind(viewModel.getScaleLevelProperty());
+        popOver.getSizeProperty().bind(viewModel.getLeftImageDimensionProperty());
+        popOver.getImageView().imageProperty().bind(viewModel.getPreviewImageProperty());
     }
 
     private void initializeListeners () {
@@ -207,9 +215,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         });
 
         pageSelector.maxProperty().addListener((observable, oldValue, newValue) -> {
-            PreviewPopOver popOver = new PreviewPopOver(pageSelector.getScene().getWidth(), pageSelector.getScene().getHeight());
-            popOver.getImageView().imageProperty().bind(viewModel.getPreviewImageProperty());
-
             if (newValue.doubleValue() > 0) {
                 pageSelector.valueChangingProperty().addListener((observable1, oldValue1, newValue1) -> {
                     if (newValue1) {

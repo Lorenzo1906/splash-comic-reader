@@ -413,24 +413,24 @@ public class ComicReaderViewModel implements ViewModel {
 
             maxHeight = Math.max(leftImageDimension.height, rightImageDimension.height);
 
-            leftImageProperty.set(new Image(fileService.getCurrentVerso(), true));
-            rightImageProperty.set(new Image(fileService.getCurrentRecto(), true));
+            leftImageProperty.setValue(new Image(fileService.getCurrentVerso(), true));
+            rightImageProperty.setValue(new Image(fileService.getCurrentRecto(), true));
 
-            leftImageDimensionProperty.set(leftImageDimension);
-            rightImageDimensionProperty.set(rightImageDimension);
+            leftImageDimensionProperty.setValue(leftImageDimension);
+            rightImageDimensionProperty.setValue(rightImageDimension);
         } else {
             Dimension imageDimension = fileService.getCurrentPageSize();
 
             maxHeight = imageDimension.height;
 
-            leftImageProperty.set(new Image(fileService.getCurrentPage(), true));
-            leftImageDimensionProperty.set(imageDimension);
+            leftImageProperty.setValue(new Image(fileService.getCurrentPage(), true));
+            leftImageDimensionProperty.setValue(imageDimension);
         }
 
         double defaultScaleLevel = (MathHelper.percentageOf(maxHeight, getScreenHeightProperty().getValue()))/100;
-        currentPageDefaultScaleLevelProperty.set(defaultScaleLevel);
+        currentPageDefaultScaleLevelProperty.setValue(defaultScaleLevel);
         if (scaleLevelProperty.get() == 1) {
-            scaleLevelProperty.set(defaultScaleLevel);
+            scaleLevelProperty.setValue(defaultScaleLevel);
         }
 
         enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
