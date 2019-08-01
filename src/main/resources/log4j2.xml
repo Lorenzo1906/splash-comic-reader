@@ -15,7 +15,7 @@
     </Appenders>
     <Loggers>
         <Logger name="com.mythicalcreaturesoftware" />
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="FILE" />
         </Root>
