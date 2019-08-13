@@ -2,7 +2,6 @@ package com.mythicalcreaturesoftware.splash.filereader.impl;
 
 import com.mythicalcreaturesoftware.splash.filereader.FileReader;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
-import com.mythicalcreaturesoftware.splash.model.Spread;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -22,7 +20,6 @@ public class CbzFileReader extends FileReader {
 
     public CbzFileReader(String path) {
         super(FileReaderType.CBZ, path);
-        construct();
     }
 
     @Override
@@ -32,11 +29,9 @@ public class CbzFileReader extends FileReader {
 
         ZipInputStream zipIs = null;
         try {
-            Map<Integer, Spread> spreads;
-
-            Path mainDirectory = Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
-            mainDirectory.toFile().deleteOnExit();
-            logger.info("Temp folder created at " + mainDirectory.toUri());
+            tempFolderPath =  Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
+            tempFolderPath.toFile().deleteOnExit();
+            logger.info("Temp folder created at " + tempFolderPath.toUri());
 
             try (FileInputStream fis = new FileInputStream(filePath);
                 BufferedInputStream bis = new BufferedInputStream(fis);
@@ -44,15 +39,15 @@ public class CbzFileReader extends FileReader {
 
                 int pageIndex = 1;
                 ZipEntry entry;
-                Map<Integer, String> pages = new HashMap<>();
-                Map<Integer, Dimension> dimensions = new HashMap<>();
+                pages = new HashMap<>();
+                dimensions = new HashMap<>();
 
                 while ((entry = stream.getNextEntry()) != null) {
                     if (entry.isDirectory()) {
-                        Files.createDirectory(mainDirectory.resolve(entry.getName()));
+                        Files.createDirectory(tempFolderPath.resolve(entry.getName()));
                     } else {
 
-                        Path filePath = processFileEntry(mainDirectory, entry, stream);
+                        Path filePath = processFileEntry(tempFolderPath, entry, stream);
                         String url = filePath.toUri().toURL().toString();
                         Dimension dimension = getPageSize(filePath);
 
@@ -63,11 +58,8 @@ public class CbzFileReader extends FileReader {
                         pageIndex++;
                     }
                 }
-
-                spreads = groupPages(pages, dimensions);
             }
 
-            fileEntries = spreads;
         } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {

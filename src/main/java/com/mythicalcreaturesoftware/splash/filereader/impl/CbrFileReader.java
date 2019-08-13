@@ -2,7 +2,6 @@ package com.mythicalcreaturesoftware.splash.filereader.impl;
 
 import com.mythicalcreaturesoftware.splash.filereader.FileReader;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
-import com.mythicalcreaturesoftware.splash.model.Spread;
 import de.innosystec.unrar.Archive;
 import de.innosystec.unrar.exception.RarException;
 import de.innosystec.unrar.rarfile.FileHeader;
@@ -18,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CbrFileReader extends FileReader {
 
@@ -26,7 +24,6 @@ public class CbrFileReader extends FileReader {
 
     public CbrFileReader(String path) {
         super(FileReaderType.CBR, path);
-        construct();
     }
 
     @Override
@@ -35,24 +32,22 @@ public class CbrFileReader extends FileReader {
         logger.info("Constructing cbr file");
 
         try {
-            Map<Integer, Spread> spreads;
-
-            Path mainDirectory = Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
-            mainDirectory.toFile().deleteOnExit();
-            logger.info("Temp folder created at " + mainDirectory.toUri());
+            tempFolderPath = Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
+            tempFolderPath.toFile().deleteOnExit();
+            logger.info("Temp folder created at " + tempFolderPath.toUri());
 
             File local = new File(filePath);
             Archive archive = new Archive(local);
             List<FileHeader> list = archive.getFileHeaders();
 
             int pageIndex = 1;
-            Map<Integer, String> pages = new HashMap<>();
-            Map<Integer, Dimension> dimensions = new HashMap<>();
+            pages = new HashMap<>();
+            dimensions = new HashMap<>();
 
             for (FileHeader header : list) {
 
                 if (!header.isDirectory()) {
-                    Path filePath = processFileEntry(mainDirectory, header);
+                    Path filePath = processFileEntry(tempFolderPath, header);
                     archive.extractFile(header, new FileOutputStream(filePath.toFile()));
 
                     String url = filePath.toUri().toURL().toString();
@@ -65,9 +60,6 @@ public class CbrFileReader extends FileReader {
                     pageIndex++;
                 }
             }
-
-            spreads = groupPages(pages, dimensions);
-            fileEntries = spreads;
         } catch (RarException | IOException e) {
             logger.error(e.getMessage());
         }
@@ -78,7 +70,9 @@ public class CbrFileReader extends FileReader {
     }
 
     private Path processFileEntry (Path directory, FileHeader entry) {
-        Path filePath = directory.resolve(entry.getFileNameString());
+        String filename = FilenameUtils.getBaseName(entry.getFileNameString()) + "." + FilenameUtils.getExtension(entry.getFileNameString());
+
+        Path filePath = directory.resolve(filename);
         filePath.toFile().deleteOnExit();
 
         return filePath;
