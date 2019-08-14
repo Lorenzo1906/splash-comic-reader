@@ -19,11 +19,11 @@ public class ImageHelper {
      * @throws IOException IOException
      */
     public static void resize(String inputImagePath, String outputImagePath, int scaledWidth, int scaledHeight) throws IOException {
-        inputImagePath = URLDecoder.decode(inputImagePath, StandardCharsets.UTF_8.toString());
-        outputImagePath = URLDecoder.decode(outputImagePath, StandardCharsets.UTF_8.toString());
+        String cleanedInputImagePath = URLDecoder.decode(inputImagePath, StandardCharsets.UTF_8.toString());
+        String cleanedOutputImagePath = URLDecoder.decode(outputImagePath, StandardCharsets.UTF_8.toString());
 
         // reads input image
-        File inputFile = new File(cleanPath(inputImagePath));
+        File inputFile = new File(cleanPath(cleanedInputImagePath));
         BufferedImage inputImage = ImageIO.read(inputFile);
 
         // creates output image
@@ -35,10 +35,10 @@ public class ImageHelper {
         g2d.dispose();
 
         // extracts extension of output file
-        String formatName = outputImagePath.substring(outputImagePath.lastIndexOf(".") + 1);
+        String formatName = cleanedOutputImagePath.substring(cleanedOutputImagePath.lastIndexOf(".") + 1);
 
         // writes to output file
-        File outputFile = new File(cleanPath(outputImagePath));
+        File outputFile = new File(cleanPath(cleanedOutputImagePath));
         if (!outputFile.exists()) {
             outputFile.createNewFile();
         }
@@ -61,17 +61,17 @@ public class ImageHelper {
             return;
         }
 
-        inputImagePath = URLDecoder.decode(inputImagePath, StandardCharsets.UTF_8.toString());
-        outputImagePath = URLDecoder.decode(outputImagePath, StandardCharsets.UTF_8.toString());
+        String cleanedInputImagePath = URLDecoder.decode(inputImagePath, StandardCharsets.UTF_8.toString());
+        String cleanedOutputImagePath = URLDecoder.decode(outputImagePath, StandardCharsets.UTF_8.toString());
 
-        File file = new File(cleanPath(inputImagePath));
+        File file = new File(cleanPath(cleanedInputImagePath));
 
         BufferedImage inputImage = ImageIO.read(file);
 
         int scaledWidth = (int) MathHelper.percentageValue(percent, inputImage.getWidth());
         int scaledHeight = (int) MathHelper.percentageValue(percent, inputImage.getHeight());
 
-        resize(inputImagePath, outputImagePath, scaledWidth, scaledHeight);
+        resize(cleanedInputImagePath, cleanedOutputImagePath, scaledWidth, scaledHeight);
     }
 
     /**
