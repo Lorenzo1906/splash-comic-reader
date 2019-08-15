@@ -110,17 +110,17 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         popOver = new PreviewPopOver();
 
-        initializeDisableBindings();
-        initializeUiComponentsBindings();
-        initializeImageViewer();
-        initializeListeners();
-        initializeMnemonics();
+        initDisableBindings();
+        initUiComponentsBindings();
+        initImageViewer();
+        initListeners();
+        initMnemonics();
 
         wrapper.setFocusTraversable(true);
         wrapper.requestFocus();
     }
 
-    private void initializeImageViewer () {
+    private void initImageViewer() {
         leftImageViewer.imageProperty().bind(viewModel.getLeftImageProperty());
         rightImageViewer.imageProperty().bind(viewModel.getRightImageProperty());
 
@@ -133,7 +133,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         mainImageContainer.minHeightProperty().bind(Bindings.createDoubleBinding(() -> scrollPane.getViewportBounds().getHeight(), scrollPane.viewportBoundsProperty()));
     }
 
-    private void initializeDisableBindings () {
+    private void initDisableBindings() {
         nextPage.disableProperty().bind(viewModel.getEnableAll().not());
         readingDirection.disableProperty().bind(viewModel.getEnableAll().not());
         pagePerView.disableProperty().bind(viewModel.getEnableAll().not());
@@ -150,7 +150,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         zoomOut.disableProperty().bind(enableZoomOut);
     }
 
-    private void initializeUiComponentsBindings () {
+    private void initUiComponentsBindings() {
         StringBinding headerBinding = Bindings.when(viewModel.getFileNameProperty().isNotEqualTo("")).then(viewModel.getFileNameProperty()).otherwise(resourceBundle.getString(DefaultValues.HEADER_TEXT_KEY));
         headerButton.textProperty().bind(headerBinding);
 
@@ -176,7 +176,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         popOver.getImageView().imageProperty().bind(viewModel.getPreviewImageProperty());
     }
 
-    private void initializeListeners () {
+    private void initListeners() {
         viewModel.getLeftImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
             if ( newValue != null) {
                 ComponentHelper.setImageViewSize(leftImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
@@ -230,7 +230,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         });
     }
 
-    private void initializeMnemonics () {
+    private void initMnemonics() {
         wrapper.sceneProperty().addListener((observable, oldValue, newValue) -> {
             KeyCombination headerKeyCombination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
             KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_ANY);

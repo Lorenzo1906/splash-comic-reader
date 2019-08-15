@@ -66,11 +66,11 @@ public class ComicReaderViewModel implements ViewModel {
 
         fileService = new FileServiceImpl();
 
-        initializeDefaultProperties();
-        initializeCommands();
+        initDefaultProperties();
+        initCommands();
     }
 
-    private void initializeDefaultProperties () {
+    private void initDefaultProperties() {
         logger.info("Initializing default properties");
 
         isTwoPagesProperty = new SimpleBooleanProperty(true);
@@ -101,7 +101,7 @@ public class ComicReaderViewModel implements ViewModel {
         rightImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
     }
 
-    private void initializeCommands () {
+    private void initCommands() {
         logger.info("Initializing commands");
 
         readingDirectionCommand = new DelegateCommand(() -> new Action() {
