@@ -9,6 +9,7 @@ import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
@@ -24,7 +25,7 @@ public class ComicReaderViewModel implements ViewModel {
     private Command readingDirectionCommand;
     private Command zoomInCommand;
     private Command zoomOutCommand;
-    private Command openFileCompleteCommand;
+    private Command openFileCommand;
     private Command loadPreviousPageCommand;
     private Command loadNextPageCommand;
     private Command previousPageCommand;
@@ -153,26 +154,15 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, false);
 
-        Command openFileCommand = new DelegateCommand(() -> new Action() {
+        openFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
                 openFile();
-            }
-        }, false);
-
-        Command totalPageCommand = new DelegateCommand(() -> new Action() {
-            @Override
-            protected void action() throws Exception {
-               updateTotalPages();
-            }
-        }, false);
-
-        Command currentPageCommand = new DelegateCommand(() -> new Action() {
-            @Override
-            protected void action() throws Exception {
+                loadImages();
+                updateTotalPages();
                 updateCurrentPage();
             }
-        }, false);
+        }, true);
 
         previousPageCommand = new DelegateCommand(() -> new Action() {
             @Override
@@ -194,8 +184,6 @@ public class ComicReaderViewModel implements ViewModel {
                 updatePreviewImage();
             }
         }, false);
-
-        openFileCompleteCommand = new CompositeCommand(openFileCommand, loadImagesCommand, totalPageCommand, currentPageCommand);
 
         loadNextPageCommand = new CompositeCommand(nextPageCommand, loadImagesCommand);
 
@@ -324,8 +312,8 @@ public class ComicReaderViewModel implements ViewModel {
         return applyDefaultScaleCommand;
     }
 
-    public Command getOpenFileCompleteCommand() {
-        return openFileCompleteCommand;
+    public Command getOpenFileCommand() {
+        return openFileCommand;
     }
 
     public Command getPreviousPageCommand() {
@@ -398,8 +386,11 @@ public class ComicReaderViewModel implements ViewModel {
     private void openFile() {
         logger.debug("Opening file");
 
-        fileNameProperty.setValue(fileService.loadFile(filePathProperty.getValue()));
+        String filename = fileService.loadFile(filePathProperty.getValue());
+        Platform.runLater(() -> fileNameProperty.setValue(filename));
         enableAll.setValue(true);
+
+        logger.debug("Finished opening file");
     }
 
     private void loadImages () {
@@ -428,9 +419,9 @@ public class ComicReaderViewModel implements ViewModel {
         }
 
         double defaultScaleLevel = (MathHelper.percentageOf(maxHeight, getScreenHeightProperty().getValue()))/100;
-        currentPageDefaultScaleLevelProperty.setValue(defaultScaleLevel);
+        Platform.runLater(() -> currentPageDefaultScaleLevelProperty.setValue(defaultScaleLevel));
         if (scaleLevelProperty.get() == 1) {
-            scaleLevelProperty.setValue(defaultScaleLevel);
+            Platform.runLater(() -> scaleLevelProperty.setValue(defaultScaleLevel));
         }
 
         enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
@@ -439,7 +430,7 @@ public class ComicReaderViewModel implements ViewModel {
     private void updateTotalPages () {
         logger.debug("Updating total page");
 
-        totalPagesProperty.setValue(fileService.getTotalPages());
+        Platform.runLater(() -> totalPagesProperty.setValue(fileService.getTotalPages()));
     }
 
     private void updateCurrentPage() {
