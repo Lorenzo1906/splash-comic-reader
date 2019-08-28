@@ -4,6 +4,8 @@ import com.mythicalcreaturesoftware.splash.exception.InsufficientDataException;
 import com.mythicalcreaturesoftware.splash.model.Spread;
 import com.mythicalcreaturesoftware.splash.utils.ImageHelper;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -18,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public abstract class FileReader {
+    private static Logger logger = LoggerFactory.getLogger(FileReader.class);
 
     private Map<Integer, Spread> fileEntries;
     private Map<Integer, String> previews;
@@ -42,7 +45,7 @@ public abstract class FileReader {
             generatePreviewImages();
             fileEntries = groupPages();
         } catch (InsufficientDataException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -140,7 +143,7 @@ public abstract class FileReader {
                 dimension.setSize(width, height);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return dimension;
@@ -170,7 +173,7 @@ public abstract class FileReader {
                 previews.put(index, previewPath);
                 ImageHelper.resize(pages.get(index), previewPath, 10);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -192,7 +195,7 @@ public abstract class FileReader {
 
             result = previewImagePath.toUri().toURL().toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return result;
@@ -209,7 +212,7 @@ public abstract class FileReader {
             previewFolderPath = Files.createTempDirectory(path, "preview");
             previewFolderPath.toFile().deleteOnExit();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
 

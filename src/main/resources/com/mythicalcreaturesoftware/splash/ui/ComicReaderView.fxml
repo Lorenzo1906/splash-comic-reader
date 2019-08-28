@@ -8,11 +8,11 @@
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
 <?import javafx.scene.image.ImageView?>
-<VBox fx:id="wrapper" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
+<VBox fx:id="wrapper" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
     <children>
         <AnchorPane prefHeight="23.0" prefWidth="790.0">
             <children>
-                <HBox alignment="CENTER_LEFT" layoutY="-29.0" prefHeight="25.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                <HBox alignment="CENTER_LEFT" layoutY="-29.0" prefHeight="25.0" prefWidth="800.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
                         <Button fx:id="headerButton" onMouseClicked="#openFileAction" >
                             <tooltip>
@@ -154,7 +154,4 @@
     <padding>
         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
-    <stylesheets>
-        <URL value="@ComicReaderView.css"/>
-    </stylesheets>
 </VBox>

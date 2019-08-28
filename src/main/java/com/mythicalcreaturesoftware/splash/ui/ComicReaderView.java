@@ -1,5 +1,6 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.mythicalcreaturesoftware.splash.app.ComicReaderApp;
 import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
@@ -177,6 +178,15 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     }
 
     private void initListeners() {
+        viewModel.getOpenFileCommand().runningProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                ComicReaderApp.instance().showLoading();
+            }
+            if (!newValue) {
+                ComicReaderApp.instance().hideLoading();
+            }
+        });
+
         viewModel.getLeftImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
             if ( newValue != null) {
                 ComponentHelper.setImageViewSize(leftImageViewer, newValue, viewModel.getScaleLevelProperty().doubleValue());
@@ -354,8 +364,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         } else {
             ScreenHelper.maximize(stage);
         }
-
-        System.out.println(maximizeButton.getScene().getMnemonics());
     }
 
     @FXML

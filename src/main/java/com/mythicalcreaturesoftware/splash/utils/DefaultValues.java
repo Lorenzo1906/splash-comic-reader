@@ -3,6 +3,7 @@ package com.mythicalcreaturesoftware.splash.utils;
 public class DefaultValues {
 
     public static final String DEFAULT_IMAGE_PATH = "/placeholder.png";
+    public static final String SPINNER_IMAGE_PATH = "/spinner/frame-x.png";
 
     public static final String HOME_FOLDER_KEY = "user.home";
 
