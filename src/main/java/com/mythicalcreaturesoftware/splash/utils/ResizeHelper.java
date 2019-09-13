@@ -104,41 +104,49 @@ public class ResizeHelper {
 
         private void widthResize(MouseEvent mouseEvent, double mouseEventX) {
             double minWidth = stage.getMinWidth() > (border * 2) ? stage.getMinWidth() : (border * 2);
-            double maxWidth = stage.getMaxWidth();
+
             if (Cursor.NW_RESIZE.equals(cursorEvent) || Cursor.W_RESIZE.equals(cursorEvent) || Cursor.SW_RESIZE.equals(cursorEvent)) {
                 double newWidth = stage.getWidth() - (mouseEvent.getScreenX() - stage.getX());
-                if (newWidth >= minWidth && newWidth <= maxWidth) {
+                if (newWidth >= minWidth) {
+                    stage.setMaxWidth(newWidth);
                     stage.setWidth(newWidth);
                     stage.setX(mouseEvent.getScreenX());
                 } else {
-                    newWidth = Math.min(Math.max(newWidth, minWidth), maxWidth);
+                    newWidth = Math.max(newWidth, minWidth);
                     // x1 + w1 = x2 + w2
                     // x1 = x2 + w2 - w1
                     stage.setX(stage.getX() + stage.getWidth() - newWidth);
+                    stage.setMaxWidth(newWidth);
                     stage.setWidth(newWidth);
                 }
             } else {
-                stage.setWidth(Math.min(Math.max(mouseEventX + startX, minWidth), maxWidth));
+                double newWidth = Math.max(mouseEventX + startX, minWidth);
+                stage.setMaxWidth(newWidth);
+                stage.setWidth(newWidth);
             }
         }
 
         private void heightResize(MouseEvent mouseEvent, double mouseEventY) {
             double minHeight = stage.getMinHeight() > (border * 2) ? stage.getMinHeight() : (border * 2);
-            double maxHeight = stage.getMaxHeight();
+
             if (Cursor.NW_RESIZE.equals(cursorEvent) || Cursor.N_RESIZE.equals(cursorEvent) || Cursor.NE_RESIZE.equals(cursorEvent)) {
                 double newHeight = stage.getHeight() - (mouseEvent.getScreenY() - stage.getY());
-                if (newHeight >= minHeight && newHeight <= maxHeight) {
+                if (newHeight >= minHeight) {
+                    stage.setMaxHeight(newHeight);
                     stage.setHeight(newHeight);
                     stage.setY(mouseEvent.getScreenY());
                 } else {
-                    newHeight = Math.min(Math.max(newHeight, minHeight), maxHeight);
+                    newHeight = Math.max(newHeight, minHeight);
                     // y1 + h1 = y2 + h2
                     // y1 = y2 + h2 - h1
                     stage.setY(stage.getY() + stage.getHeight() - newHeight);
+                    stage.setMaxHeight(newHeight);
                     stage.setHeight(newHeight);
                 }
             } else {
-                stage.setHeight(Math.min(Math.max(mouseEventY + startY, minHeight), maxHeight));
+                double newHeight = Math.max(mouseEventY + startY, minHeight);
+                stage.setMaxHeight(newHeight);
+                stage.setHeight(newHeight);
             }
         }
 

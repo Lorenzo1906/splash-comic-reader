@@ -20,6 +20,8 @@ public class ScreenHelper {
 
         Screen screen = getCurrentScreen(stage);
         Rectangle2D bounds = screen.getVisualBounds();
+        stage.setMaxWidth(bounds.getWidth());
+        stage.setMaxHeight(bounds.getHeight());
         stage.setWidth(bounds.getWidth());
         stage.setHeight(bounds.getHeight());
         stage.setX(bounds.getMinX());
@@ -29,6 +31,8 @@ public class ScreenHelper {
 
     public static void unMaximize (Stage stage) {
 
+        stage.setMaxWidth(width);
+        stage.setMaxHeight(height);
         stage.setWidth(width);
         stage.setHeight(height);
         stage.setX(x);

@@ -2,7 +2,7 @@ package com.mythicalcreaturesoftware.splash.ui.viewmodel;
 
 import com.mythicalcreaturesoftware.splash.service.FileService;
 import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
-import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
+import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import com.mythicalcreaturesoftware.splash.utils.MathHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
@@ -94,9 +94,9 @@ public class ComicReaderViewModel implements ViewModel {
         fileNameProperty = new SimpleStringProperty("");
         filePathProperty = new SimpleStringProperty("");
 
-        leftImageProperty = new SimpleObjectProperty<>(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
-        rightImageProperty = new SimpleObjectProperty<>(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
-        previewImageProperty = new SimpleObjectProperty<>(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
+        leftImageProperty = new SimpleObjectProperty<>(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty = new SimpleObjectProperty<>(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+        previewImageProperty = new SimpleObjectProperty<>(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
 
         leftImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
         rightImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
@@ -154,6 +154,13 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, false);
 
+        Command calculateScaleCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                calculateScale();
+            }
+        }, false);
+
         openFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
@@ -161,6 +168,7 @@ public class ComicReaderViewModel implements ViewModel {
                 loadImages();
                 updateTotalPages();
                 updateCurrentPage();
+                calculateScale();
             }
         }, true);
 
@@ -185,13 +193,13 @@ public class ComicReaderViewModel implements ViewModel {
             }
         }, false);
 
-        loadNextPageCommand = new CompositeCommand(nextPageCommand, loadImagesCommand);
+        loadNextPageCommand = new CompositeCommand(nextPageCommand, loadImagesCommand, calculateScaleCommand);
 
-        loadPreviousPageCommand = new CompositeCommand(previousPageCommand, loadImagesCommand);
+        loadPreviousPageCommand = new CompositeCommand(previousPageCommand, loadImagesCommand, calculateScaleCommand);
 
-        loadSliderPageCommand = new CompositeCommand(updateCurrentFromUiCommand, loadImagesCommand);
+        loadSliderPageCommand = new CompositeCommand(updateCurrentFromUiCommand, loadImagesCommand, calculateScaleCommand);
 
-        updatePagesPerViewPageCommand = new CompositeCommand(pagePerViewCommand, loadImagesCommand);
+        updatePagesPerViewPageCommand = new CompositeCommand(pagePerViewCommand, loadImagesCommand, calculateScaleCommand);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -355,8 +363,8 @@ public class ComicReaderViewModel implements ViewModel {
     private void setPagesPerView() {
         logger.debug("Set pages per view");
 
-        leftImageProperty.set(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
-        rightImageProperty.set(new Image(DefaultValues.DEFAULT_IMAGE_PATH, true));
+        leftImageProperty.set(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty.set(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
 
         isTwoPagesProperty.setValue(!isTwoPagesProperty.getValue());
     }
@@ -364,16 +372,16 @@ public class ComicReaderViewModel implements ViewModel {
     private void zoomIn() {
         logger.debug("Zooming in image");
 
-        if (scaleLevelProperty.getValue() <= DefaultValues.MAXIMUM_SCALE_LEVEL) {
-            scaleLevelProperty.setValue(scaleLevelProperty.getValue() + DefaultValues.SCALE_DELTA);
+        if (scaleLevelProperty.getValue() <= DefaultValuesHelper.MAXIMUM_SCALE_LEVEL) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() + DefaultValuesHelper.SCALE_DELTA);
         }
     }
 
     private void zoomOut() {
         logger.debug("Zooming out image");
 
-        if (scaleLevelProperty.getValue() >= DefaultValues.MINIMUM_SCALE_LEVEL) {
-            scaleLevelProperty.setValue(scaleLevelProperty.getValue() - DefaultValues.SCALE_DELTA);
+        if (scaleLevelProperty.getValue() >= DefaultValuesHelper.MINIMUM_SCALE_LEVEL) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() - DefaultValuesHelper.SCALE_DELTA);
         }
     }
 
@@ -396,6 +404,17 @@ public class ComicReaderViewModel implements ViewModel {
     private void loadImages () {
         logger.debug("Loading images");
 
+        if (isTwoPagesProperty.getValue()) {
+            leftImageProperty.setValue(new Image(fileService.getCurrentVerso(), true));
+            rightImageProperty.setValue(new Image(fileService.getCurrentRecto(), true));
+        } else {
+            leftImageProperty.setValue(new Image(fileService.getCurrentPage(), true));
+        }
+
+        enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
+    }
+
+    private void calculateScale() {
         double maxHeight;
 
         if (isTwoPagesProperty.getValue()) {
@@ -404,9 +423,6 @@ public class ComicReaderViewModel implements ViewModel {
 
             maxHeight = Math.max(leftImageDimension.height, rightImageDimension.height);
 
-            leftImageProperty.setValue(new Image(fileService.getCurrentVerso(), true));
-            rightImageProperty.setValue(new Image(fileService.getCurrentRecto(), true));
-
             leftImageDimensionProperty.setValue(leftImageDimension);
             rightImageDimensionProperty.setValue(rightImageDimension);
         } else {
@@ -414,7 +430,6 @@ public class ComicReaderViewModel implements ViewModel {
 
             maxHeight = imageDimension.height;
 
-            leftImageProperty.setValue(new Image(fileService.getCurrentPage(), true));
             leftImageDimensionProperty.setValue(imageDimension);
         }
 
@@ -423,8 +438,6 @@ public class ComicReaderViewModel implements ViewModel {
         if (scaleLevelProperty.get() == 1) {
             Platform.runLater(() -> scaleLevelProperty.setValue(defaultScaleLevel));
         }
-
-        enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
     }
 
     private void updateTotalPages () {

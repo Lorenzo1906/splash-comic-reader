@@ -1,7 +1,7 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.LoadingViewModel;
-import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
+import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -40,7 +40,7 @@ public class LoadingView implements FxmlView<LoadingViewModel>, Initializable {
 
         List<Image> images = new ArrayList<>();
         for (int i = 0; i <= 29; i++) {
-            images.add(new Image(DefaultValues.SPINNER_IMAGE_PATH.replace("x", String.valueOf(i))));
+            images.add(new Image(DefaultValuesHelper.SPINNER_IMAGE_PATH.replace("x", String.valueOf(i))));
         }
 
         Transition animation = new Transition(30) {

@@ -8,7 +8,7 @@
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
 <?import javafx.scene.image.ImageView?>
-<VBox fx:id="wrapper" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
+<VBox fx:id="wrapper" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
     <children>
         <AnchorPane prefHeight="23.0" prefWidth="790.0">
             <children>

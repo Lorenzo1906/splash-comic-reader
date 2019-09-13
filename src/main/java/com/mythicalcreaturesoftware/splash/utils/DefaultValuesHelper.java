@@ -1,6 +1,6 @@
 package com.mythicalcreaturesoftware.splash.utils;
 
-public class DefaultValues {
+public class DefaultValuesHelper {
 
     public static final String DEFAULT_IMAGE_PATH = "/placeholder.png";
     public static final String SPINNER_IMAGE_PATH = "/spinner/frame-x.png";
@@ -14,4 +14,6 @@ public class DefaultValues {
     public static final int MAXIMUM_SCALE_LEVEL = 2;
     public static final double MINIMUM_SCALE_LEVEL = .01;
     public static final double SCALE_DELTA = .01;
+    public static final double WIDTH_PERCENTAGE = 98.85;
+    public static final double HEIGHT_PERCENTAGE = 86.52;
 }

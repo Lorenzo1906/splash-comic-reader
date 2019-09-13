@@ -6,7 +6,7 @@ import com.mythicalcreaturesoftware.splash.filereader.FileReaderFactory;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
 import com.mythicalcreaturesoftware.splash.model.Spread;
 import com.mythicalcreaturesoftware.splash.service.FileService;
-import com.mythicalcreaturesoftware.splash.utils.DefaultValues;
+import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getCurrentRecto() {
-        String result = DefaultValues.DEFAULT_IMAGE_PATH;
+        String result = DefaultValuesHelper.DEFAULT_IMAGE_PATH;
 
         if (fileReader != null) {
 
@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getCurrentVerso() {
-        String result = DefaultValues.DEFAULT_IMAGE_PATH;
+        String result = DefaultValuesHelper.DEFAULT_IMAGE_PATH;
 
         if (fileReader != null) {
 
@@ -66,7 +66,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getCurrentPreviewByPageNumber(Integer pageNumber) {
-        String result = DefaultValues.DEFAULT_IMAGE_PATH;
+        String result = DefaultValuesHelper.DEFAULT_IMAGE_PATH;
 
         if (fileReader != null) {
             Spread spread = fileReader.getPath(pageNumber);
@@ -84,7 +84,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private String getPageByPageNumber(Integer pageNumber) {
-        String result = DefaultValues.DEFAULT_IMAGE_PATH;
+        String result = DefaultValuesHelper.DEFAULT_IMAGE_PATH;
 
         if (fileReader != null) {
             Spread spread = fileReader.getPath(pageNumber);
