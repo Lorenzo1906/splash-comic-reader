@@ -199,6 +199,17 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public boolean getMangaMode() {
+        return fileReader.getIsMangaMode();
+    }
+
+    @Override
+    public boolean changeMangaMode() {
+        fileReader.changeMangaMode();
+        return getMangaMode();
+    }
+
+    @Override
     public void setCurrentPage(Integer pageNumber) {
         if (fileReader == null) {
             return;

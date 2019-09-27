@@ -105,13 +105,6 @@ public class ComicReaderViewModel implements ViewModel {
     private void initCommands() {
         logger.info("Initializing commands");
 
-        readingDirectionCommand = new DelegateCommand(() -> new Action() {
-            @Override
-            protected void action() throws Exception {
-                changeReadingDirection();
-            }
-        }, false);
-
         zoomInCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
@@ -200,6 +193,15 @@ public class ComicReaderViewModel implements ViewModel {
         loadSliderPageCommand = new CompositeCommand(updateCurrentFromUiCommand, loadImagesCommand, calculateScaleCommand);
 
         updatePagesPerViewPageCommand = new CompositeCommand(pagePerViewCommand, loadImagesCommand, calculateScaleCommand);
+
+        Command changeReadingDirectionCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                changeReadingDirection();
+            }
+        }, false);
+
+        readingDirectionCommand = new CompositeCommand(changeReadingDirectionCommand, loadImagesCommand, calculateScaleCommand);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -357,7 +359,8 @@ public class ComicReaderViewModel implements ViewModel {
     private void changeReadingDirection() {
         logger.debug("Change Reading Direction");
 
-        readingDirectionRightProperty.setValue(!readingDirectionRightProperty.getValue());
+        readingDirectionRightProperty.setValue(!fileService.changeMangaMode());
+        currentPageProperty.setValue(fileService.getCurrentPageNumber());
     }
 
     private void setPagesPerView() {
@@ -396,6 +399,7 @@ public class ComicReaderViewModel implements ViewModel {
 
         String filename = fileService.loadFile(filePathProperty.getValue());
         Platform.runLater(() -> fileNameProperty.setValue(filename));
+        Platform.runLater(() -> readingDirectionRightProperty.setValue(!fileService.getMangaMode()));
         enableAll.setValue(true);
 
         logger.debug("Finished opening file");

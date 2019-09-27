@@ -30,6 +30,7 @@ public abstract class FileReader {
     protected String filePath;
     protected int totalPages;
     private Integer index;
+    private Boolean isMangaMode;
 
     private FileReaderType type = null;
 
@@ -39,6 +40,7 @@ public abstract class FileReader {
         this.type = type;
         this.filePath = filePath;
         this.index = 1;
+        this.isMangaMode = false;
 
         try {
             construct();
@@ -77,6 +79,88 @@ public abstract class FileReader {
         this.index = index;
     }
 
+    public Boolean getIsMangaMode() {
+        return isMangaMode;
+    }
+
+    public void changeMangaMode () {
+        isMangaMode = !isMangaMode;
+        String currPage = getCurrentPage();
+
+        fileEntries = invertPagesOrder();
+
+        index = calculateNewIndex(currPage);
+    }
+
+    private String getCurrentPage () {
+        String result = "";
+        Spread currSpread = getPath(index);
+        if (currSpread.getRectoPageNumber().equals(index)) {
+            result = currSpread.getRecto();
+        }
+        if (currSpread.getVersoPageNumber().equals(index)) {
+            result = currSpread.getVerso();
+        }
+
+        return result;
+    }
+
+    private int calculateNewIndex(String currPage) {
+        int result = 0;
+        for (Spread spread : fileEntries.values()) {
+            if (spread.getVerso() != null && spread.getVerso().equals(currPage)) {
+                result = spread.getVersoPageNumber();
+                break;
+            }
+            if (spread.getRecto() != null && spread.getRecto().equals(currPage)) {
+                result = spread.getRectoPageNumber();
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private Map<Integer, Spread> invertPagesOrder () {
+        pages = invertMap(pages);
+        previews = invertMap(previews);
+        dimensions = invertDimensionsMap(dimensions);
+
+        Map<Integer, Spread> result = null;
+
+        try {
+            result = groupPages();
+        } catch (InsufficientDataException e) {
+            logger.error(e.getMessage());
+        }
+
+        return result;
+    }
+
+    private Map<Integer, String> invertMap (Map<Integer, String> map) {
+        Map<Integer, String> result = new HashMap<>();
+        int currPage = totalPages;
+
+        for (String value : map.values()) {
+            result.put(currPage, value);
+            currPage--;
+        }
+
+        return result;
+    }
+
+    private Map<Integer, Dimension> invertDimensionsMap (Map<Integer, Dimension> map) {
+        Map<Integer, Dimension> result = new HashMap<>();
+        int currPage = totalPages;
+
+        for (Dimension dimension : map.values()) {
+            result.put(currPage, dimension);
+            currPage--;
+        }
+
+        return result;
+    }
+
     private Map<Integer, Spread> groupPages() throws InsufficientDataException {
         if (pages == null || dimensions == null) {
             throw new InsufficientDataException("Insufficient data to group pages");
@@ -92,37 +176,47 @@ public abstract class FileReader {
             //The first one is always alone on the spread
             if (isFirst || shouldBeAlone(dimensions.get(index))) {
                 spread = new Spread();
-                spread.setVerso(pages.get(index));
-                spread.setVersoPageNumber(index);
-                spread.setVersoSize(dimensions.get(index));
-                spread.setVersoPreview(previews.get(index));
-
-                spreads.put(index, spread);
+                spreads.put(index, fillSpread(spread, index, true));
 
                 isFirst = false;
                 spread = null;
             } else {
                 if (spread == null) {
                     spread = new Spread();
-                    spread.setVerso(pages.get(index));
-                    spread.setVersoPageNumber(index);
-                    spread.setVersoSize(dimensions.get(index));
-                    spread.setVersoPreview(previews.get(index));
-
-                    spreads.put(index, spread);
+                    spreads.put(index, fillSpread(spread, index, true));
                 } else {
-                    spread.setRecto(pages.get(index));
-                    spread.setRectoPageNumber(index);
-                    spread.setRectoSize(dimensions.get(index));
-                    spread.setRectoPreview(previews.get(index));
-
-                    spreads.put(index, spread);
+                    spreads.put(index, fillSpread(spread, index, false));
                     spread = null;
                 }
             }
         }
 
         return spreads;
+    }
+
+    private Spread fillSpread(Spread spread, Integer index, boolean isEmpty) {
+        if (isEmpty) {
+            fillVerso(spread, index);
+        }
+        if (!isEmpty) {
+            fillRecto(spread, index);
+        }
+
+        return spread;
+    }
+
+    private void fillRecto (Spread spread, Integer index) {
+        spread.setRecto(pages.get(index));
+        spread.setRectoPageNumber(index);
+        spread.setRectoSize(dimensions.get(index));
+        spread.setRectoPreview(previews.get(index));
+    }
+
+    private void fillVerso(Spread spread, Integer index) {
+        spread.setVerso(pages.get(index));
+        spread.setVersoPageNumber(index);
+        spread.setVersoSize(dimensions.get(index));
+        spread.setVersoPreview(previews.get(index));
     }
 
     protected Dimension getPageSize(Path file) {
@@ -214,7 +308,6 @@ public abstract class FileReader {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-
 
         return previewFolderPath;
     }

@@ -14,6 +14,8 @@ public interface FileService {
     Integer getTotalPages();
     Integer getCurrentPageNumber();
     boolean canChangeToNextPage(boolean isTwoPage);
+    boolean getMangaMode();
+    boolean changeMangaMode();
     void setCurrentPage(Integer pageNumber);
     void updateNextPage(boolean isTwoPage);
     void updatePreviousPage(boolean isTwoPage);
