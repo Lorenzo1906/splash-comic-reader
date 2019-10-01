@@ -453,7 +453,7 @@ public class ComicReaderViewModel implements ViewModel {
     private void updateCurrentPage() {
         logger.debug("Updating current page");
 
-        currentPageProperty.setValue(fileService.getCurrentPageNumber());
+        Platform.runLater(() -> currentPageProperty.setValue(fileService.getCurrentPageNumber()));
     }
 
     private void updateCurrentFromUi() {

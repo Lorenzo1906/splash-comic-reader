@@ -95,10 +95,10 @@ public abstract class FileReader {
     private String getCurrentPage () {
         String result = "";
         Spread currSpread = getPath(index);
-        if (currSpread.getRectoPageNumber().equals(index)) {
+        if (currSpread.getRecto() != null && currSpread.getRectoPageNumber().equals(index)) {
             result = currSpread.getRecto();
         }
-        if (currSpread.getVersoPageNumber().equals(index)) {
+        if (currSpread.getVerso() != null && currSpread.getVersoPageNumber().equals(index)) {
             result = currSpread.getVerso();
         }
 
