@@ -11,8 +11,6 @@ javafx {
 group 'com.mythicalcreaturesoftware'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 12
-
 repositories {
     mavenCentral()
     maven {
