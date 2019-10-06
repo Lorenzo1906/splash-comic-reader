@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -45,20 +47,7 @@ public class CbrFileReader extends FileReader {
             dimensions = new HashMap<>();
 
             for (FileHeader header : list) {
-
-                if (!header.isDirectory()) {
-                    Path filePath = processFileEntry(tempFolderPath, header);
-                    archive.extractFile(header, new FileOutputStream(filePath.toFile()));
-
-                    String url = filePath.toUri().toURL().toString();
-                    Dimension dimension = getPageSize(filePath);
-
-                    pages.put(pageIndex, url);
-                    dimensions.put(pageIndex, dimension);
-
-                    totalPages++;
-                    pageIndex++;
-                }
+                pageIndex = processFileHeader(header, archive, pageIndex);
             }
         } catch (RarException | IOException e) {
             logger.error(e.getMessage());
@@ -67,6 +56,24 @@ public class CbrFileReader extends FileReader {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         logger.info("File loaded in {} milliseconds", elapsedTime);
+    }
+
+    private int processFileHeader (FileHeader header, Archive archive, int pageIndex) throws MalformedURLException, FileNotFoundException, RarException {
+        if (!header.isDirectory()) {
+            Path filePath = processFileEntry(tempFolderPath, header);
+            archive.extractFile(header, new FileOutputStream(filePath.toFile()));
+
+            String url = filePath.toUri().toURL().toString();
+            Dimension dimension = getPageSize(filePath);
+
+            pages.put(pageIndex, url);
+            dimensions.put(pageIndex, dimension);
+
+            totalPages++;
+            pageIndex++;
+        }
+
+        return pageIndex;
     }
 
     private Path processFileEntry (Path directory, FileHeader entry) {

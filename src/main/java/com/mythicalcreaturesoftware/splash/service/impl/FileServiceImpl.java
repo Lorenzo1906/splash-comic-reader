@@ -38,7 +38,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private String getCurrentPageValue(boolean verso) {
-        String result = DefaultValuesHelper.DEFAULT_IMAGE_PATH;
+        String result = "";
 
         if (fileReader != null) {
 
@@ -47,6 +47,10 @@ public class FileServiceImpl implements FileService {
             if (spread != null && spread.getVerso() != null) {
                 result = verso ? spread.getVerso() : spread.getRecto();
             }
+        }
+
+        if (result == null || result.equals("")) {
+            result = DefaultValuesHelper.DEFAULT_IMAGE_PATH;
         }
 
         return result;
@@ -95,7 +99,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private Dimension getSize(boolean verso) {
-        Dimension result = new Dimension(1, 1);
+        Dimension result = null;
 
         if (fileReader != null) {
 
@@ -104,6 +108,10 @@ public class FileServiceImpl implements FileService {
             if (spread != null && spread.getVerso() != null) {
                 result = verso ? spread.getVersoSize() : spread.getRectoSize();
             }
+        }
+
+        if (result == null) {
+            result = new Dimension(1, 1);
         }
 
         return result;
@@ -158,10 +166,11 @@ public class FileServiceImpl implements FileService {
 
             Spread spread = fileReader.getPath(fileReader.getIndex());
 
-            if (spread != null &&
-                    (spread.getRectoPageNumber() != null || spread.getVersoPageNumber() != null ) &&
-                        (spread.getRectoPageNumber() == fileReader.getTotalPages() || spread.getVersoPageNumber() == fileReader.getTotalPages())) {
+            if (spread != null && spread.getRectoPageNumber() != null && spread.getRectoPageNumber() == fileReader.getTotalPages()) {
+                result = false;
+            }
 
+            if (spread != null && spread.getVersoPageNumber() != null && spread.getVersoPageNumber() == fileReader.getTotalPages()) {
                 result = false;
             }
         } else {
@@ -199,15 +208,7 @@ public class FileServiceImpl implements FileService {
 
             fileReader.setIndex(fileReader.getIndex() + 1);
         } else {
-
-            Spread currentSpread = fileReader.getCurrentPath();
-            Spread nextSpread = fileReader.getPath(fileReader.getIndex() + 1);
-
-            if (currentSpread.equals(nextSpread) && fileReader.getIndex() + 2 <= fileReader.getTotalPages()) {
-                fileReader.setIndex(fileReader.getIndex() + 2);
-            } else if (fileReader.getIndex() + 1 <= fileReader.getTotalPages()) {
-                fileReader.setIndex(fileReader.getIndex() + 1);
-            }
+            updateSpreadPage(1);
         }
     }
 
@@ -217,15 +218,18 @@ public class FileServiceImpl implements FileService {
 
             fileReader.setIndex(fileReader.getIndex() - 1);
         } else {
+            updateSpreadPage(-1);
+        }
+    }
 
-            Spread currentSpread = fileReader.getCurrentPath();
-            Spread nextSpread = fileReader.getPath(fileReader.getIndex() - 1);
+    private void updateSpreadPage(int sign) {
+        Spread currentSpread = fileReader.getCurrentPath();
+        Spread nextSpread = fileReader.getPath(fileReader.getIndex() + sign);
 
-            if (currentSpread.equals(nextSpread)) {
-                fileReader.setIndex(fileReader.getIndex() - 2);
-            } else {
-                fileReader.setIndex(fileReader.getIndex() - 1);
-            }
+        if (currentSpread.equals(nextSpread) && fileReader.getIndex() + 2 <= fileReader.getTotalPages()) {
+            fileReader.setIndex(fileReader.getIndex() + (2 * sign));
+        } else if (fileReader.getIndex() + 1 <= fileReader.getTotalPages()) {
+            fileReader.setIndex(fileReader.getIndex() + sign);
         }
     }
 

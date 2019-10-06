@@ -409,13 +409,13 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Loading images");
 
         if (isTwoPagesProperty.getValue()) {
-            leftImageProperty.setValue(new Image(fileService.getCurrentVerso(), true));
-            rightImageProperty.setValue(new Image(fileService.getCurrentRecto(), true));
+            Platform.runLater(() -> leftImageProperty.setValue(new Image(fileService.getCurrentVerso(), true)));
+            Platform.runLater(() -> rightImageProperty.setValue(new Image(fileService.getCurrentRecto(), true)));
         } else {
-            leftImageProperty.setValue(new Image(fileService.getCurrentPage(), true));
+            Platform.runLater(() -> leftImageProperty.setValue(new Image(fileService.getCurrentPage(), true)));
         }
 
-        enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue()));
+        Platform.runLater(() -> enableNextPage.setValue(fileService.canChangeToNextPage(isTwoPagesProperty.getValue())));
     }
 
     private void calculateScale() {

@@ -29,37 +29,7 @@ public class CbzFileReader extends FileReader {
 
         ZipInputStream zipIs = null;
         try {
-            tempFolderPath =  Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
-            tempFolderPath.toFile().deleteOnExit();
-            logger.info("Temp folder created at " + tempFolderPath.toUri());
-
-            try (FileInputStream fis = new FileInputStream(filePath);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                ZipInputStream stream = new ZipInputStream(bis)) {
-
-                int pageIndex = 1;
-                ZipEntry entry;
-                pages = new HashMap<>();
-                dimensions = new HashMap<>();
-
-                while ((entry = stream.getNextEntry()) != null) {
-                    if (entry.isDirectory()) {
-                        Files.createDirectory(tempFolderPath.resolve(entry.getName()));
-                    } else {
-
-                        Path filePath = processFileEntry(tempFolderPath, entry, stream);
-                        String url = filePath.toUri().toURL().toString();
-                        Dimension dimension = getPageSize(filePath);
-
-                        pages.put(pageIndex, url);
-                        dimensions.put(pageIndex, dimension);
-
-                        totalPages++;
-                        pageIndex++;
-                    }
-                }
-            }
-
+            processFileEntries();
         } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {
@@ -75,6 +45,45 @@ public class CbzFileReader extends FileReader {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         logger.info("File loaded in {} milliseconds", elapsedTime);
+    }
+
+    private void processFileEntries() throws IOException {
+        tempFolderPath =  Files.createTempDirectory(FilenameUtils.getBaseName(filePath));
+        tempFolderPath.toFile().deleteOnExit();
+        logger.info("Temp folder created at " + tempFolderPath.toUri());
+
+        try (FileInputStream fis = new FileInputStream(filePath);
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             ZipInputStream stream = new ZipInputStream(bis)) {
+
+            int pageIndex = 1;
+            ZipEntry entry;
+            pages = new HashMap<>();
+            dimensions = new HashMap<>();
+
+            while ((entry = stream.getNextEntry()) != null) {
+                pageIndex = checkProcessEntry(entry, stream, pageIndex);
+            }
+        }
+    }
+
+    private int checkProcessEntry (ZipEntry entry, ZipInputStream stream, int pageIndex) throws IOException {
+        if (entry.isDirectory()) {
+            Files.createDirectory(tempFolderPath.resolve(entry.getName()));
+        } else {
+
+            Path filePath = processFileEntry(tempFolderPath, entry, stream);
+            String url = filePath.toUri().toURL().toString();
+            Dimension dimension = getPageSize(filePath);
+
+            pages.put(pageIndex, url);
+            dimensions.put(pageIndex, dimension);
+
+            totalPages++;
+            pageIndex++;
+        }
+
+        return pageIndex;
     }
 
     private Path processFileEntry (Path directory, ZipEntry entry, ZipInputStream stream) throws IOException {
