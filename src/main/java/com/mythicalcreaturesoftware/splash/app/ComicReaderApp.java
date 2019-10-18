@@ -1,8 +1,10 @@
 package com.mythicalcreaturesoftware.splash.app;
 
 import com.mythicalcreaturesoftware.splash.ui.ComicReaderView;
+import com.mythicalcreaturesoftware.splash.ui.FullscreenView;
 import com.mythicalcreaturesoftware.splash.ui.LoadingView;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.FullscreenViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.LoadingViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ResizeHelper;
 import com.mythicalcreaturesoftware.splash.utils.ScreenHelper;
@@ -34,6 +36,7 @@ public class ComicReaderApp extends Application {
 
     private ViewTuple<LoadingView, LoadingViewModel> loadingViewTuple;
     private ViewTuple<ComicReaderView, ComicReaderViewModel> readerViewTuple;
+    private ViewTuple<FullscreenView, FullscreenViewModel> fullscreenViewTuple;
     private StackPane stackPane;
 
     public static ComicReaderApp instance() {
@@ -57,9 +60,14 @@ public class ComicReaderApp extends Application {
             Parent loadingRoot = loadingViewTuple.getView();
             loadingRoot.setVisible(false);
 
+            fullscreenViewTuple = FluentViewLoader.fxmlView(FullscreenView.class).load();
+            Parent fullscreenRoot = fullscreenViewTuple.getView();
+            fullscreenRoot.setVisible(false);
+
             readerViewTuple = FluentViewLoader.fxmlView(ComicReaderView.class).load();
             Parent root = readerViewTuple.getView();
 
+            stackPane.getChildren().add(fullscreenRoot);
             stackPane.getChildren().add(loadingRoot);
             stackPane.getChildren().add(root);
 
@@ -78,9 +86,31 @@ public class ComicReaderApp extends Application {
             stackPane.prefWidthProperty().bind(primaryStage.widthProperty());
 
             primaryStage.show();
+
+            primaryStage.fullScreenProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) {
+                    hideFullscreen();
+                }
+            });
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void showFullscreen() {
+        Stage stage = (Stage) stackPane.getScene().getWindow();
+        stage.setFullScreen(true);
+
+        fullscreenViewTuple.getView().setVisible(true);
+        setNodeToFront(fullscreenViewTuple.getView());
+    }
+
+    public void hideFullscreen() {
+        Stage stage = (Stage) stackPane.getScene().getWindow();
+        stage.setFullScreen(false);
+
+        fullscreenViewTuple.getView().setVisible(false);
+        setNodeToFront(readerViewTuple.getView());
     }
 
     public void showLoading() {

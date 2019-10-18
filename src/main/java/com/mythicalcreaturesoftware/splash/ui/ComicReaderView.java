@@ -343,7 +343,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void fullscreenAction() {
-        logger.info("Full screen Action");
+        ComicReaderApp.instance().showFullscreen();
     }
 
     @FXML

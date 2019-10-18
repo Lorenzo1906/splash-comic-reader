@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<StackPane fx:id="wrapper"  styleClass="fullscreenView" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView" >
+    <StackPane fx:id="imageContainer">
+        <BorderPane maxWidth="0" maxHeight="0">
+            <left>
+                <ImageView fx:id="leftImage" preserveRatio="true">
+                    <Image url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_4.jpg" backgroundLoading="true" />
+                </ImageView>
+            </left>
+            <right>
+                <ImageView fx:id="rightImage" preserveRatio="true">
+                    <Image url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_5.jpg" backgroundLoading="true" />
+                </ImageView>
+            </right>
+        </BorderPane>
+    </StackPane>
+</StackPane>

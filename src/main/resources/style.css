@@ -113,3 +113,7 @@
     -fx-background-color: black;
     -fx-opacity: 0.7;
 }
+
+.fullscreenView {
+    -fx-background-color: black;
+}
