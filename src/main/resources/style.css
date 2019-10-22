@@ -117,3 +117,29 @@
 .fullscreenView {
     -fx-background-color: black;
 }
+
+.pagePanel {
+    -fx-background-color: blue;
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-radius: 10 10 10 10;
+}
+
+.zoomPanel {
+    -fx-background-color: red;
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-radius: 10 10 10 10;
+}
+
+.exitPanel {
+    -fx-background-color: grey;
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-radius: 10 10 10 10;
+}
+
+.hintPanel {
+    -fx-opacity: .4;
+}
+
+.hintText {
+    -fx-text-fill: white;
+}

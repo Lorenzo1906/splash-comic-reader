@@ -1,28 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<StackPane fx:id="wrapper"  styleClass="fullscreenView" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView" >
+<StackPane fx:id="wrapper" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="fullscreenView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView">
     <StackPane fx:id="imageContainer">
-        <BorderPane maxWidth="0" maxHeight="0">
+        <BorderPane maxHeight="0" maxWidth="0">
             <left>
                 <ImageView fx:id="leftImage" preserveRatio="true">
-                    <Image url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_4.jpg" backgroundLoading="true" />
+                    <Image backgroundLoading="true" url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_4.jpg" />
                 </ImageView>
             </left>
             <right>
                 <ImageView fx:id="rightImage" preserveRatio="true">
-                    <Image url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_5.jpg" backgroundLoading="true" />
+                    <Image backgroundLoading="true" url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_5.jpg" />
                 </ImageView>
             </right>
         </BorderPane>
+        <HBox styleClass="hintPanel">
+            <StackPane styleClass="pagePanel" HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </HBox.margin>
+                <Label styleClass="hintText" text="Label" />
+            </StackPane>
+            <VBox HBox.hgrow="ALWAYS">
+                <StackPane styleClass="zoomPanel" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                    </VBox.margin>
+                    <Label styleClass="hintText" text="Label" />
+                </StackPane>
+                <StackPane styleClass="exitPanel" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                    <Label styleClass="hintText" text="Label" />
+                </StackPane>
+                <StackPane styleClass="zoomPanel" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                    </VBox.margin>
+                    <Label styleClass="hintText" text="Label" />
+                </StackPane>
+                <HBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </HBox.margin>
+            </VBox>
+            <StackPane styleClass="pagePanel" HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </HBox.margin>
+                <Label styleClass="hintText" text="Label" />
+            </StackPane>
+            <StackPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </StackPane.margin>
+        </HBox>
+        <AnchorPane>
+            <Label text="Page 01/10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+        </AnchorPane>
     </StackPane>
 </StackPane>

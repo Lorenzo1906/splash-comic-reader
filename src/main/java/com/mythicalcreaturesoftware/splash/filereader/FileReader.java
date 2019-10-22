@@ -273,7 +273,7 @@ public abstract class FileReader {
     }
 
     private String generatePreviewImagePath(String path, Path folderPath) {
-        if (path == null || path.equals("")) {
+        if (path.isEmpty()) {
             return "";
         }
         if (folderPath == null) {

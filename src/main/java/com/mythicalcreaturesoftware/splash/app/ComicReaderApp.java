@@ -78,6 +78,7 @@ public class ComicReaderApp extends Application {
             primaryStage.setMaximized(true);
             primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.setTitle(bundle.getString("window.title"));
+            primaryStage.setFullScreenExitHint("");
 
             ScreenHelper.maximize(primaryStage);
             ResizeHelper.addResizeListener(primaryStage);
