@@ -5,17 +5,33 @@ import com.mythicalcreaturesoftware.splash.filereader.FileReader;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderFactory;
 import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
 import com.mythicalcreaturesoftware.splash.model.Spread;
-import com.mythicalcreaturesoftware.splash.service.FileService;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import org.apache.commons.io.FilenameUtils;
 
-import java.awt.*;
+import java.awt.Dimension;
 
-public class FileServiceImpl implements FileService {
+public class FileServiceImpl {
+
+    private static volatile FileServiceImpl instance = null;
 
     private FileReader fileReader;
 
-    @Override
+    private FileServiceImpl () {
+
+    }
+
+    public static FileServiceImpl getInstance() {
+        if (instance == null) {
+            synchronized (FileServiceImpl.class) {
+                if (instance == null) {
+                    instance = new FileServiceImpl();
+                }
+            }
+        }
+
+        return instance;
+    }
+
     public String loadFile(String path) {
         try {
             getFileReaderTypeFromPath(path);
@@ -27,12 +43,10 @@ public class FileServiceImpl implements FileService {
         return getFilenameFromPath(path);
     }
 
-    @Override
     public String getCurrentRecto() {
         return getCurrentPageValue(false);
     }
 
-    @Override
     public String getCurrentVerso() {
         return getCurrentPageValue(true);
     }
@@ -56,12 +70,10 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
     public String getCurrentPage() {
         return getPageByPageNumber(fileReader.getIndex());
     }
 
-    @Override
     public String getCurrentPreviewByPageNumber(Integer pageNumber) {
         return getPageValueByNumber(pageNumber, true);
     }
@@ -88,12 +100,10 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
     public Dimension getCurrentRectoSize() {
         return getSize(false);
     }
 
-    @Override
     public Dimension getCurrentVersoSize() {
         return getSize(true);
     }
@@ -117,7 +127,6 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
     public Dimension getCurrentPageSize() {
         Dimension result = new Dimension(1, 1);
 
@@ -136,7 +145,6 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
     public Integer getTotalPages() {
         if (fileReader == null) {
             return 1;
@@ -145,7 +153,6 @@ public class FileServiceImpl implements FileService {
         return fileReader.getTotalPages();
     }
 
-    @Override
     public Integer getCurrentPageNumber() {
         if (fileReader == null) {
             return 1;
@@ -154,7 +161,6 @@ public class FileServiceImpl implements FileService {
         return fileReader.getIndex();
     }
 
-    @Override
     public boolean canChangeToNextPage(boolean isTwoPage) {
         if (fileReader == null) {
             return false;
@@ -182,18 +188,15 @@ public class FileServiceImpl implements FileService {
         return result;
     }
 
-    @Override
     public boolean getMangaMode() {
         return fileReader.getIsMangaMode();
     }
 
-    @Override
     public boolean changeMangaMode() {
         fileReader.changeMangaMode();
         return getMangaMode();
     }
 
-    @Override
     public void setCurrentPage(Integer pageNumber) {
         if (fileReader == null) {
             return;
@@ -202,7 +205,6 @@ public class FileServiceImpl implements FileService {
         fileReader.setIndex(pageNumber);
     }
 
-    @Override
     public void updateNextPage(boolean isTwoPage) {
         if (!isTwoPage && fileReader.getIndex() + 1 <= fileReader.getTotalPages()) {
 
@@ -212,7 +214,6 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    @Override
     public void updatePreviousPage(boolean isTwoPage) {
         if (!isTwoPage && fileReader.getIndex() - 1 == 1) {
 

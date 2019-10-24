@@ -108,7 +108,7 @@ public class ComicReaderApp extends Application {
         setNodeToFront(fullscreenViewTuple.getView());
     }
 
-    public void hideFullscreen() {
+    private void hideFullscreen() {
         Stage stage = (Stage) stackPane.getScene().getWindow();
         stage.setFullScreen(false);
 
