@@ -131,7 +131,7 @@
 }
 
 .exitPanel {
-    -fx-background-color: grey;
+    -fx-background-color: dimgrey;
     -fx-border-radius: 10 10 10 10;
     -fx-background-radius: 10 10 10 10;
 }
@@ -140,6 +140,7 @@
     -fx-opacity: .4;
 }
 
-.hintText {
-    -fx-text-fill: white;
+.hintText .text {
+    -fx-text-fill: white !important;
+    -fx-font-size: 25;
 }

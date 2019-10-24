@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<StackPane fx:id="wrapper" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="fullscreenView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView">
+<StackPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="fullscreenView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView">
     <StackPane fx:id="imageContainer">
         <BorderPane maxHeight="0" maxWidth="0">
             <left>
@@ -23,31 +23,31 @@
                 </ImageView>
             </right>
         </BorderPane>
-        <HBox styleClass="hintPanel">
+        <HBox fx:id="hintPanel" styleClass="hintPanel">
             <StackPane styleClass="pagePanel" HBox.hgrow="ALWAYS">
                 <HBox.margin>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </HBox.margin>
-                <Label styleClass="hintText" text="Label" />
+                <Label styleClass="hintText" text="%nextPage.tooltip.text" />
             </StackPane>
             <VBox HBox.hgrow="ALWAYS">
                 <StackPane styleClass="zoomPanel" VBox.vgrow="ALWAYS">
                     <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" />
                     </VBox.margin>
-                    <Label styleClass="hintText" text="Label" />
+                    <Label styleClass="hintText" text="%zoomIn.tooltip.text" />
                 </StackPane>
                 <StackPane styleClass="exitPanel" VBox.vgrow="ALWAYS">
                     <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </VBox.margin>
-                    <Label styleClass="hintText" text="Label" />
+                    <Label styleClass="hintText" text="%fullscreen.exit.text" />
                 </StackPane>
                 <StackPane styleClass="zoomPanel" VBox.vgrow="ALWAYS">
                     <VBox.margin>
                         <Insets left="10.0" right="10.0" top="10.0" />
                     </VBox.margin>
-                    <Label styleClass="hintText" text="Label" />
+                    <Label styleClass="hintText" text="%zoomOut.tooltip.text" />
                 </StackPane>
                 <HBox.margin>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -57,14 +57,14 @@
                 <HBox.margin>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </HBox.margin>
-                <Label styleClass="hintText" text="Label" />
+                <Label styleClass="hintText" text="%previousPage.tooltip.text" />
             </StackPane>
             <StackPane.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </StackPane.margin>
         </HBox>
-        <AnchorPane>
-            <Label text="Page 01/10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+        <AnchorPane fx:id="pagePanel">
+            <Label styleClass="hintText" text="Page 01/10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
         </AnchorPane>
     </StackPane>
 </StackPane>

@@ -103,6 +103,8 @@ public class ComicReaderApp extends Application {
         stage.setFullScreen(true);
 
         fullscreenViewTuple.getView().setVisible(true);
+        fullscreenViewTuple.getCodeBehind().playHintFadeAnimation();
+        fullscreenViewTuple.getCodeBehind().playPageFadeAnimation();
         setNodeToFront(fullscreenViewTuple.getView());
     }
 
