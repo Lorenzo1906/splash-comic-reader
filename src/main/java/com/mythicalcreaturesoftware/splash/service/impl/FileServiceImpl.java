@@ -16,9 +16,7 @@ public class FileServiceImpl {
 
     private FileReader fileReader;
 
-    private FileServiceImpl () {
-
-    }
+    private FileServiceImpl () {}
 
     public static FileServiceImpl getInstance() {
         if (instance == null) {

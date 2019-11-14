@@ -49,6 +49,7 @@ public class ComicReaderViewModel implements ViewModel {
     private BooleanProperty isTwoPagesProperty;
     private BooleanProperty enableAll;
     private BooleanProperty enableNextPage;
+    private BooleanProperty fileLoaded;
 
     private IntegerProperty currentPageProperty;
     private IntegerProperty currentPagePreviewProperty;
@@ -82,6 +83,7 @@ public class ComicReaderViewModel implements ViewModel {
         readingDirectionRightProperty = new SimpleBooleanProperty(true);
         enableAll = new SimpleBooleanProperty(false);
         enableNextPage = new SimpleBooleanProperty(false);
+        fileLoaded = new SimpleBooleanProperty(false);
 
         zoomInButton = new SimpleBooleanProperty(true);
         zoomOutButton = new SimpleBooleanProperty(true);
@@ -161,11 +163,13 @@ public class ComicReaderViewModel implements ViewModel {
         openFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
+                fileLoaded.setValue(false);
                 openFile();
                 loadImages();
                 updateTotalPages();
                 updateCurrentPage();
                 calculateScale();
+                fileLoaded.setValue(true);
             }
         }, true);
 
@@ -268,6 +272,10 @@ public class ComicReaderViewModel implements ViewModel {
 
     public BooleanProperty getEnableAll() {
         return enableAll;
+    }
+
+    public BooleanProperty getFileLoaded() {
+        return fileLoaded;
     }
 
     public DoubleProperty getScaleLevelProperty(){

@@ -2,6 +2,8 @@ package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.app.ComicReaderApp;
 import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
+import com.mythicalcreaturesoftware.splash.event.MessageEvent;
+import com.mythicalcreaturesoftware.splash.event.ActionMessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
@@ -17,9 +19,12 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -249,6 +254,12 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
                 });
             }
         });
+
+        viewModel.getFileLoaded().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                fireEvent(previousPage.getScene(), MessageEvent.PAGE_EVENT);
+            }
+        });
     }
 
     private void initMnemonics() {
@@ -296,6 +307,10 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         });
     }
 
+    private void fireEvent (Scene target, EventType<MessageEvent> type) {
+        Event.fireEvent(target, new ActionMessageEvent(type));
+    }
+
     @FXML
     public void openFileAction() {
         FileChooser chooser = new FileChooser();
@@ -323,11 +338,13 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     @FXML
     public void previousPageAction() {
         viewModel.getLoadPreviousPageCommand().execute();
+        fireEvent(previousPage.getScene(), MessageEvent.PAGE_EVENT);
     }
 
     @FXML
     public void nextPageAction() {
         viewModel.getLoadNextPageCommand().execute();
+        fireEvent(nextPage.getScene(), MessageEvent.PAGE_EVENT);
     }
 
     @FXML
@@ -357,7 +374,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void fullscreenAction() {
-        ComicReaderApp.instance().showFullscreen();
+        if (!fullscreen.isDisabled()) {
+            ComicReaderApp.instance().showFullscreen();
+        }
     }
 
     @FXML

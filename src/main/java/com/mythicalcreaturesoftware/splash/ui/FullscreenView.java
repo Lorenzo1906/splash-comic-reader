@@ -1,13 +1,19 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.mythicalcreaturesoftware.splash.event.MessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.FullscreenViewModel;
+import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
+import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -38,6 +44,9 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
     @FXML
     private ImageView rightImage;
 
+    @FXML
+    private Label pagePanelText;
+
     @InjectViewModel
     private FullscreenViewModel viewModel;
 
@@ -48,12 +57,55 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("Initializing fullscreen view");
 
+        initImageViewer();
+        initUiComponents();
+        initScreen();
+        initListeners();
+    }
+
+    private void initScreen() {
         Dimension resolution = Toolkit.getDefaultToolkit().getScreenSize();
         double height = resolution.getHeight();
+        double width = resolution.getWidth();
 
-        imageContainer.setMaxHeight(height);
-        leftImage.setFitHeight(height);
-        rightImage.setFitHeight(height);
+        viewModel.getScreenWidthProperty().set(width);
+        viewModel.getScreenHeightProperty().set(height);
+    }
+
+    private void initUiComponents() {
+        pagePanelText.textProperty().bind(Bindings.concat(resourceBundle.getString(DefaultValuesHelper.PAGE_TEXT_KEY), " ", viewModel.getCurrentPageProperty(), "/", viewModel.getTotalPagesProperty()));
+    }
+
+    private void initImageViewer() {
+        leftImage.imageProperty().bind(viewModel.getLeftImageProperty());
+        rightImage.imageProperty().bind(viewModel.getRightImageProperty());
+
+        imageContainer.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            newValue.addEventFilter(MessageEvent.PAGE_EVENT, event -> {
+                logger.debug("Updating view values from event");
+
+                viewModel.getOpenFileCommand().execute();
+            });
+        });
+    }
+
+    private void initListeners() {
+        viewModel.getScaleLevelProperty().addListener((observable, oldValue, newValue) -> {
+            ComponentHelper.setImageViewSize(rightImage, viewModel.getRightImageDimensionProperty().get(), newValue.doubleValue());
+            ComponentHelper.setImageViewSize(leftImage, viewModel.getLeftImageDimensionProperty().get(), newValue.doubleValue());
+        });
+
+        viewModel.getRightImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                ComponentHelper.setImageViewSize(rightImage, newValue, viewModel.getScaleLevelProperty().doubleValue());
+            }
+        });
+
+        viewModel.getLeftImageDimensionProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue != null) {
+                ComponentHelper.setImageViewSize(leftImage, newValue, viewModel.getScaleLevelProperty().doubleValue());
+            }
+        });
     }
 
     public void playHintFadeAnimation () {

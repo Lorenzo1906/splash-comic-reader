@@ -9,20 +9,20 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<StackPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="fullscreenView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView">
+<StackPane fx:id="container" styleClass="fullscreenView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.FullscreenView">
     <StackPane fx:id="imageContainer">
-        <BorderPane maxHeight="0" maxWidth="0">
-            <left>
-                <ImageView fx:id="leftImage" preserveRatio="true">
-                    <Image backgroundLoading="true" url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_4.jpg" />
-                </ImageView>
-            </left>
-            <right>
-                <ImageView fx:id="rightImage" preserveRatio="true">
-                    <Image backgroundLoading="true" url="https://www.filmofilia.com/wp-content/uploads/2015/11/supergirl-set-photos-in-los-angeles-melissa-benoist_5.jpg" />
-                </ImageView>
-            </right>
-        </BorderPane>
+        <StackPane>
+            <BorderPane maxWidth="0" maxHeight="0">
+                <left>
+                    <ImageView fx:id="leftImage" preserveRatio="true">
+                    </ImageView>
+                </left>
+                <right>
+                    <ImageView fx:id="rightImage" preserveRatio="true">
+                    </ImageView>
+                </right>
+            </BorderPane>
+        </StackPane>
         <HBox fx:id="hintPanel" styleClass="hintPanel">
             <StackPane styleClass="pagePanel" HBox.hgrow="ALWAYS">
                 <HBox.margin>
@@ -64,7 +64,7 @@
             </StackPane.margin>
         </HBox>
         <AnchorPane fx:id="pagePanel">
-            <Label styleClass="hintText" text="Page 01/10" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+            <Label fx:id="pagePanelText" styleClass="hintText" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
         </AnchorPane>
     </StackPane>
 </StackPane>
