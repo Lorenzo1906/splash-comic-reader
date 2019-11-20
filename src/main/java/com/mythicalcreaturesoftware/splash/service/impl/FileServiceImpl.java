@@ -227,7 +227,7 @@ public class FileServiceImpl {
 
         if (currentSpread.equals(nextSpread) && fileReader.getIndex() + 2 <= fileReader.getTotalPages()) {
             fileReader.setIndex(fileReader.getIndex() + (2 * sign));
-        } else if (fileReader.getIndex() + 1 <= fileReader.getTotalPages()) {
+        } else if (fileReader.getIndex() + sign <= fileReader.getTotalPages()) {
             fileReader.setIndex(fileReader.getIndex() + sign);
         }
     }
