@@ -72,8 +72,14 @@ public class ComicReaderViewModel implements ViewModel {
     public ComicReaderViewModel () {
         logger.info("Initializing comic reader view model");
 
+        initStatusControlProperties();
         initDefaultProperties();
         initCommands();
+    }
+
+    private void initStatusControlProperties() {
+        fileLoaded = new SimpleBooleanProperty(false);
+        filePathProperty = new SimpleStringProperty("");
     }
 
     private void initDefaultProperties() {
@@ -83,8 +89,7 @@ public class ComicReaderViewModel implements ViewModel {
         readingDirectionRightProperty = new SimpleBooleanProperty(true);
         enableAll = new SimpleBooleanProperty(false);
         enableNextPage = new SimpleBooleanProperty(false);
-        fileLoaded = new SimpleBooleanProperty(false);
-
+        
         zoomInButton = new SimpleBooleanProperty(true);
         zoomOutButton = new SimpleBooleanProperty(true);
 
@@ -98,7 +103,6 @@ public class ComicReaderViewModel implements ViewModel {
         totalPagesProperty = new SimpleIntegerProperty(1);
 
         fileNameProperty = new SimpleStringProperty("");
-        filePathProperty = new SimpleStringProperty("");
 
         leftImageProperty = new SimpleObjectProperty<>(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
         rightImageProperty = new SimpleObjectProperty<>(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
@@ -106,6 +110,34 @@ public class ComicReaderViewModel implements ViewModel {
 
         leftImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
         rightImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
+    }
+
+    private void resetToDefaultProperties() {
+        logger.info("Reset to default properties");
+
+        isTwoPagesProperty.set(true);
+        readingDirectionRightProperty.set(true);
+        enableAll.set(true);
+        enableNextPage.set(false);
+
+        zoomInButton.set(true);
+        zoomOutButton.set(true);
+
+        scaleLevelProperty.set(1);
+        currentPageDefaultScaleLevelProperty.set(1);
+
+        currentPageProperty.setValue(1);
+        currentPagePreviewProperty.setValue(1);
+        totalPagesProperty.setValue(1);
+
+        fileNameProperty.setValue("");
+
+        leftImageProperty.setValue(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+        rightImageProperty.setValue(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+        previewImageProperty.setValue(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+
+        leftImageDimensionProperty.setValue(new Dimension(1, 1));
+        leftImageDimensionProperty.setValue(new Dimension(1, 1));
     }
 
     private void initCommands() {
@@ -163,6 +195,11 @@ public class ComicReaderViewModel implements ViewModel {
         openFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
+                if (fileLoaded.get()) {
+                    Platform.runLater(() -> resetToDefaultProperties());
+                    FileServiceImpl.getInstance().unloadFile();
+                }
+
                 fileLoaded.setValue(false);
                 openFile();
                 loadImages();

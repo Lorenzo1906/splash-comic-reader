@@ -330,7 +330,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
         if (file != null) {
             viewModel.getFilePathProperty().setValue(file.getAbsolutePath());
-            viewModel.getScaleLevelProperty().setValue(1);
+            //viewModel.getScaleLevelProperty().setValue(1);
             viewModel.getOpenFileCommand().execute();
         }
     }

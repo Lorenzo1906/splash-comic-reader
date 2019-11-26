@@ -7,10 +7,14 @@ import com.mythicalcreaturesoftware.splash.filereader.FileReaderType;
 import com.mythicalcreaturesoftware.splash.model.Spread;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 
 public class FileServiceImpl {
+
+    private static Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
     private static volatile FileServiceImpl instance = null;
 
@@ -30,12 +34,18 @@ public class FileServiceImpl {
         return instance;
     }
 
+    public void unloadFile() {
+        logger.info("Unloading file");
+        fileReader = null;
+    }
+
     public String loadFile(String path) {
+        logger.info("Loading file");
+
         try {
-            getFileReaderTypeFromPath(path);
             fileReader = FileReaderFactory.buildFileReader(getFileReaderTypeFromPath(path), path);
         } catch (UnsupportedFileTypeException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return getFilenameFromPath(path);

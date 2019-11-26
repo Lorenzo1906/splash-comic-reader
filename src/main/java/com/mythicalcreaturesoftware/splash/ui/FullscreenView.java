@@ -8,6 +8,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -83,7 +84,7 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
             newValue.addEventFilter(MessageEvent.PAGE_EVENT, event -> {
                 logger.debug("Updating view values from event");
 
-                viewModel.getOpenFileCommand().execute();
+                Platform.runLater(() -> viewModel.getOpenFileCommand().execute());
             });
         });
     }
