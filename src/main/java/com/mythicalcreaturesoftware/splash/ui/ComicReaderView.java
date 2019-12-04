@@ -3,7 +3,6 @@ package com.mythicalcreaturesoftware.splash.ui;
 import com.mythicalcreaturesoftware.splash.app.ComicReaderApp;
 import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
 import com.mythicalcreaturesoftware.splash.event.MessageEvent;
-import com.mythicalcreaturesoftware.splash.event.ActionMessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
@@ -19,20 +18,14 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -120,6 +113,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     private ResourceBundle resourceBundle;
 
     private PreviewPopOver popOver;
+    private boolean isActive = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -254,61 +248,90 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
                 });
             }
         });
-
-        viewModel.getFileLoaded().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                fireEvent(previousPage.getScene(), MessageEvent.PAGE_EVENT);
-            }
-        });
     }
 
     private void initMnemonics() {
         wrapper.sceneProperty().addListener((observable, oldValue, newValue) -> {
-            KeyCombination headerKeyCombination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-            KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_ANY);
-            KeyCombination nextPageKeyCombination = new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_ANY);
-            KeyCombination readingDirectionKeyCombination = new KeyCodeCombination(KeyCode.M, KeyCombination.CONTROL_ANY);
-            KeyCombination pagePerViewKeyCombination = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_ANY);
-            KeyCombination zoomOutKeyCombination = new KeyCodeCombination(KeyCode.SUBTRACT, KeyCombination.CONTROL_ANY);
-            KeyCombination zoomInKeyCombination = new KeyCodeCombination(KeyCode.ADD, KeyCombination.CONTROL_ANY);
-            KeyCombination defaultScaleKeyCombination = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_ANY);
-            KeyCombination fullscreenKeyCombination = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_ANY);
+            newValue.addEventFilter(MessageEvent.OPEN_FILE_EVENT, event -> {
+                logger.debug("Receiving open file event");
 
-            newValue.setOnKeyPressed(event -> {
-                if (headerKeyCombination.match(event)) {
+                if (isActive) {
                     openFileAction();
                 }
-                if (previousPageKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.PREVIOUS_PAGE_EVENT, event -> {
+                logger.debug("Receiving previous event");
+
+                if (isActive) {
                     previousPageAction();
                 }
-                if (nextPageKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.NEXT_PAGE_EVENT, event -> {
+                logger.debug("Receiving next event");
+
+                if (isActive) {
                     nextPageAction();
                 }
-                if (readingDirectionKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.CHANGE_READING_DIRECTION_EVENT, event -> {
+                logger.debug("Receiving change reading direction event");
+
+                if (isActive) {
                     readingDirectionAction();
                 }
-                if (pagePerViewKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.CHANGE_PAGES_PER_VIEW_EVENT, event -> {
+                logger.debug("Receiving change pages per view event");
+
+                if (isActive) {
                     pagePerViewAction();
                 }
-                if (zoomOutKeyCombination.match(event)) {
-                    zoomOutAction();
-                }
-                if (zoomInKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.ZOOM_IN_EVENT, event -> {
+                logger.debug("Receiving zoom in event");
+
+                if (isActive) {
                     zoomInAction();
                 }
-                if (defaultScaleKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.ZOOM_OUT_EVENT, event -> {
+                logger.debug("Receiving zoom out event");
+
+                if (isActive) {
+                    zoomOutAction();
+                }
+            });
+
+            newValue.addEventFilter(MessageEvent.SET_DEFAULT_SCALE_EVENT, event -> {
+                logger.debug("Receiving set default scale event");
+
+                if (isActive) {
                     setDefaultScale();
                 }
-                if (fullscreenKeyCombination.match(event)) {
+            });
+
+            newValue.addEventFilter(MessageEvent.FULLSCREEN_EVENT, event -> {
+                logger.debug("Receiving fullscreen event");
+
+                if (isActive) {
                     fullscreenAction();
                 }
             });
 
-        });
-    }
+            newValue.addEventFilter(MessageEvent.EXITED_FULLSCREEN_EVENT, event -> {
+                logger.debug("Receiving fullscreen event");
 
-    private void fireEvent (Scene target, EventType<MessageEvent> type) {
-        Event.fireEvent(target, new ActionMessageEvent(type));
+                if (isActive) {
+                    viewModel.getRefreshFileCommand().execute();
+                }
+            });
+        });
     }
 
     @FXML
@@ -330,46 +353,57 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
         if (file != null) {
             viewModel.getFilePathProperty().setValue(file.getAbsolutePath());
-            //viewModel.getScaleLevelProperty().setValue(1);
             viewModel.getOpenFileCommand().execute();
         }
     }
 
     @FXML
     public void previousPageAction() {
-        viewModel.getLoadPreviousPageCommand().execute();
-        fireEvent(previousPage.getScene(), MessageEvent.PAGE_EVENT);
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getLoadPreviousPageCommand().execute();
+        }
     }
 
     @FXML
     public void nextPageAction() {
-        viewModel.getLoadNextPageCommand().execute();
-        fireEvent(nextPage.getScene(), MessageEvent.PAGE_EVENT);
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getLoadNextPageCommand().execute();
+        }
     }
 
     @FXML
     public void readingDirectionAction() {
-        viewModel.getReadingDirectionCommand().execute();
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getReadingDirectionCommand().execute();
+        }
     }
 
     @FXML
     public void pagePerViewAction() {
-        viewModel.getUpdatePagesPerViewPageCommand().execute();
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getUpdatePagesPerViewPageCommand().execute();
+        }
     }
 
     @FXML
     public void zoomInAction() {
-        viewModel.getZoomInCommand().execute();
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getZoomInCommand().execute();
+        }
     }
 
     @FXML
     public void zoomOutAction() {
-        viewModel.getZoomOutCommand().execute();
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getZoomOutCommand().execute();
+        }
     }
 
     @FXML
     public void setDefaultScale() {
-        viewModel.getApplyDefaultScaleCommand().execute();
+        if (viewModel.getEnableAll().getValue()) {
+            viewModel.getApplyDefaultScaleCommand().execute();
+        }
     }
 
     @FXML
@@ -400,5 +434,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     public void closeAction() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

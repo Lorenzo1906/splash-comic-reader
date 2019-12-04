@@ -53,6 +53,8 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
     @InjectResourceBundle
     private ResourceBundle resourceBundle;
 
+    private boolean isActive = false;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("Initializing fullscreen view");
@@ -81,10 +83,54 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
         rightImage.imageProperty().bind(viewModel.getRightImageProperty());
 
         imageContainer.sceneProperty().addListener((observable, oldValue, newValue) -> {
-            newValue.addEventFilter(MessageEvent.PAGE_EVENT, event -> {
-                logger.debug("Updating view values from event");
+            newValue.addEventFilter(MessageEvent.ENTERED_FULLSCREEN_EVENT, event -> {
+                logger.debug("Receiving entered fullscreen event");
 
-                Platform.runLater(() -> viewModel.getOpenFileCommand().execute());
+                if (isActive) {
+                    viewModel.getRefreshFileCommand().execute();
+                }
+            });
+
+            newValue.addEventFilter(MessageEvent.PREVIOUS_PAGE_EVENT, event -> {
+                logger.debug("Receiving previous page event");
+
+                if (isActive) {
+                    viewModel.getLoadPreviousPageCommand().execute();
+                    playPageFadeAnimation();
+                }
+            });
+
+            newValue.addEventFilter(MessageEvent.NEXT_PAGE_EVENT, event -> {
+                logger.debug("Receiving next page event");
+
+                if (isActive) {
+                    viewModel.getLoadNextPageCommand().execute();
+                    playPageFadeAnimation();
+                }
+            });
+
+            newValue.addEventFilter(MessageEvent.ZOOM_IN_EVENT, event -> {
+                logger.debug("Receiving zoom in event");
+
+                if (isActive) {
+                    //zoomInAction();
+                }
+            });
+
+            newValue.addEventFilter(MessageEvent.ZOOM_OUT_EVENT, event -> {
+                logger.debug("Receiving zoom out event");
+
+                if (isActive) {
+                    //zoomOutAction();
+                }
+            });
+
+            newValue.addEventFilter(MessageEvent.SET_DEFAULT_SCALE_EVENT, event -> {
+                logger.debug("Receiving set default scale event");
+
+                if (isActive) {
+                    //setDefaultScale();
+                }
             });
         });
     }
@@ -128,5 +174,9 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
         fade.setNode(node);
 
         fade.play();
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

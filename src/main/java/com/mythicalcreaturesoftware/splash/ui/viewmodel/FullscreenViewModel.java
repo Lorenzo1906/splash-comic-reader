@@ -6,6 +6,7 @@ import com.mythicalcreaturesoftware.splash.utils.MathHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -24,7 +25,9 @@ public class FullscreenViewModel implements ViewModel {
 
     private static Logger logger = LoggerFactory.getLogger(LoadingViewModel.class);
 
-    private Command openFileCommand;
+    private Command refreshFileCommand;
+    private Command loadPreviousPageCommand;
+    private Command loadNextPageCommand;
 
     private IntegerProperty currentPageProperty;
     private IntegerProperty totalPagesProperty;
@@ -68,7 +71,7 @@ public class FullscreenViewModel implements ViewModel {
     private void initCommands() {
         logger.info("Initializing commands");
 
-        openFileCommand = new DelegateCommand(() -> new Action() {
+        refreshFileCommand = new DelegateCommand(() -> new Action() {
             @Override
             protected void action() throws Exception {
                 loadImages();
@@ -77,6 +80,24 @@ public class FullscreenViewModel implements ViewModel {
                 calculateScale();
             }
         }, true);
+
+        Command previousPageCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                previousPage();
+            }
+        }, false);
+
+        Command nextPageCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                nextPage();
+            }
+        },false);
+
+        loadNextPageCommand = new CompositeCommand(nextPageCommand, refreshFileCommand);
+
+        loadPreviousPageCommand = new CompositeCommand(previousPageCommand, refreshFileCommand);
     }
 
     public IntegerProperty getCurrentPageProperty() {
@@ -111,8 +132,16 @@ public class FullscreenViewModel implements ViewModel {
         return screenHeightProperty;
     }
 
-    public Command getOpenFileCommand() {
-        return openFileCommand;
+    public Command getRefreshFileCommand() {
+        return refreshFileCommand;
+    }
+
+    public Command getLoadPreviousPageCommand() {
+        return loadPreviousPageCommand;
+    }
+
+    public Command getLoadNextPageCommand() {
+        return loadNextPageCommand;
     }
 
     public ObjectProperty<Dimension> getLeftImageDimensionProperty() {
@@ -158,5 +187,19 @@ public class FullscreenViewModel implements ViewModel {
         if (scaleLevelProperty.get() == 1) {
             Platform.runLater(() -> scaleLevelProperty.setValue(defaultScaleLevel));
         }
+    }
+
+    private void previousPage() {
+        logger.debug("Previous Page");
+
+        FileServiceImpl.getInstance().updatePreviousPage(true);
+        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+    }
+
+    private void nextPage() {
+        logger.debug("Next Page");
+
+        FileServiceImpl.getInstance().updateNextPage(true);
+        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
     }
 }

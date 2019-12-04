@@ -42,6 +42,7 @@ public class ComicReaderViewModel implements ViewModel {
     private Command updatePagesPerViewPageCommand;
     private Command applyDefaultScaleCommand;
     private Command updatePreviewImageCommand;
+    private Command refreshFileCommand;
 
     private BooleanProperty zoomInButton;
     private BooleanProperty zoomOutButton;
@@ -247,6 +248,16 @@ public class ComicReaderViewModel implements ViewModel {
         }, false);
 
         readingDirectionCommand = new CompositeCommand(changeReadingDirectionCommand, loadImagesCommand, calculateScaleCommand);
+
+        refreshFileCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                loadImages();
+                updateTotalPages();
+                updateCurrentPage();
+                calculateScale();
+            }
+        }, true);
     }
 
     private BooleanProperty createEnableNextPageButtonProperty () {
@@ -389,6 +400,10 @@ public class ComicReaderViewModel implements ViewModel {
 
     public Command getUpdatePreviewImageCommand() {
         return updatePreviewImageCommand;
+    }
+
+    public Command getRefreshFileCommand() {
+        return refreshFileCommand;
     }
 
     private void previousPage() {

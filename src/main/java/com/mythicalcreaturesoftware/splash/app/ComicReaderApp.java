@@ -1,5 +1,7 @@
 package com.mythicalcreaturesoftware.splash.app;
 
+import com.mythicalcreaturesoftware.splash.event.ActionMessageEvent;
+import com.mythicalcreaturesoftware.splash.event.MessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.ComicReaderView;
 import com.mythicalcreaturesoftware.splash.ui.FullscreenView;
 import com.mythicalcreaturesoftware.splash.ui.LoadingView;
@@ -14,9 +16,14 @@ import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -24,7 +31,7 @@ import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
@@ -38,6 +45,7 @@ public class ComicReaderApp extends Application {
     private ViewTuple<ComicReaderView, ComicReaderViewModel> readerViewTuple;
     private ViewTuple<FullscreenView, FullscreenViewModel> fullscreenViewTuple;
     private StackPane stackPane;
+    private Scene scene;
 
     public static ComicReaderApp instance() {
         return instance;
@@ -71,8 +79,15 @@ public class ComicReaderApp extends Application {
             stackPane.getChildren().add(loadingRoot);
             stackPane.getChildren().add(root);
 
-            Scene scene = new Scene(stackPane);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
+            scene = new Scene(stackPane);
+            URL css = getClass().getClassLoader().getResource("style.css");
+
+            if (css != null) {
+                scene.getStylesheets().add(css.toExternalForm());
+            }
+
+            setKeysShortcuts();
+            readerViewTuple.getCodeBehind().setActive(true);
 
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
@@ -98,6 +113,52 @@ public class ComicReaderApp extends Application {
         }
     }
 
+    private void setKeysShortcuts() {
+        KeyCombination headerKeyCombination = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+        KeyCombination previousPageKeyCombination = new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_ANY);
+        KeyCombination nextPageKeyCombination = new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_ANY);
+        KeyCombination readingDirectionKeyCombination = new KeyCodeCombination(KeyCode.M, KeyCombination.CONTROL_ANY);
+        KeyCombination pagePerViewKeyCombination = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_ANY);
+        KeyCombination zoomOutKeyCombination = new KeyCodeCombination(KeyCode.SUBTRACT, KeyCombination.CONTROL_ANY);
+        KeyCombination zoomInKeyCombination = new KeyCodeCombination(KeyCode.ADD, KeyCombination.CONTROL_ANY);
+        KeyCombination defaultScaleKeyCombination = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_ANY);
+        KeyCombination fullscreenKeyCombination = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_ANY);
+
+        scene.setOnKeyPressed(event -> {
+            if (headerKeyCombination.match(event)) {
+                fireEvent(MessageEvent.OPEN_FILE_EVENT);
+            }
+            if (previousPageKeyCombination.match(event)) {
+                fireEvent(MessageEvent.PREVIOUS_PAGE_EVENT);
+            }
+            if (nextPageKeyCombination.match(event)) {
+                fireEvent(MessageEvent.NEXT_PAGE_EVENT);
+            }
+            if (readingDirectionKeyCombination.match(event)) {
+                fireEvent(MessageEvent.CHANGE_READING_DIRECTION_EVENT);
+            }
+            if (pagePerViewKeyCombination.match(event)) {
+                fireEvent(MessageEvent.CHANGE_PAGES_PER_VIEW_EVENT);
+            }
+            if (zoomOutKeyCombination.match(event)) {
+                fireEvent(MessageEvent.ZOOM_OUT_EVENT);
+            }
+            if (zoomInKeyCombination.match(event)) {
+                fireEvent(MessageEvent.ZOOM_IN_EVENT);
+            }
+            if (defaultScaleKeyCombination.match(event)) {
+                fireEvent(MessageEvent.SET_DEFAULT_SCALE_EVENT);
+            }
+            if (fullscreenKeyCombination.match(event)) {
+                fireEvent(MessageEvent.FULLSCREEN_EVENT);
+            }
+        });
+    }
+
+    public void fireEvent(EventType<MessageEvent> type) {
+        Event.fireEvent(scene, new ActionMessageEvent(type));
+    }
+
     public void showFullscreen() {
         Stage stage = (Stage) stackPane.getScene().getWindow();
         stage.setFullScreen(true);
@@ -105,7 +166,12 @@ public class ComicReaderApp extends Application {
         fullscreenViewTuple.getView().setVisible(true);
         fullscreenViewTuple.getCodeBehind().playHintFadeAnimation();
         fullscreenViewTuple.getCodeBehind().playPageFadeAnimation();
+        fullscreenViewTuple.getCodeBehind().setActive(true);
+        readerViewTuple.getCodeBehind().setActive(false);
+
         setNodeToFront(fullscreenViewTuple.getView());
+
+        fireEvent(MessageEvent.ENTERED_FULLSCREEN_EVENT);
     }
 
     private void hideFullscreen() {
@@ -113,7 +179,11 @@ public class ComicReaderApp extends Application {
         stage.setFullScreen(false);
 
         fullscreenViewTuple.getView().setVisible(false);
+        fullscreenViewTuple.getCodeBehind().setActive(false);
+        readerViewTuple.getCodeBehind().setActive(true);
         setNodeToFront(readerViewTuple.getView());
+
+        fireEvent(MessageEvent.EXITED_FULLSCREEN_EVENT);
     }
 
     public void showLoading() {
@@ -128,7 +198,7 @@ public class ComicReaderApp extends Application {
 
     private void setNodeToFront(Node node) {
         ObservableList<Node> workingCollection = FXCollections.observableArrayList(stackPane.getChildren());
-        Collections.sort(workingCollection, Comparator.comparing(node::equals));
+        workingCollection.sort(Comparator.comparing(node::equals));
         stackPane.getChildren().setAll(workingCollection);
     }
 }
