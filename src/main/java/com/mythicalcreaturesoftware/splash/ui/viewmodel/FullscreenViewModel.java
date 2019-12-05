@@ -28,6 +28,9 @@ public class FullscreenViewModel implements ViewModel {
     private Command refreshFileCommand;
     private Command loadPreviousPageCommand;
     private Command loadNextPageCommand;
+    private Command applyDefaultScaleCommand;
+    private Command zoomInCommand;
+    private Command zoomOutCommand;
 
     private IntegerProperty currentPageProperty;
     private IntegerProperty totalPagesProperty;
@@ -98,6 +101,27 @@ public class FullscreenViewModel implements ViewModel {
         loadNextPageCommand = new CompositeCommand(nextPageCommand, refreshFileCommand);
 
         loadPreviousPageCommand = new CompositeCommand(previousPageCommand, refreshFileCommand);
+
+        zoomInCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                zoomIn();
+            }
+        }, false);
+
+        zoomOutCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                zoomOut();
+            }
+        }, false);
+
+        applyDefaultScaleCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() throws Exception {
+                applyDefaultScale();
+            }
+        }, false);
     }
 
     public IntegerProperty getCurrentPageProperty() {
@@ -152,6 +176,18 @@ public class FullscreenViewModel implements ViewModel {
         return rightImageDimensionProperty;
     }
 
+    public Command getZoomInCommand() {
+        return zoomInCommand;
+    }
+
+    public Command getZoomOutCommand() {
+        return zoomOutCommand;
+    }
+
+    public Command getApplyDefaultScaleCommand() {
+        return applyDefaultScaleCommand;
+    }
+
     private void loadImages () {
         logger.debug("Loading images");
 
@@ -201,5 +237,27 @@ public class FullscreenViewModel implements ViewModel {
 
         FileServiceImpl.getInstance().updateNextPage(true);
         currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+    }
+
+    private void zoomIn() {
+        logger.debug("Zooming in image");
+
+        if (scaleLevelProperty.getValue() <= DefaultValuesHelper.MAXIMUM_SCALE_LEVEL) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() + DefaultValuesHelper.SCALE_DELTA);
+        }
+    }
+
+    private void zoomOut() {
+        logger.debug("Zooming out image");
+
+        if (scaleLevelProperty.getValue() >= DefaultValuesHelper.MINIMUM_SCALE_LEVEL) {
+            scaleLevelProperty.setValue(scaleLevelProperty.getValue() - DefaultValuesHelper.SCALE_DELTA);
+        }
+    }
+
+    private void applyDefaultScale() {
+        logger.debug("Applying default scale");
+
+        scaleLevelProperty.set(currentPageDefaultScaleLevelProperty.getValue());
     }
 }

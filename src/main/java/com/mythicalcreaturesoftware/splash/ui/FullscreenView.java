@@ -113,7 +113,7 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
                 logger.debug("Receiving zoom in event");
 
                 if (isActive) {
-                    //zoomInAction();
+                    viewModel.getZoomInCommand().execute();
                 }
             });
 
@@ -121,7 +121,7 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
                 logger.debug("Receiving zoom out event");
 
                 if (isActive) {
-                    //zoomOutAction();
+                    viewModel.getZoomOutCommand().execute();
                 }
             });
 
@@ -129,7 +129,7 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
                 logger.debug("Receiving set default scale event");
 
                 if (isActive) {
-                    //setDefaultScale();
+                    viewModel.getApplyDefaultScaleCommand().execute();
                 }
             });
         });
