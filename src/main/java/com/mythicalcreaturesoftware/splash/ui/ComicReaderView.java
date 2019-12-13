@@ -359,14 +359,14 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void previousPageAction() {
-        if (viewModel.getEnableAll().getValue()) {
+        if (viewModel.getEnableAll().getValue() && viewModel.getLoadPreviousPageCommand().isExecutable()) {
             viewModel.getLoadPreviousPageCommand().execute();
         }
     }
 
     @FXML
     public void nextPageAction() {
-        if (viewModel.getEnableAll().getValue()) {
+        if (viewModel.getEnableAll().getValue() && viewModel.getLoadNextPageCommand().isExecutable()) {
             viewModel.getLoadNextPageCommand().execute();
         }
     }
@@ -387,14 +387,14 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void zoomInAction() {
-        if (viewModel.getEnableAll().getValue()) {
+        if (viewModel.getEnableAll().getValue() && viewModel.getZoomOutCommand().isExecutable()) {
             viewModel.getZoomInCommand().execute();
         }
     }
 
     @FXML
     public void zoomOutAction() {
-        if (viewModel.getEnableAll().getValue()) {
+        if (viewModel.getEnableAll().getValue() && viewModel.getZoomOutCommand().isExecutable()) {
             viewModel.getZoomOutCommand().execute();
         }
     }

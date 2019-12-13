@@ -68,19 +68,18 @@ public class CbzFileReader extends FileReader {
     }
 
     private int checkProcessEntry (ZipEntry entry, ZipInputStream stream, int pageIndex) throws IOException {
-        if (entry.isDirectory()) {
-            Files.createDirectory(tempFolderPath.resolve(entry.getName()));
-        } else {
-
+        if (!entry.isDirectory()) {
             Path filePath = processFileEntry(tempFolderPath, entry, stream);
             String url = filePath.toUri().toURL().toString();
             Dimension dimension = getPageSize(filePath);
 
-            pages.put(pageIndex, url);
-            dimensions.put(pageIndex, dimension);
+            if (dimension.height > 0 && dimension.width > 0) {
+                pages.put(pageIndex, url);
+                dimensions.put(pageIndex, dimension);
 
-            totalPages++;
-            pageIndex++;
+                totalPages++;
+                pageIndex++;
+            }
         }
 
         return pageIndex;
@@ -89,7 +88,7 @@ public class CbzFileReader extends FileReader {
     private Path processFileEntry (Path directory, ZipEntry entry, ZipInputStream stream) throws IOException {
         byte[] buffer = new byte[2048];
 
-        Path filePath = directory.resolve(entry.getName());
+        Path filePath = directory.resolve(FilenameUtils.getBaseName(entry.getName()));
         filePath.toFile().deleteOnExit();
 
         try (FileOutputStream fos = new FileOutputStream(filePath.toFile());

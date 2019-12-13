@@ -68,10 +68,12 @@ public class ImageHelper {
 
         BufferedImage inputImage = ImageIO.read(file);
 
-        int scaledWidth = (int) MathHelper.percentageValue(percent, inputImage.getWidth());
-        int scaledHeight = (int) MathHelper.percentageValue(percent, inputImage.getHeight());
+        if (inputImage != null) {
+            int scaledWidth = (int) MathHelper.percentageValue(percent, inputImage.getWidth());
+            int scaledHeight = (int) MathHelper.percentageValue(percent, inputImage.getHeight());
 
-        resize(cleanedInputImagePath, cleanedOutputImagePath, scaledWidth, scaledHeight);
+            resize(cleanedInputImagePath, cleanedOutputImagePath, scaledWidth, scaledHeight);
+        }
     }
 
     /**

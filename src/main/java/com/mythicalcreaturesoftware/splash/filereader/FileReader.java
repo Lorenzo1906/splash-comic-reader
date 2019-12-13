@@ -254,6 +254,9 @@ public abstract class FileReader {
     }
 
     private void generatePreviewImages() throws InsufficientDataException {
+        long startTime = System.currentTimeMillis();
+        logger.info("Constructing preview images");
+
         if (pages == null || pages.size() == 0) {
             throw new InsufficientDataException("Insufficient data to generate previews");
         }
@@ -270,6 +273,10 @@ public abstract class FileReader {
                 logger.error(e.getMessage());
             }
         }
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        logger.info("Constructed preview images in {} milliseconds", elapsedTime);
     }
 
     private String generatePreviewImagePath(String path, Path folderPath) {

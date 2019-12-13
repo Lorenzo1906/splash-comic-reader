@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CbrFileReader extends FileReader {
 
@@ -40,7 +42,7 @@ public class CbrFileReader extends FileReader {
 
             File local = new File(filePath);
             Archive archive = new Archive(local);
-            List<FileHeader> list = archive.getFileHeaders();
+            List<FileHeader> list = sortFileHeaderList(archive.getFileHeaders());
 
             int pageIndex = 1;
             pages = new HashMap<>();
@@ -56,6 +58,12 @@ public class CbrFileReader extends FileReader {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         logger.info("File loaded in {} milliseconds", elapsedTime);
+    }
+
+    private List<FileHeader> sortFileHeaderList(List<FileHeader> list) {
+        return list.stream()
+                .sorted(Comparator.comparing(FileHeader::getFileNameString))
+                .collect(Collectors.toList());
     }
 
     private int processFileHeader (FileHeader header, Archive archive, int pageIndex) throws MalformedURLException, FileNotFoundException, RarException {
