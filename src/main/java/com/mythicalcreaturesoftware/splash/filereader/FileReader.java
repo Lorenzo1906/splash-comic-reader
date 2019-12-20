@@ -12,6 +12,8 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -291,7 +293,14 @@ public abstract class FileReader {
         Path imagePath = Paths.get(path);
 
         try {
-            Path previewImagePath = Files.createTempFile(folderPath, imagePath.getFileName().toString(), "." + FilenameUtils.getExtension(imagePath.getFileName().toString()));
+            String extension = FilenameUtils.getExtension(imagePath.getFileName().toString());
+            if (!extension.isEmpty()) {
+                extension = "." + extension;
+            }
+
+            String baseName = URLDecoder.decode(FilenameUtils.getBaseName(imagePath.getFileName().toString()), StandardCharsets.UTF_8.toString());
+
+            Path previewImagePath = Files.createTempFile(folderPath, baseName, extension);
             previewImagePath.toFile().deleteOnExit();
 
             result = previewImagePath.toUri().toURL().toString();
@@ -309,7 +318,6 @@ public abstract class FileReader {
 
         Path previewFolderPath = null;
         try {
-
             previewFolderPath = Files.createTempDirectory(path, "preview");
             previewFolderPath.toFile().deleteOnExit();
         } catch (IOException e) {

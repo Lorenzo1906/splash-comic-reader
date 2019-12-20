@@ -29,21 +29,18 @@ public class PreviewPopOver extends PopOver {
 
         scaleLevelProperty = new SimpleDoubleProperty(1);
         scaleLevelProperty.addListener((observable, oldValue, newValue) -> {
-            imageView.setFitWidth(imageView.getFitWidth() * newValue.doubleValue());
             imageView.setFitHeight(imageView.getFitHeight() * newValue.doubleValue());
         });
 
         sizeProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
         sizeProperty.addListener((observable, oldValue, newValue) -> {
-            double fixedWidth = MathHelper.percentageValue(45, newValue.width);
-            double fixedHeight = MathHelper.percentageValue(45, newValue.height);
+            double fixedHeight = MathHelper.percentageValue(30, newValue.height);
 
-            imageView.setFitWidth(fixedWidth);
             imageView.setFitHeight(fixedHeight);
         });
     }
 
-    public  ImageView getImageView() {
+    public ImageView getImageView() {
         return imageView;
     }
 

@@ -109,7 +109,7 @@ public class ComicReaderApp extends Application {
                 }
             });
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("error starting app", e);
         }
     }
 

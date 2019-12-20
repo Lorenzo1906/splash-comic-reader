@@ -88,7 +88,9 @@ public class CbzFileReader extends FileReader {
     private Path processFileEntry (Path directory, ZipEntry entry, ZipInputStream stream) throws IOException {
         byte[] buffer = new byte[2048];
 
-        Path filePath = directory.resolve(FilenameUtils.getBaseName(entry.getName()));
+        String filename = FilenameUtils.getBaseName(entry.getName()) + "." + FilenameUtils.getExtension(entry.getName());
+
+        Path filePath = directory.resolve(filename);
         filePath.toFile().deleteOnExit();
 
         try (FileOutputStream fos = new FileOutputStream(filePath.toFile());

@@ -69,6 +69,7 @@ public class ComicReaderViewModel implements ViewModel {
     private ObjectProperty<Image> previewImageProperty;
     private ObjectProperty<Dimension> leftImageDimensionProperty;
     private ObjectProperty<Dimension> rightImageDimensionProperty;
+    private ObjectProperty<Dimension> firstPageDimensionProperty;
 
     public ComicReaderViewModel () {
         logger.info("Initializing comic reader view model");
@@ -111,6 +112,7 @@ public class ComicReaderViewModel implements ViewModel {
 
         leftImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
         rightImageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
+        firstPageDimensionProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
     }
 
     private void resetToDefaultProperties() {
@@ -139,6 +141,7 @@ public class ComicReaderViewModel implements ViewModel {
 
         leftImageDimensionProperty.setValue(new Dimension(1, 1));
         leftImageDimensionProperty.setValue(new Dimension(1, 1));
+        firstPageDimensionProperty.setValue(new Dimension(1, 1));
     }
 
     private void initCommands() {
@@ -354,6 +357,10 @@ public class ComicReaderViewModel implements ViewModel {
         return totalPagesProperty;
     }
 
+    public ObjectProperty<Dimension> getFirstPageDimensionProperty() {
+        return firstPageDimensionProperty;
+    }
+
     public Command getLoadPreviousPageCommand() {
         return loadPreviousPageCommand;
     }
@@ -464,6 +471,7 @@ public class ComicReaderViewModel implements ViewModel {
         String filename = FileServiceImpl.getInstance().loadFile(filePathProperty.getValue());
         Platform.runLater(() -> fileNameProperty.setValue(filename));
         Platform.runLater(() -> readingDirectionRightProperty.setValue(!FileServiceImpl.getInstance().getMangaMode()));
+        Platform.runLater(() -> firstPageDimensionProperty.setValue(FileServiceImpl.getInstance().getCurrentPageSize()));
         enableAll.setValue(true);
 
         logger.debug("Finished opening file");

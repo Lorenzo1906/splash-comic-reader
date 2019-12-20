@@ -182,8 +182,8 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         ObjectBinding<Node> defaultScaleBinding = Bindings.when(viewModel.getCurrentPageDefaultScaleLevelProperty().greaterThanOrEqualTo(viewModel.getScaleLevelProperty())).then(IconHelper.createExpandScaleIconProperty()).otherwise(IconHelper.createCollapseScaleIconProperty());
         defaultScale.graphicProperty().bind(defaultScaleBinding);
 
-        popOver.getScaleLevelProperty().bind(viewModel.getScaleLevelProperty());
-        popOver.getSizeProperty().bind(viewModel.getLeftImageDimensionProperty());
+        popOver.getScaleLevelProperty().bind(viewModel.getCurrentPageDefaultScaleLevelProperty());
+        popOver.getSizeProperty().bind(viewModel.getFirstPageDimensionProperty());
         popOver.getImageView().imageProperty().bind(viewModel.getPreviewImageProperty());
     }
 
