@@ -1,4 +1,8 @@
-package com.mythicalcreaturesoftware.splash.utils;
+package com.mythicalcreaturesoftware.splash.tasks;
+
+import com.mythicalcreaturesoftware.splash.utils.MathHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -8,7 +12,28 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class ImageHelper {
+public class ImageResizeTask implements Runnable {
+
+    private static Logger logger = LoggerFactory.getLogger(ImageResizeTask.class);
+
+    private String inputImagePath;
+    private String outputImagePath;
+    private double percent;
+
+    public ImageResizeTask(String inputImagePath, String outputImagePath, double percent) {
+        this.inputImagePath = inputImagePath;
+        this.outputImagePath = outputImagePath;
+        this.percent = percent;
+    }
+
+    @Override
+    public void run() {
+        try {
+            resize(inputImagePath, outputImagePath, percent);
+        } catch (IOException e) {
+            logger.error("Error starting thread", e);
+        }
+    }
 
     /**
      * Resize an image to a absolute width and height (the image may not be proportional). Both paths should be coming as an encode url, they will be decode during the execution
@@ -18,7 +43,7 @@ public class ImageHelper {
      * @param scaledHeight absolute height in pixels
      * @throws IOException IOException
      */
-    public static void resize(String inputImagePath, String outputImagePath, int scaledWidth, int scaledHeight) throws IOException {
+    private void resize(String inputImagePath, String outputImagePath, int scaledWidth, int scaledHeight) throws IOException {
         String cleanedInputImagePath = URLDecoder.decode(inputImagePath, StandardCharsets.UTF_8.toString());
         String cleanedOutputImagePath = URLDecoder.decode(outputImagePath, StandardCharsets.UTF_8.toString());
 
@@ -53,7 +78,7 @@ public class ImageHelper {
      * over the input image.
      * @throws IOException IOException
      */
-    public static void resize(String inputImagePath, String outputImagePath, double percent) throws IOException {
+    private void resize(String inputImagePath, String outputImagePath, double percent) throws IOException {
         if (inputImagePath == null || inputImagePath.equals("")) {
             return;
         }
@@ -81,7 +106,7 @@ public class ImageHelper {
      * @param path path to clean
      * @return the cleaned path
      */
-    public static String cleanPath(String path) {
+    private String cleanPath(String path) {
         return path.replace("file:", "");
     }
 }

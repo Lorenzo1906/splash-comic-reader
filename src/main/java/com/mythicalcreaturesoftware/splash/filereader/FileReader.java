@@ -2,7 +2,7 @@ package com.mythicalcreaturesoftware.splash.filereader;
 
 import com.mythicalcreaturesoftware.splash.exception.InsufficientDataException;
 import com.mythicalcreaturesoftware.splash.model.Spread;
-import com.mythicalcreaturesoftware.splash.utils.ImageHelper;
+import com.mythicalcreaturesoftware.splash.tasks.ImageResizeTask;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public abstract class FileReader {
     private static Logger logger = LoggerFactory.getLogger(FileReader.class);
@@ -266,19 +268,23 @@ public abstract class FileReader {
         previews = new HashMap<>();
 
         Path previewFolderPath = generatePreviewPath(tempFolderPath);
-        for (Integer index : pages.keySet()) {
-            try {
-                String previewPath = generatePreviewImagePath(pages.get(index), previewFolderPath);
-                previews.put(index, previewPath);
-                ImageHelper.resize(pages.get(index), previewPath, 10);
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-        }
+        generatePreviewImagesSimultaneously(previewFolderPath);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         logger.info("Constructed preview images in {} milliseconds", elapsedTime);
+    }
+
+    private void generatePreviewImagesSimultaneously (Path previewFolderPath) {
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
+
+        for (Integer index : pages.keySet()) {
+            String previewPath = generatePreviewImagePath(pages.get(index), previewFolderPath);
+            previews.put(index, previewPath);
+
+            ImageResizeTask task = new ImageResizeTask(pages.get(index), previewPath, 10);
+            executor.execute(task);
+        }
     }
 
     private String generatePreviewImagePath(String path, Path folderPath) {
