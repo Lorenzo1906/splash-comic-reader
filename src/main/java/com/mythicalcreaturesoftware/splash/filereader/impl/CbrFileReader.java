@@ -74,11 +74,13 @@ public class CbrFileReader extends FileReader {
             String url = filePath.toUri().toURL().toString();
             Dimension dimension = getPageSize(filePath);
 
-            pages.put(pageIndex, url);
-            dimensions.put(pageIndex, dimension);
+            if (dimension.height > 0 && dimension.width > 0) {
+                pages.put(pageIndex, url);
+                dimensions.put(pageIndex, dimension);
 
-            totalPages++;
-            pageIndex++;
+                totalPages++;
+                pageIndex++;
+            }
         }
 
         return pageIndex;
