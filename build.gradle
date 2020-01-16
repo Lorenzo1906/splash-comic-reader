@@ -14,7 +14,10 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
     maven {
-        url  "https://dl.bintray.com/jerady/maven"
+        url "https://dl.bintray.com/jerady/maven"
+    }
+    maven {
+        url "https://jitpack.io"
     }
 }
 
@@ -30,6 +33,7 @@ dependencies {
     compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-11'
     compile 'de.jensd:fontawesomefx-materialicons:2.2.0-11'
     compile 'de.jensd:fontawesomefx-materialstackicons:2.1-11'
+    implementation 'com.github.goxr3plus:FX-BorderlessScene:4.3.1'
 
     annotationProcessor group: 'de.saxsys', name: 'mvvmfx', version: '1.8.0'
 

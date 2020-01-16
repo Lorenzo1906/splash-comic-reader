@@ -1,5 +1,6 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.goxr3plus.fxborderlessscene.borderless.BorderlessScene;
 import com.mythicalcreaturesoftware.splash.app.ComicReaderApp;
 import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
 import com.mythicalcreaturesoftware.splash.event.MessageEvent;
@@ -7,7 +8,6 @@ import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
-import com.mythicalcreaturesoftware.splash.utils.ScreenHelper;
 import com.sun.javafx.binding.SelectBinding;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
@@ -27,6 +27,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -45,6 +46,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     private VBox wrapper;
+
+    @FXML
+    private AnchorPane mainBar;
 
     @FXML
     private StackPane mainImageContainer;
@@ -415,19 +419,14 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void minimizeAction() {
-        Stage stage = (Stage) minimizeButton.getScene().getWindow();
-        stage.setIconified(true);
+        BorderlessScene scene = (BorderlessScene) minimizeButton.getScene();
+        scene.minimizeStage();
     }
 
     @FXML
     public void maximizeAction() {
-        Stage stage = (Stage) maximizeButton.getScene().getWindow();
-
-        if (ScreenHelper.isMaximized()) {
-            ScreenHelper.unMaximize(stage);
-        } else {
-            ScreenHelper.maximize(stage);
-        }
+        BorderlessScene scene = (BorderlessScene) maximizeButton.getScene();
+        scene.maximizeStage();
     }
 
     @FXML
@@ -438,5 +437,9 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public Node getMainBar() {
+        return mainBar;
     }
 }

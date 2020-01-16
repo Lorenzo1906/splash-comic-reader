@@ -1,5 +1,6 @@
 package com.mythicalcreaturesoftware.splash.app;
 
+import com.goxr3plus.fxborderlessscene.borderless.BorderlessScene;
 import com.mythicalcreaturesoftware.splash.event.ActionMessageEvent;
 import com.mythicalcreaturesoftware.splash.event.MessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.ComicReaderView;
@@ -8,8 +9,6 @@ import com.mythicalcreaturesoftware.splash.ui.LoadingView;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.FullscreenViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.LoadingViewModel;
-import com.mythicalcreaturesoftware.splash.utils.ResizeHelper;
-import com.mythicalcreaturesoftware.splash.utils.ScreenHelper;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
@@ -20,7 +19,6 @@ import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -45,7 +43,7 @@ public class ComicReaderApp extends Application {
     private ViewTuple<ComicReaderView, ComicReaderViewModel> readerViewTuple;
     private ViewTuple<FullscreenView, FullscreenViewModel> fullscreenViewTuple;
     private StackPane stackPane;
-    private Scene scene;
+    private BorderlessScene scene;
 
     public static ComicReaderApp instance() {
         return instance;
@@ -63,6 +61,7 @@ public class ComicReaderApp extends Application {
 
             stackPane = new StackPane();
             stackPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+            stackPane.getStyleClass().add("root");
 
             loadingViewTuple = FluentViewLoader.fxmlView(LoadingView.class).load();
             Parent loadingRoot = loadingViewTuple.getView();
@@ -79,9 +78,10 @@ public class ComicReaderApp extends Application {
             stackPane.getChildren().add(loadingRoot);
             stackPane.getChildren().add(root);
 
-            scene = new Scene(stackPane);
-            URL css = getClass().getClassLoader().getResource("style.css");
+            scene = new BorderlessScene(primaryStage, StageStyle.UNDECORATED, stackPane, 250, 250);
+            scene.setMoveControl(readerViewTuple.getCodeBehind().getMainBar());
 
+            URL css = getClass().getClassLoader().getResource("style.css");
             if (css != null) {
                 scene.getStylesheets().add(css.toExternalForm());
             }
@@ -90,13 +90,8 @@ public class ComicReaderApp extends Application {
             readerViewTuple.getCodeBehind().setActive(true);
 
             primaryStage.setScene(scene);
-            primaryStage.setMaximized(true);
-            primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.setTitle(bundle.getString("window.title"));
             primaryStage.setFullScreenExitHint("");
-
-            ScreenHelper.maximize(primaryStage);
-            ResizeHelper.addResizeListener(primaryStage);
 
             stackPane.prefHeightProperty().bind(primaryStage.heightProperty());
             stackPane.prefWidthProperty().bind(primaryStage.widthProperty());
@@ -108,6 +103,9 @@ public class ComicReaderApp extends Application {
                     hideFullscreen();
                 }
             });
+
+            scene.maximizeStage();
+            scene.removeDefaultCSS();
         } catch (Exception e) {
             logger.error("error starting app", e);
         }

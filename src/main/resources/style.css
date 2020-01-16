@@ -4,7 +4,7 @@
 }
 
 .root {
-    -fx-background: rgb(42,49,58);
+    -fx-background: rgb(42,49,58) !important;
 }
 
 .text {
