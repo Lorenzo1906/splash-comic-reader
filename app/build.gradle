@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
@@ -19,6 +19,10 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+}
+
+application {
+    mainClassName = 'com.mythicalcreaturesoftware.splash.Main'
 }
 
 jar {
