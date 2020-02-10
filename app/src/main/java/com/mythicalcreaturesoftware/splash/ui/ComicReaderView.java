@@ -12,6 +12,7 @@ import com.sun.javafx.binding.SelectBinding;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -431,8 +432,8 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void closeAction() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
+        Platform.exit();
+        System.exit(0);
     }
 
     public void setActive(boolean active) {
