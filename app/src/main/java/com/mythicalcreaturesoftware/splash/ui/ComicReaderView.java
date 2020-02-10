@@ -8,7 +8,6 @@ import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
-import com.sun.javafx.binding.SelectBinding;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -171,8 +170,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         headerButton.textProperty().bind(headerBinding);
 
         DoubleBinding scaleBinding = viewModel.getScaleLevelProperty().multiply(100);
-        IntegerBinding integerBinding = new SelectBinding.AsInteger(scaleBinding);
-        zoomPercentageLabel.textProperty().bind(Bindings.concat(integerBinding, " %"));
+        zoomPercentageLabel.textProperty().bind(Bindings.concat(Bindings.format("%.0f", scaleBinding), " %"));
         pageIndicatorLabel.textProperty().bind(Bindings.concat(resourceBundle.getString(DefaultValuesHelper.PAGE_TEXT_KEY), " ", viewModel.getCurrentPageProperty(), "/", viewModel.getTotalPagesProperty()));
 
         pageSelector.maxProperty().bindBidirectional(viewModel.getTotalPagesProperty());

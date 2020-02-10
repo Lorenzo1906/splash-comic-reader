@@ -5,17 +5,17 @@
     </Properties>
     <Appenders>
         <!-- File Appender -->
-        <File name="FILE" fileName="${basePath}/logfile.log" append="true">
-            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n" />
+        <File name="FILE" fileName="${basePath}/logfile.log" append="true" >
+            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %c{1.} (%F:%L) - %m%n" />
         </File>
         <!-- Console Appender -->
-        <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n" />
+        <Console name="STDOUT" target="SYSTEM_OUT" >
+            <PatternLayout pattern="%highlight{%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %c{1.} (%F:%L) - %m%n}{FATAL=red, ERROR=red, WARN=yellow, INFO=black, DEBUG=green, TRACE=blue}" />
         </Console>
     </Appenders>
     <Loggers>
         <Logger name="com.mythicalcreaturesoftware" />
-        <Root level="info">
+        <Root level="all">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="FILE" />
         </Root>
