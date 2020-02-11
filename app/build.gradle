@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 javafx {
@@ -25,31 +26,21 @@ application {
     mainClassName = 'com.mythicalcreaturesoftware.splash.Main'
 }
 
-jar {
-    manifest {
-        attributes "Main-Class": "com.mythicalcreaturesoftware.splash.Main"
-    }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
 dependencies {
-    compile group: 'de.saxsys', name: 'mvvmfx', version: '1.8.0'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.2'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile group: 'com.github.axet', name: 'java-unrar', version: '1.7.0-1'
-    compile group: 'org.controlsfx', name: 'controlsfx', version: '11.0.0'
-    compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
-    compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-11'
-    compile 'de.jensd:fontawesomefx-materialicons:2.2.0-11'
-    compile 'de.jensd:fontawesomefx-materialstackicons:2.1-11'
+    implementation 'de.saxsys:mvvmfx:1.8.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.11.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.11.2'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'com.github.axet:java-unrar:1.7.0-1'
+    implementation 'org.controlsfx:controlsfx:11.0.0'
+    implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2'
+    implementation 'de.jensd:fontawesomefx-materialdesignfont:2.0.26-9.1.2'
+    implementation 'de.jensd:fontawesomefx-materialicons:2.2.0-9.1.2'
+    implementation 'de.jensd:fontawesomefx-materialstackicons:2.1-5-9.1.2'
     implementation 'com.github.goxr3plus:FX-BorderlessScene:4.3.1'
 
-    annotationProcessor group: 'de.saxsys', name: 'mvvmfx', version: '1.8.0'
+    annotationProcessor 'de.saxsys:mvvmfx:1.8.0'
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'junit:junit:4.12'
 }

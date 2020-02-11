@@ -66,7 +66,7 @@ public class IconHelper {
     public static ObjectProperty<Node> createCollapseScaleIconProperty () {
         logger.debug("Creating default collapse scale icon property");
 
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.ARROW_COMPRESS_ALL, "18px");
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.ARROW_COLLAPSE_ALL, "18px");
 
         return new SimpleObjectProperty<>(icon);
     }
