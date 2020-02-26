@@ -1,6 +1,5 @@
 package com.mythicalcreaturesoftware.splash.controls;
 
-import com.mythicalcreaturesoftware.splash.utils.MathHelper;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -8,8 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.PopOver;
-
-import java.awt.*;
+import reader.model.Dimension;
+import reader.utils.MathUtilKt;
 
 public class PreviewPopOver extends PopOver {
 
@@ -34,7 +33,7 @@ public class PreviewPopOver extends PopOver {
 
         sizeProperty = new SimpleObjectProperty<>(new Dimension(1, 1));
         sizeProperty.addListener((observable, oldValue, newValue) -> {
-            double fixedHeight = MathHelper.percentageValue(30, newValue.height);
+            double fixedHeight = MathUtilKt.percentageValue(30, newValue.getHeight());
 
             imageView.setFitHeight(fixedHeight);
         });

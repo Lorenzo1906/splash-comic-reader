@@ -9,10 +9,12 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
+sourceCompatibility = 12
 group 'com.mythicalcreaturesoftware'
 version '1.0-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url "https://dl.bintray.com/jerady/maven"
@@ -32,13 +34,13 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.11.2'
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
     implementation 'commons-io:commons-io:2.6'
-    implementation 'com.github.axet:java-unrar:1.7.0-1'
     implementation 'org.controlsfx:controlsfx:11.0.0'
     implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2'
     implementation 'de.jensd:fontawesomefx-materialdesignfont:2.0.26-9.1.2'
     implementation 'de.jensd:fontawesomefx-materialicons:2.2.0-9.1.2'
     implementation 'de.jensd:fontawesomefx-materialstackicons:2.1-5-9.1.2'
     implementation 'com.github.goxr3plus:FX-BorderlessScene:4.3.1'
+    implementation 'com.mythicalcreaturesoftware:reader-jvm:0.0.1'
 
     annotationProcessor 'de.saxsys:mvvmfx:1.8.0'
 

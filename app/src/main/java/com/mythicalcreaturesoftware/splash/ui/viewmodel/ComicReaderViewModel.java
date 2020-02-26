@@ -1,8 +1,6 @@
 package com.mythicalcreaturesoftware.splash.ui.viewmodel;
 
-import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
-import com.mythicalcreaturesoftware.splash.utils.MathHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -24,8 +22,9 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.Dimension;
+import reader.model.Dimension;
+import reader.service.impl.FileServiceImpl;
+import reader.utils.MathUtilKt;
 
 public class ComicReaderViewModel implements ViewModel {
     private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
@@ -201,7 +200,7 @@ public class ComicReaderViewModel implements ViewModel {
             protected void action() throws Exception {
                 if (fileLoaded.get()) {
                     Platform.runLater(() -> resetToDefaultProperties());
-                    FileServiceImpl.getInstance().unloadFile();
+                    FileServiceImpl.INSTANCE.unloadFile();
                 }
 
                 fileLoaded.setValue(false);
@@ -416,22 +415,22 @@ public class ComicReaderViewModel implements ViewModel {
     private void previousPage() {
         logger.debug("Previous Page");
 
-        FileServiceImpl.getInstance().updatePreviousPage(isTwoPagesProperty.getValue());
-        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+        FileServiceImpl.INSTANCE.updatePreviousPage(isTwoPagesProperty.getValue());
+        currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber());
     }
 
     private void nextPage() {
         logger.debug("Next Page");
 
-        FileServiceImpl.getInstance().updateNextPage(isTwoPagesProperty.getValue());
-        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+        FileServiceImpl.INSTANCE.updateNextPage(isTwoPagesProperty.getValue());
+        currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber());
     }
 
     private void changeReadingDirection() {
         logger.debug("Change Reading Direction");
 
-        readingDirectionRightProperty.setValue(!FileServiceImpl.getInstance().changeMangaMode());
-        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+        readingDirectionRightProperty.setValue(!FileServiceImpl.INSTANCE.changeReadingDirection());
+        currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber());
     }
 
     private void setPagesPerView() {
@@ -468,10 +467,10 @@ public class ComicReaderViewModel implements ViewModel {
     private void openFile() {
         logger.debug("Opening file");
 
-        String filename = FileServiceImpl.getInstance().loadFile(filePathProperty.getValue());
+        String filename = FileServiceImpl.INSTANCE.loadFile(filePathProperty.getValue());
         Platform.runLater(() -> fileNameProperty.setValue(filename));
-        Platform.runLater(() -> readingDirectionRightProperty.setValue(!FileServiceImpl.getInstance().getMangaMode()));
-        Platform.runLater(() -> firstPageDimensionProperty.setValue(FileServiceImpl.getInstance().getCurrentPageSize()));
+        Platform.runLater(() -> readingDirectionRightProperty.setValue(!FileServiceImpl.INSTANCE.isReverseReadingDirection()));
+        Platform.runLater(() -> firstPageDimensionProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageSize()));
         enableAll.setValue(true);
 
         logger.debug("Finished opening file");
@@ -481,35 +480,35 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Loading images");
 
         if (isTwoPagesProperty.getValue()) {
-            Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.getInstance().getCurrentVerso(), true)));
-            Platform.runLater(() -> rightImageProperty.setValue(new Image(FileServiceImpl.getInstance().getCurrentRecto(), true)));
+            Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentVerso(), true)));
+            Platform.runLater(() -> rightImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentRecto(), true)));
         } else {
-            Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.getInstance().getCurrentPage(), true)));
+            Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentPage(), true)));
         }
 
-        Platform.runLater(() -> enableNextPage.setValue(FileServiceImpl.getInstance().canChangeToNextPage(isTwoPagesProperty.getValue())));
+        Platform.runLater(() -> enableNextPage.setValue(FileServiceImpl.INSTANCE.canChangeToNextPage(isTwoPagesProperty.getValue())));
     }
 
     private void calculateScale() {
         double maxHeight;
 
         if (isTwoPagesProperty.getValue()) {
-            Dimension leftImageDimension = FileServiceImpl.getInstance().getCurrentVersoSize();
-            Dimension rightImageDimension = FileServiceImpl.getInstance().getCurrentRectoSize();
+            Dimension leftImageDimension = FileServiceImpl.INSTANCE.getCurrentVersoSize();
+            Dimension rightImageDimension = FileServiceImpl.INSTANCE.getCurrentRectoSize();
 
-            maxHeight = Math.max(leftImageDimension.height, rightImageDimension.height);
+            maxHeight = Math.max(leftImageDimension.getHeight(), rightImageDimension.getHeight());
 
             leftImageDimensionProperty.setValue(leftImageDimension);
             rightImageDimensionProperty.setValue(rightImageDimension);
         } else {
-            Dimension imageDimension = FileServiceImpl.getInstance().getCurrentPageSize();
+            Dimension imageDimension = FileServiceImpl.INSTANCE.getCurrentPageSize();
 
-            maxHeight = imageDimension.height;
+            maxHeight = imageDimension.getHeight();
 
             leftImageDimensionProperty.setValue(imageDimension);
         }
 
-        double defaultScaleLevel = (MathHelper.percentageOf(maxHeight, getScreenHeightProperty().getValue()))/100;
+        double defaultScaleLevel = (MathUtilKt.percentageOf(maxHeight, getScreenHeightProperty().getValue()))/100;
         Platform.runLater(() -> currentPageDefaultScaleLevelProperty.setValue(defaultScaleLevel));
         if (scaleLevelProperty.get() == 1) {
             Platform.runLater(() -> scaleLevelProperty.setValue(defaultScaleLevel));
@@ -519,25 +518,25 @@ public class ComicReaderViewModel implements ViewModel {
     private void updateTotalPages () {
         logger.debug("Updating total page");
 
-        Platform.runLater(() -> totalPagesProperty.setValue(FileServiceImpl.getInstance().getTotalPages()));
+        Platform.runLater(() -> totalPagesProperty.setValue(FileServiceImpl.INSTANCE.getTotalPages()));
     }
 
     private void updateCurrentPage() {
         logger.debug("Updating current page");
 
-        Platform.runLater(() -> currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber()));
+        Platform.runLater(() -> currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber()));
     }
 
     private void updateCurrentFromUi() {
         logger.debug("Updating current page");
 
-        FileServiceImpl.getInstance().setCurrentPage(currentPageProperty.getValue());
+        FileServiceImpl.INSTANCE.setCurrentPage(currentPageProperty.getValue());
     }
 
     private void updatePreviewImage() {
         logger.debug("Updating preview image");
 
-        String path = FileServiceImpl.getInstance().getCurrentPreviewByPageNumber(currentPagePreviewProperty.getValue());
+        String path = FileServiceImpl.INSTANCE.getCurrentPreviewByPageNumber(currentPagePreviewProperty.getValue());
         previewImageProperty.set(new Image(path, true));
     }
 }

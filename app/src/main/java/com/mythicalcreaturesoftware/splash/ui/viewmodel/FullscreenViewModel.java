@@ -1,8 +1,6 @@
 package com.mythicalcreaturesoftware.splash.ui.viewmodel;
 
-import com.mythicalcreaturesoftware.splash.service.impl.FileServiceImpl;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
-import com.mythicalcreaturesoftware.splash.utils.MathHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -18,8 +16,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.Dimension;
+import reader.model.Dimension;
+import reader.service.impl.FileServiceImpl;
+import reader.utils.MathUtilKt;
 
 public class FullscreenViewModel implements ViewModel {
 
@@ -191,34 +190,34 @@ public class FullscreenViewModel implements ViewModel {
     private void loadImages () {
         logger.debug("Loading images");
 
-        Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.getInstance().getCurrentVerso(), true)));
-        Platform.runLater(() -> rightImageProperty.setValue(new Image(FileServiceImpl.getInstance().getCurrentRecto(), true)));
+        Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentVerso(), true)));
+        Platform.runLater(() -> rightImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentRecto(), true)));
     }
 
     private void updateTotalPages () {
         logger.debug("Updating total page");
 
-        Platform.runLater(() -> totalPagesProperty.setValue(FileServiceImpl.getInstance().getTotalPages()));
+        Platform.runLater(() -> totalPagesProperty.setValue(FileServiceImpl.INSTANCE.getTotalPages()));
     }
 
     private void updateCurrentPage() {
         logger.debug("Updating current page");
 
-        Platform.runLater(() -> currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber()));
+        Platform.runLater(() -> currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber()));
     }
 
     private void calculateScale() {
         double maxHeight;
 
-        Dimension leftImageDimension = FileServiceImpl.getInstance().getCurrentVersoSize();
-        Dimension rightImageDimension = FileServiceImpl.getInstance().getCurrentRectoSize();
+        Dimension leftImageDimension = FileServiceImpl.INSTANCE.getCurrentVersoSize();
+        Dimension rightImageDimension = FileServiceImpl.INSTANCE.getCurrentRectoSize();
 
-        maxHeight = Math.max(leftImageDimension.height, rightImageDimension.height);
+        maxHeight = Math.max(leftImageDimension.getHeight(), rightImageDimension.getHeight());
 
         leftImageDimensionProperty.setValue(leftImageDimension);
         rightImageDimensionProperty.setValue(rightImageDimension);
 
-        double defaultScaleLevel = (MathHelper.percentageOf(maxHeight, getScreenHeightProperty().getValue()))/100;
+        double defaultScaleLevel = (MathUtilKt.percentageOf(maxHeight, getScreenHeightProperty().getValue()))/100;
         Platform.runLater(() -> currentPageDefaultScaleLevelProperty.setValue(defaultScaleLevel));
         if (scaleLevelProperty.get() == 1) {
             Platform.runLater(() -> scaleLevelProperty.setValue(defaultScaleLevel));
@@ -228,15 +227,15 @@ public class FullscreenViewModel implements ViewModel {
     private void previousPage() {
         logger.debug("Previous Page");
 
-        FileServiceImpl.getInstance().updatePreviousPage(true);
-        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+        FileServiceImpl.INSTANCE.updatePreviousPage(true);
+        currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber());
     }
 
     private void nextPage() {
         logger.debug("Next Page");
 
-        FileServiceImpl.getInstance().updateNextPage(true);
-        currentPageProperty.setValue(FileServiceImpl.getInstance().getCurrentPageNumber());
+        FileServiceImpl.INSTANCE.updateNextPage(true);
+        currentPageProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageNumber());
     }
 
     private void zoomIn() {
