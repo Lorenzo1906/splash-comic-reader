@@ -46,9 +46,6 @@ actual fun generatePreviewImages(pages: Map<Int, String>?, tempFolderPath: Strin
     return previews
 }
 
-/**
- * Execute several process to simultaneously reduce the size of the images and store that on the temp folder
- */
 private fun generatePreviewImagesSimultaneously (previewFolderPath: Path, pages: Map<Int, String>, previews: MutableMap<Int, String>) {
     val executor = Executors.newFixedThreadPool(50)
 
