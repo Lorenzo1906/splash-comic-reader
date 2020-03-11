@@ -97,9 +97,6 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
     return result
 }
 
-/**
- * Creates a preview folder inside the temp folder for the images. [path] is the url of the temp folder
- */
 private fun generatePreviewPath(path: Path?): Path? {
     if (path == null) {
         return null

@@ -47,10 +47,6 @@ abstract class FileService {
         return getCurrentPageValue(true)
     }
 
-    /**
-     * Returns a [String] with the path of the current page. If the value of [verso] is true it will returns a verso,
-     * otherwise it will returns a recto
-     */
     private fun getCurrentPageValue(verso: Boolean): String {
         var result = ""
 
@@ -86,17 +82,10 @@ abstract class FileService {
         return getPageValueByNumber(pageNumber, true)
     }
 
-    /**
-     * Returns a [String] with the path with the given [pageNumber]
-     */
     private fun getPageByPageNumber(pageNumber: Int): String {
         return getPageValueByNumber(pageNumber, false)
     }
 
-    /**
-     * Returns a [String] with the path with the given [pageNumber], if the value of [preview] is true, it will returns
-     * the preview, otherwise it will return the oage
-     */
     private fun getPageValueByNumber(pageNumber: Int, preview: Boolean): String {
         var result = ""
 
@@ -129,10 +118,6 @@ abstract class FileService {
         return getSize(true)
     }
 
-    /**
-     * Returns the [Dimension] for the current page. If [verso] is true, it will return the verso, otherwise
-     * it will return the recto
-     */
     private fun getSize(verso: Boolean): Dimension {
         var result: Dimension? = null
 

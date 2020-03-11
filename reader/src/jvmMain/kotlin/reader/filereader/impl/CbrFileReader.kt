@@ -58,18 +58,12 @@ actual class CbrFileReader actual constructor(filePath: String) : FileReader(fil
         logger.info("File loaded in {} milliseconds", elapsedTime)
     }
 
-    /**
-     * Sort the filenames alphabetically
-     */
     private fun sortFileHeaderList(list: List<FileHeader>): List<FileHeader>  {
         return list.stream()
                 .sorted(Comparator.comparing(FileHeader::getFileNameString))
                 .collect(Collectors.toList())
     }
 
-    /**
-     * Reads the file from the archive and calculates the dimesions and store the info on the maps
-     */
     private fun processFileHeader (directory: Path, header: FileHeader, archive: Archive, pageIndex: Int ): Boolean {
         var result = false
 

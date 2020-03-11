@@ -45,9 +45,6 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         logger.info("File loaded in {} milliseconds", elapsedTime)
     }
 
-    /**
-     * Creates the temp folder and copy the contents of the cbz to that folder
-     */
     private fun processFileEntries() {
         val tempFolder = Files.createTempDirectory(FilenameUtils.getBaseName(filePath))
         tempFolderPath = tempFolder.toUri().toString()
@@ -71,9 +68,6 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         } while (true)
     }
 
-    /**
-     * Reads the file from the archive and calculates the dimesions and store the info on the maps
-     */
     private fun checkProcessEntry (directory: Path, entry: ZipEntry?, stream: ZipInputStream, pageIndex: Int ): Boolean {
         var result = false
         if (entry != null && !entry.isDirectory) {
@@ -93,9 +87,6 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         return result
     }
 
-    /**
-     * Reads the file and create the file on the temp directory
-     */
     private fun processFileEntry (directory: Path, entry: ZipEntry, stream: ZipInputStream): Path {
         val filename = FilenameUtils.getBaseName(entry.name) + "." + FilenameUtils.getExtension(entry.name)
 
