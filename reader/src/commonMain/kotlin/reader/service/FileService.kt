@@ -28,11 +28,7 @@ abstract class FileService {
     fun loadFile(path: String): String {
         logger.info { "Loading file" }
 
-        try {
-            fileReader = getFileReaderTypeFromPath(path)?.let { buildFileReader(it, path) }
-        } catch (e: Exception) {
-            logger.error(e) { e.message }
-        }
+        fileReader = getFileReaderTypeFromPath(path)?.let { buildFileReader(it, path) }
 
         return getFilenameFromPath(path)
     }
@@ -233,10 +229,6 @@ abstract class FileService {
         return result
     }
 
-    /**
-     * It will return a [Boolean] with the value set to true if the [fileReader] is using a reverse reading direction.
-     * ie: the first page is on the right side
-     */
     private fun isReverseReadingDirection(): Boolean {
         var result = false
         if (fileReader != null) {

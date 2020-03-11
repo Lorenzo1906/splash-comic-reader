@@ -92,9 +92,6 @@ actual class CbrFileReader actual constructor(filePath: String) : FileReader(fil
         return result
     }
 
-    /**
-     * Reads the file and create the file on the temp directory
-     */
     private fun processFileEntry (directory: Path, entry: FileHeader): Path {
         val filename = FilenameUtils.getBaseName(entry.fileNameString) + "." + FilenameUtils.getExtension(entry.fileNameString)
 

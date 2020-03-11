@@ -220,9 +220,6 @@ abstract class FileReader (val filePath: String) {
         spread.versoPreview = previews[index] ?: ""
     }
 
-    /**
-     * Returns a [Boolean] if the [dimension] correspond to the dimensions of two page
-     */
     private fun shouldBeAlone(dimension: Dimension?): Boolean {
         if (dimension == null) {
             throw InsufficientDataException("No dimensions info")

@@ -4,6 +4,9 @@ import org.apache.commons.io.FilenameUtils
 import reader.filereader.FileReaderType
 import reader.service.FileService
 
+/**
+ * Service class to serve as interface between the graphical part and the reader
+ */
 actual object FileServiceImpl : FileService() {
 
     /**

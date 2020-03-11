@@ -10,9 +10,13 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import javax.imageio.ImageIO
 
-class ImageResizeTask (var inputImagePath: String?,
-                       var outputImagePath: String?,
-                       var percent: Double) : Runnable {
+/**
+ * Start a new process that receive a image path with an image [inputImagePath] and copy and reduce the image in another
+ * path [outputImagePath] using the give [percent]
+ */
+class ImageResizeTask (private var inputImagePath: String?,
+                       private var outputImagePath: String?,
+                       private var percent: Double) : Runnable {
 
     private val logger = KotlinLogging.logger {}
 
@@ -24,14 +28,6 @@ class ImageResizeTask (var inputImagePath: String?,
         }
     }
 
-    /**
-     * Resize an image to a absolute width and height (the image may not be proportional). Both paths should be coming as an encode url, they will be decode during the execution
-     * @param inputImagePath Path of the original image
-     * @param outputImagePath Path to save the resized image
-     * @param scaledWidth absolute width in pixels
-     * @param scaledHeight absolute height in pixels
-     * @throws IOException IOException
-     */
     private fun resize(inputImagePath: String, outputImagePath: String, scaledWidth: Int, scaledHeight: Int) {
         val cleanedInputImagePath = URLDecoder.decode(inputImagePath, StandardCharsets.UTF_8.toString())
         val cleanedOutputImagePath = URLDecoder.decode(outputImagePath, StandardCharsets.UTF_8.toString())
@@ -59,14 +55,6 @@ class ImageResizeTask (var inputImagePath: String?,
         ImageIO.write(outputImage, formatName, outputFile)
     }
 
-    /**
-     * Resize an image by a percentage of original size (proportional). Both paths should be coming as an encode url, they will be decode during the execution
-     * @param inputImagePath Path of the original image
-     * @param outputImagePath Path to save the resized image
-     * @param percent a double number specifies percentage of the output image. Eg: 10
-     * over the input image.
-     * @throws IOException IOException
-     */
     private fun resize(inputImagePath: String?, outputImagePath: String?, percent: Double) {
         if (inputImagePath == null || inputImagePath == "") {
             return
