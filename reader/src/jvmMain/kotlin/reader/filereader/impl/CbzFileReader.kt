@@ -33,11 +33,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         } catch (e: IOException) {
             logger.error(e) { e.message }
         } finally {
-            try {
-                zipIs?.close()
-            } catch (e: Exception) {
-                logger.error(e) { e.message }
-            }
+            zipIs?.close()
         }
 
         val stopTime = System.currentTimeMillis()

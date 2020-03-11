@@ -63,10 +63,6 @@ private fun generatePreviewImagesSimultaneously (previewFolderPath: Path, pages:
     }
 }
 
-/**
- * Generate the url for the preview image based on the path of the original image.
- * [path] is the path of the image ad [folderPath] is the path of the preview images folder inside the temp folder
- */
 private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
     if (path.isEmpty()) {
         return ""
