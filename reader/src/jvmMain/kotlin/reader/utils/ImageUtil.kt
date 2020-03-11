@@ -18,6 +18,10 @@ import javax.imageio.stream.ImageInputStream
 
 private val logger = KotlinLogging.logger {}
 
+/**
+ * Generate the previews images on the temp folder. Receives the [Map] with the paths of the files and the [String] with
+ * the path of the temp folder and returns a new map with the paths of the previews
+ */
 actual fun generatePreviewImages(pages: Map<Int, String>?, tempFolderPath: String): MutableMap<Int, String> {
     val startTime = System.currentTimeMillis()
     logger.info("Constructing preview images")
@@ -42,6 +46,9 @@ actual fun generatePreviewImages(pages: Map<Int, String>?, tempFolderPath: Strin
     return previews
 }
 
+/**
+ * Execute several process to simultaneously reduce the size of the images and store that on the temp folder
+ */
 private fun generatePreviewImagesSimultaneously (previewFolderPath: Path, pages: Map<Int, String>, previews: MutableMap<Int, String>) {
     val executor = Executors.newFixedThreadPool(50)
 
@@ -56,6 +63,10 @@ private fun generatePreviewImagesSimultaneously (previewFolderPath: Path, pages:
     }
 }
 
+/**
+ * Generate the url for the preview image based on the path of the original image.
+ * [path] is the path of the image ad [folderPath] is the path of the preview images folder inside the temp folder
+ */
 private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
     if (path.isEmpty()) {
         return ""
@@ -86,6 +97,9 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
     return result
 }
 
+/**
+ * Creates a preview folder inside the temp folder for the images. [path] is the url of the temp folder
+ */
 private fun generatePreviewPath(path: Path?): Path? {
     if (path == null) {
         return null
@@ -102,6 +116,9 @@ private fun generatePreviewPath(path: Path?): Path? {
     return previewFolderPath
 }
 
+/**
+ * Returns the [Dimension] of the file located on the given [path]
+ */
 actual fun getPageSize(path: String): Dimension {
     val dimension = Dimension()
     val cleanedPath = URLDecoder.decode(cleanPath(path), StandardCharsets.UTF_8.toString())

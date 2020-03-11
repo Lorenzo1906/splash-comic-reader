@@ -21,6 +21,10 @@ abstract class FileReader (val filePath: String) {
     var isReverseReadingDirection: Boolean = false
     var index: Int = 1
 
+    /**
+     * Method called after the constructor. Calls the [construct] method to get the info from the file and then it
+     * generates the previews and groups the pages
+     */
     fun initialize() {
         try {
             construct()
@@ -31,16 +35,28 @@ abstract class FileReader (val filePath: String) {
         }
     }
 
+    /**
+     * Abstract method to read the file from the disk and save the paths on memory
+     */
     abstract fun construct()
 
+    /**
+     * Returns the current [Spread] based in the current [index] set on the instance
+     */
     fun getCurrentPath(): Spread? {
         return fileEntries[index]
     }
 
+    /**
+     * Receives a [pageNumber] of type [Int] and returns the [Spread] on that index
+     */
     fun getPath(pageNumber: Int): Spread? {
         return fileEntries[pageNumber]
     }
 
+    /**
+     * Change the current reading direction
+     */
     fun changeReadingDirection () {
         isReverseReadingDirection = !isReverseReadingDirection
         val currPage: String = getCurrentPage()
@@ -49,6 +65,9 @@ abstract class FileReader (val filePath: String) {
         index = calculateNewIndex(currPage)
     }
 
+    /**
+     * Returns a [String] with the path of the current page
+     */
     private fun getCurrentPage (): String {
         var result = ""
         val currSpread = getCurrentPath()
@@ -64,6 +83,9 @@ abstract class FileReader (val filePath: String) {
         return result
     }
 
+    /**
+     * Returns a [Int] with the new index for the given [currPage]
+     */
     private fun calculateNewIndex(currPage: String): Int {
         var result = 0
 
@@ -81,6 +103,10 @@ abstract class FileReader (val filePath: String) {
         return result
     }
 
+    /**
+     * Returns a [MutableMap] with the pages in invert order. It also inverts the order for the [pages], [previews]
+     * and [dimensions]
+     */
     private fun invertPagesOrder(): MutableMap<Int, Spread> {
         pages = invertMap(pages)
         previews = invertMap(previews)
@@ -96,6 +122,9 @@ abstract class FileReader (val filePath: String) {
         return result
     }
 
+    /**
+     * Returns a [MutableMap] with invert order from the given [map]
+     */
     private fun invertMap(map: MutableMap<Int, String>): MutableMap<Int, String> {
         val result = HashMap<Int, String>()
         var currPage:Int = totalPages
@@ -108,6 +137,10 @@ abstract class FileReader (val filePath: String) {
         return result
     }
 
+    /**
+     * Returns a [MutableMap] with invert order for the given [map]. This method only works for maps with values of
+     * type [Dimension]
+     */
     private fun invertDimensionsMap(map: MutableMap<Int, Dimension>): MutableMap<Int, Dimension> {
         val result = HashMap<Int, Dimension>()
         var currPage:Int = totalPages
@@ -120,6 +153,10 @@ abstract class FileReader (val filePath: String) {
         return result
     }
 
+    /**
+     * Groups the different pages in their respective [Spread], it also determines of the spread should only contain a
+     * page or two. Returns a [MutableMap]
+     */
     private fun groupPages(): MutableMap<Int, Spread> {
         val spreads = mutableMapOf<Int, Spread>()
 
@@ -148,6 +185,10 @@ abstract class FileReader (val filePath: String) {
         return spreads
     }
 
+    /**
+     * Fills the verso or the recto of a [Spread], the [index] contains the index of the page to put on the Spread and
+     * [isEmpty] determines if is a verso, if the value is true, or a recto, if the value is false
+     */
     private fun fillSpread(spread: Spread, index: Int, isEmpty: Boolean): Spread {
         if (isEmpty) {
             fillVerso(spread, index)
@@ -159,6 +200,9 @@ abstract class FileReader (val filePath: String) {
         return spread
     }
 
+    /**
+     * Fills the recto of the given [spread], the [index] is the page to be put in the recto
+     */
     private fun fillRecto(spread: Spread, index: Int) {
         spread.recto = pages[index] ?: ""
         spread.rectoPageNumber = index
@@ -166,6 +210,9 @@ abstract class FileReader (val filePath: String) {
         spread.rectoPreview = previews[index] ?: ""
     }
 
+    /**
+     * Fills the verso of the given [spread], the [index] is the page to be put in the verso
+     */
     private fun fillVerso(spread: Spread, index: Int) {
         spread.verso = pages[index] ?: ""
         spread.versoPageNumber = index
@@ -173,6 +220,9 @@ abstract class FileReader (val filePath: String) {
         spread.versoPreview = previews[index] ?: ""
     }
 
+    /**
+     * Returns a [Boolean] if the [dimension] correspond to the dimensions of two page
+     */
     private fun shouldBeAlone(dimension: Dimension?): Boolean {
         if (dimension == null) {
             throw InsufficientDataException("No dimensions info")

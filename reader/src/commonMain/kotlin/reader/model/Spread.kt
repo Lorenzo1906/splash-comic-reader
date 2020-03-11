@@ -12,5 +12,4 @@ data class Spread(var recto: String = "",
                   var verso: String = "",
                   var versoPreview: String = "",
                   var versoPageNumber: Int = 0,
-                  var versoSize: Dimension? = null) {
-}
+                  var versoSize: Dimension? = null)

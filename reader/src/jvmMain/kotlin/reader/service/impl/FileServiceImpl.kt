@@ -5,10 +5,17 @@ import reader.filereader.FileReaderType
 import reader.service.FileService
 
 actual object FileServiceImpl : FileService() {
+
+    /**
+     * Returns the name of the file on the given [path]
+     */
     override fun getFilenameFromPath(path: String): String {
         return FilenameUtils.getName(path)
     }
 
+    /**
+     * Returns the file type from the give [path]
+     */
     override fun getFileReaderTypeFromPath(path: String): FileReaderType? {
         val extension = FilenameUtils.getExtension(path).toLowerCase()
         var type: FileReaderType? = null
