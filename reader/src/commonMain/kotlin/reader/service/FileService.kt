@@ -214,7 +214,10 @@ abstract class FileService {
         return result
     }
 
-    private fun isReverseReadingDirection(): Boolean {
+    /**
+     * Returns true if the file is in reverse reading direction mode
+     */
+    fun isReverseReadingDirection(): Boolean {
         var result = false
         if (fileReader != null) {
             result = fileReader!!.isReverseReadingDirection
@@ -266,7 +269,7 @@ abstract class FileService {
             return
         }
 
-        if (!isTwoPage && fileReader!!.index - 1 == 1) {
+        if (!isTwoPage && fileReader!!.index - 1 >= 1) {
 
             fileReader!!.index = fileReader!!.index - 1
         } else {
@@ -279,10 +282,15 @@ abstract class FileService {
         val nextSpread = fileReader?.getPath(fileReader!!.index + sign)
 
         if (currentSpread != null) {
-            if (currentSpread == nextSpread && (fileReader!!.index) + 2 <= fileReader!!.totalPages) {
-                fileReader!!.index = fileReader!!.index + (2 * sign)
-            } else if ((fileReader!!.index) + sign <= fileReader!!.totalPages) {
-                fileReader!!.index = fileReader!!.index + sign
+            var change = 1
+            if (currentSpread == nextSpread) {
+                change = 2
+            }
+            val isInSuperiorRange = (fileReader!!.index) + (change * sign) <= fileReader!!.totalPages
+            val isInInferiorRange = (fileReader!!.index) + (change * sign) >= 1
+
+            if (isInSuperiorRange && isInInferiorRange) {
+                fileReader!!.index = fileReader!!.index + (change * sign)
             }
         }
     }

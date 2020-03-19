@@ -480,10 +480,21 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Loading images");
 
         if (isTwoPagesProperty.getValue()) {
-            Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentVerso(), true)));
-            Platform.runLater(() -> rightImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentRecto(), true)));
+            String leftImageValue = FileServiceImpl.INSTANCE.getCurrentVerso();
+            String rightImageValue = FileServiceImpl.INSTANCE.getCurrentRecto();
+            leftImageValue = leftImageValue.isEmpty() ? DefaultValuesHelper.DEFAULT_IMAGE_PATH : leftImageValue;
+            rightImageValue = rightImageValue.isEmpty() ? DefaultValuesHelper.DEFAULT_IMAGE_PATH : rightImageValue;
+            String finalLeftImageValue = leftImageValue;
+            String finalRightImageValue = rightImageValue;
+
+            Platform.runLater(() -> leftImageProperty.setValue(new Image(finalLeftImageValue, true)));
+            Platform.runLater(() -> rightImageProperty.setValue(new Image(finalRightImageValue, true)));
         } else {
-            Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentPage(), true)));
+            String image = FileServiceImpl.INSTANCE.getCurrentPage();
+            image = image.isEmpty() ? DefaultValuesHelper.DEFAULT_IMAGE_PATH : image;
+            String finalImage = image;
+
+            Platform.runLater(() -> leftImageProperty.setValue(new Image(finalImage, true)));
         }
 
         Platform.runLater(() -> enableNextPage.setValue(FileServiceImpl.INSTANCE.canChangeToNextPage(isTwoPagesProperty.getValue())));
