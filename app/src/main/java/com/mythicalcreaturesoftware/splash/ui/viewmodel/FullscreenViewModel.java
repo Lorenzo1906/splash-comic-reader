@@ -190,8 +190,15 @@ public class FullscreenViewModel implements ViewModel {
     private void loadImages () {
         logger.debug("Loading images");
 
-        Platform.runLater(() -> leftImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentVerso(), true)));
-        Platform.runLater(() -> rightImageProperty.setValue(new Image(FileServiceImpl.INSTANCE.getCurrentRecto(), true)));
+        String leftImageValue = FileServiceImpl.INSTANCE.getCurrentVerso();
+        String rightImageValue = FileServiceImpl.INSTANCE.getCurrentRecto();
+        leftImageValue = leftImageValue.isEmpty() ? DefaultValuesHelper.DEFAULT_IMAGE_PATH : leftImageValue;
+        rightImageValue = rightImageValue.isEmpty() ? DefaultValuesHelper.DEFAULT_IMAGE_PATH : rightImageValue;
+        String finalLeftImageValue = leftImageValue;
+        String finalRightImageValue = rightImageValue;
+
+        Platform.runLater(() -> leftImageProperty.setValue(new Image(finalLeftImageValue, true)));
+        Platform.runLater(() -> rightImageProperty.setValue(new Image(finalRightImageValue, true)));
     }
 
     private void updateTotalPages () {
