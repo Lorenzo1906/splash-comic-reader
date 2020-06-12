@@ -36,6 +36,7 @@ kotlin {
                 implementation ('commons-io:commons-io:2.6')
                 implementation ('com.github.axet:java-unrar:1.7.0-1')
                 implementation ('commons-io:commons-io:2.6')
+                implementation ('org.apache.commons:commons-lang3:3.10')
             }
         }
         jvmTest {

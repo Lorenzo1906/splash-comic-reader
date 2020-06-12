@@ -47,15 +47,27 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-def jPackage = System.getenv('JAVA_HOME') + "/bin/jpackage"
 task generateExec(type: Exec) {
     dependsOn build
 
     workingDir "$projectDir/build"
 
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        //commandLine 'cmd', '/c', 'mycommand'
+        commandLine 'cmd', '/c', 'jPackage ' +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../generalResources/icon.ico ' +
+                '--win-shortcut ' +
+                '--win-dir-chooser ' +
+                '--win-menu ' +
+                '--win-menu-group "Mythical Creature Software"'
+                '--app-version ' + version + ' '
     } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux'))) {
+        def jPackage = System.getenv('JAVA_HOME') + "/bin/jpackage"
         commandLine 'sh', '-c', jPackage +
                 ' --input libs ' +
                 '--main-jar app-' + version + '-all.jar ' +
@@ -64,6 +76,7 @@ task generateExec(type: Exec) {
                 '--description "Application to read .cbr and .cbz files" ' +
                 '--vendor "Mythical Creature Software" ' +
                 '--copyright "Copyright 2020, All rights reserved" ' +
-                '--icon ../generalResources/icon.png '
+                '--icon ../generalResources/icon.png ' +
+                '--app-version '  + version
     }
 }
