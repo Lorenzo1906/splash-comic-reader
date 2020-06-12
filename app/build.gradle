@@ -11,7 +11,7 @@ javafx {
 
 sourceCompatibility = 12
 group 'com.mythicalcreaturesoftware'
-version '1.0-SNAPSHOT'
+version '0.1.0'
 
 repositories {
     mavenLocal()
@@ -45,4 +45,25 @@ dependencies {
     annotationProcessor 'de.saxsys:mvvmfx:1.8.0'
 
     testImplementation 'junit:junit:4.12'
+}
+
+def jPackage = System.getenv('JAVA_HOME') + "/bin/jpackage"
+task generateExec(type: Exec) {
+    dependsOn build
+
+    workingDir "$projectDir/build"
+
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        //commandLine 'cmd', '/c', 'mycommand'
+    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux'))) {
+        commandLine 'sh', '-c', jPackage +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--linux-package-name splash-comic-reader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../generalResources/icon.png '
+    }
 }
