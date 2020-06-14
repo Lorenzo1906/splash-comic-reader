@@ -78,5 +78,17 @@ task generateExec(type: Exec) {
                 '--copyright "Copyright 2020, All rights reserved" ' +
                 '--icon ../generalResources/icon.png ' +
                 '--app-version '  + version
+    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('mac'))) {
+        def jPackage = '/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home' + "/bin/jpackage"
+        commandLine 'sh', '-c', jPackage +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--mac-package-name splash-comic-reader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../generalResources/icon.icns ' +
+                '--app-version '  + version
     }
 }
