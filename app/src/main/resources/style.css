@@ -1,146 +1,145 @@
 @font-face {
-    font-family: Roboto-Bold;
-    src: url('com/mythicalcreaturesoftware/splash/ui/Roboto-Regular.ttf');
+  font-family: Roboto-Bold;
+  src: url('com/mythicalcreaturesoftware/splash/ui/Roboto-Regular.ttf');
 }
 
 .root {
-    -fx-background: rgb(42,49,58);
+  -fx-background: rgb(42,49,58);
 }
 
 .text {
-    -fx-font-family: Roboto-Bold;
-    -fx-fill: rgb(158,161,165);
+  -fx-font-family: Roboto-Bold;
+  -fx-fill: rgb(158,161,165);
 }
 
 .button {
-    -fx-border-color: transparent;
-    -fx-border-width: 0;
-    -fx-background-radius: 0;
-    -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-border-width: 0;
+  -fx-background-radius: 0;
+  -fx-background-color: transparent;
 }
 
 .button:pressed {
-    -fx-background-color: rgb(39,45,53);
-    -fx-text-fill: white;
+  -fx-background-color: rgb(39,45,53);
+  -fx-text-fill: white;
 }
 
 .button:hover .glyph-icon {
-    -fx-fill: white;
+  -fx-fill: white;
 }
 
 .glyph-icon {
-    -fx-fill: rgb(158,161,165);
+  -fx-fill: rgb(158,161,165);
 }
 
 .imageView {
-    -fx-background-color: rgb(25,29,34);
-    -fx-border-color: rgb(39,45,53);
+  -fx-background-color: rgb(25,29,34);
+  -fx-border-color: rgb(39,45,53);
 }
 
 .separator *.line {
-    -fx-border-style: solid;
-    -fx-border-width: 0.1 0.1 1 0.1;
-    -fx-border-color: rgb(158,161,165);
+  -fx-border-style: solid;
+  -fx-border-width: 0.1 0.1 1 0.1;
+  -fx-border-color: rgb(158,161,165);
 }
 
 .slider .track {
-    -fx-background-color: rgb(25,29,34);
+  -fx-background-color: rgb(25,29,34);
 }
 
 .slider .thumb {
-    -fx-background-color: rgb(158,161,165);
+  -fx-background-color: rgb(158,161,165);
 }
 
 .scroll-pane {
-    -fx-background-color: rgb(39,45,53);
+  -fx-background-color: rgb(39,45,53);
 }
 
 .scroll-bar:horizontal, .scroll-bar:vertical{
-    -fx-background-color: rgb(39,45,53);
+  -fx-background-color: rgb(39,45,53);
 }
 
 .increment-button, .decrement-button {
-    -fx-background-color: rgb(39,45,53);
-    -fx-border-color: rgb(39,45,53);
+  -fx-background-color: rgb(39,45,53);
+  -fx-border-color: rgb(39,45,53);
 }
 
 .scroll-bar:horizontal .track, .scroll-bar:vertical .track{
-    -fx-background-color: rgb(25,29,34);
-    -fx-border-color: rgb(25,29,34);
-    -fx-background-radius: 0em;
+  -fx-background-color: rgb(25,29,34);
+  -fx-border-color: rgb(25,29,34);
+  -fx-background-radius: 0em;
 }
 
 .scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
-    -fx-background-color: rgb(39,45,53);
-    -fx-background-insets: 0, 0, 0;
-    -fx-background-radius: 0em;
-
+  -fx-background-color: rgb(39,45,53);
+  -fx-background-insets: 0, 0, 0;
+  -fx-background-radius: 0em;
 }
 
 .scroll-bar:horizontal:hover .track,
 .scroll-bar:horizontal:pressed .track,
 .scroll-bar:vertical:hover .track,
 .scroll-bar:vertical:pressed .track{
-    -fx-background-color: derive(#252934,70%);
-    -fx-opacity: 0.2;
-    -fx-background-radius: 0em;
+  -fx-background-color: derive(#252934,70%);
+  -fx-opacity: 0.2;
+  -fx-background-radius: 0em;
 }
 
 .scroll-bar .thumb:hover,
 .scroll-bar .thumb:pressed{
-    -fx-background-color: derive(#394553,70%);
+  -fx-background-color: derive(#394553,70%);
 }
 
 .increment-button:hover, .decrement-button:hover {
-    -fx-background-color: derive(#394553,70%);
-    -fx-border-color: derive(#394553,70%);
+  -fx-background-color: derive(#394553,70%);
+  -fx-border-color: derive(#394553,70%);
 }
 
 .scroll-pane > .corner {
-    -fx-background-color: rgb(42,49,58);
+  -fx-background-color: rgb(42,49,58);
 }
 
 .mangaDirection {
-    unicode-bidi:bidi-override;
-    direction:rtl;
+  unicode-bidi:bidi-override;
+  direction:rtl;
 }
 
 .popover {
-    -fx-padding: 5 5 5 5;
+  -fx-padding: 5 5 5 5;
 }
 
 .loadingView {
-    -fx-background-color: black;
-    -fx-opacity: 0.7;
+  -fx-background-color: black;
+  -fx-opacity: 0.7;
 }
 
 .fullscreenView {
-    -fx-background-color: black;
+  -fx-background-color: black;
 }
 
 .pagePanel {
-    -fx-background-color: blue;
-    -fx-border-radius: 10 10 10 10;
-    -fx-background-radius: 10 10 10 10;
+  -fx-background-color: blue;
+  -fx-border-radius: 10 10 10 10;
+  -fx-background-radius: 10 10 10 10;
 }
 
 .zoomPanel {
-    -fx-background-color: red;
-    -fx-border-radius: 10 10 10 10;
-    -fx-background-radius: 10 10 10 10;
+  -fx-background-color: red;
+  -fx-border-radius: 10 10 10 10;
+  -fx-background-radius: 10 10 10 10;
 }
 
 .exitPanel {
-    -fx-background-color: dimgrey;
-    -fx-border-radius: 10 10 10 10;
-    -fx-background-radius: 10 10 10 10;
+  -fx-background-color: dimgrey;
+  -fx-border-radius: 10 10 10 10;
+  -fx-background-radius: 10 10 10 10;
 }
 
 .hintPanel {
-    -fx-opacity: .4;
+  -fx-opacity: .4;
 }
 
 .hintText .text {
-    -fx-text-fill: white;
-    -fx-font-size: 25;
+  -fx-text-fill: white;
+  -fx-font-size: 25;
 }
