@@ -83,14 +83,14 @@
 .scroll-bar:horizontal:hover .track,
 .scroll-bar:horizontal:pressed .track,
 .scroll-bar:vertical:hover .track,
-.scroll-bar:vertical:pressed .track{
+.scroll-bar:vertical:pressed .track {
   -fx-background-color: derive(#252934, 70%);
   -fx-opacity: 0.2;
   -fx-background-radius: 0em;
 }
 
 .scroll-bar .thumb:hover,
-.scroll-bar .thumb:pressed{
+.scroll-bar .thumb:pressed {
   -fx-background-color: derive(#394553, 70%);
 }
 
