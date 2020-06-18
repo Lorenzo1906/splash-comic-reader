@@ -9,7 +9,7 @@
 
 .text {
   -fx-font-family: Roboto-Bold;
-  -fx-fill: rgb(158, 161,165);
+  -fx-fill: rgb(158, 161, 165);
 }
 
 .button {
@@ -33,7 +33,7 @@
 }
 
 .imageView {
-  -fx-background-color: rgb(25, 29,  34);
+  -fx-background-color: rgb(25, 29, 34);
   -fx-border-color: rgb(39, 45, 53);
 }
 
@@ -55,22 +55,26 @@
   -fx-background-color: rgb(39, 45, 53);
 }
 
-.scroll-bar:horizontal, .scroll-bar:vertical{
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
   -fx-background-color: rgb(39, 45, 53);
 }
 
-.increment-button, .decrement-button {
+.increment-button,
+.decrement-button {
   -fx-background-color: rgb(39, 45, 53);
   -fx-border-color: rgb(39, 45, 53);
 }
 
-.scroll-bar:horizontal .track, .scroll-bar:vertical .track{
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
   -fx-background-color: rgb(25, 29, 34);
   -fx-border-color: rgb(25, 29, 34);
   -fx-background-radius: 0em;
 }
 
-.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
   -fx-background-color: rgb(39, 45, 53);
   -fx-background-insets: 0, 0, 0;
   -fx-background-radius: 0em;
@@ -90,7 +94,8 @@
   -fx-background-color: derive(#394553, 70%);
 }
 
-.increment-button:hover, .decrement-button:hover {
+.increment-button:hover,
+.decrement-button:hover {
   -fx-background-color: derive(#394553, 70%);
   -fx-border-color: derive(#394553, 70%);
 }
@@ -100,8 +105,8 @@
 }
 
 .mangaDirection {
-  unicode-bidi:bidi-override;
-  direction:rtl;
+  unicode-bidi: bidi-override;
+  direction: rtl;
 }
 
 .popover {
