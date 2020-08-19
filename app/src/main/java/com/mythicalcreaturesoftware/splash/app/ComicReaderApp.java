@@ -31,11 +31,13 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
 
 public class ComicReaderApp extends Application {
 
-    private static Logger logger = LoggerFactory.getLogger(ComicReaderApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComicReaderApp.class);
 
     private static ComicReaderApp instance;
 
@@ -44,6 +46,7 @@ public class ComicReaderApp extends Application {
     private ViewTuple<FullscreenView, FullscreenViewModel> fullscreenViewTuple;
     private StackPane stackPane;
     private BorderlessScene scene;
+    private String path;
 
     public static ComicReaderApp instance() {
         return instance;
@@ -55,6 +58,9 @@ public class ComicReaderApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
+        processParams();
+
         try {
             ResourceBundle bundle = ResourceBundle.getBundle("default");
             MvvmFX.setGlobalResourceBundle(bundle);
@@ -106,9 +112,20 @@ public class ComicReaderApp extends Application {
 
             scene.maximizeStage();
             scene.removeDefaultCSS();
+
+            if (!path.isEmpty()) {
+                readerViewTuple.getCodeBehind().openFile(path);
+            }
         } catch (Exception e) {
             logger.error("error starting app", e);
         }
+    }
+
+    private void processParams() {
+
+        Map<String, String> params = this.getParameters().getNamed();
+        path = params.get("file");
+        path = path.replaceFirst("^~", Matcher.quoteReplacement(System.getProperty("user.home")));
     }
 
     private void setKeysShortcuts() {

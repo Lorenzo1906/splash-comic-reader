@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
 
 public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initializable {
 
-    private static Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
 
     @FXML
     private VBox wrapper;
@@ -101,9 +101,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     private Button maximizeButton;
-
-    @FXML
-    private Button closeButton;
 
     @FXML
     private Button defaultScale;
@@ -353,9 +350,13 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
         if (file != null) {
-            viewModel.getFilePathProperty().setValue(file.getAbsolutePath());
-            viewModel.getOpenFileCommand().execute();
+            openFile(file.getAbsolutePath());
         }
+    }
+
+    public void openFile(String path) {
+        viewModel.getFilePathProperty().setValue(path);
+        viewModel.getOpenFileCommand().execute();
     }
 
     @FXML
