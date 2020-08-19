@@ -11,7 +11,7 @@ javafx {
 
 sourceCompatibility = 12
 group 'com.mythicalcreaturesoftware'
-version '1.0-SNAPSHOT'
+version '0.1.0'
 
 repositories {
     mavenLocal()
@@ -45,4 +45,50 @@ dependencies {
     annotationProcessor 'de.saxsys:mvvmfx:1.8.0'
 
     testImplementation 'junit:junit:4.12'
+}
+
+task generateExec(type: Exec) {
+    dependsOn build
+
+    workingDir "$projectDir/build"
+
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', 'jPackage ' +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../generalResources/icon.ico ' +
+                '--win-shortcut ' +
+                '--win-dir-chooser ' +
+                '--win-menu ' +
+                '--win-menu-group "Mythical Creature Software"'
+                '--app-version ' + version + ' '
+    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux'))) {
+        def jPackage = System.getenv('JAVA_HOME') + "/bin/jpackage"
+        commandLine 'sh', '-c', jPackage +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--linux-package-name splash-comic-reader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../generalResources/icon.png ' +
+                '--app-version '  + version
+    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('mac'))) {
+        def jPackage = '/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home' + "/bin/jpackage"
+        commandLine 'sh', '-c', jPackage +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--mac-package-name splash-comic-reader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../generalResources/icon.icns ' +
+                '--app-version '  + version
+    }
 }

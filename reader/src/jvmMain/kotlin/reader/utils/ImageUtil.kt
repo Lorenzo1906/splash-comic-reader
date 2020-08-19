@@ -2,6 +2,7 @@ package reader.utils
 
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
+import org.apache.commons.lang3.SystemUtils
 import reader.exception.InsufficientDataException
 import reader.model.Dimension
 import reader.tasks.ImageResizeTask
@@ -69,7 +70,7 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
     }
 
     var result = ""
-    val imagePath = Paths.get(path)
+    val imagePath = Paths.get(cleanPathBeginning(path))
 
     try {
         var extension = FilenameUtils.getExtension(imagePath.fileName.toString())
@@ -141,5 +142,17 @@ actual fun getPageSize(path: String): Dimension {
  * @return the cleaned path
  */
 fun cleanPath(path: String): String {
-    return path.replace("file:/", "/")
+    return if (SystemUtils.IS_OS_WINDOWS) {
+        path.replace("file:///", "")
+    } else {
+        path.replace("file:/", "/")
+    }
+}
+
+fun cleanPathBeginning(path: String): String {
+    return if (SystemUtils.IS_OS_WINDOWS) {
+        path.replace("file:/", "")
+    } else {
+        path.replace("file:/", "/")
+    }
 }
