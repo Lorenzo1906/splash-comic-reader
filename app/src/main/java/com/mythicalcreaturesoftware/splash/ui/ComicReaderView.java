@@ -8,6 +8,7 @@ import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
+import com.mythicalcreaturesoftware.splash.utils.PopupHelper;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -35,7 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initializable {
@@ -128,6 +131,10 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
         wrapper.setFocusTraversable(true);
         wrapper.requestFocus();
+
+        viewModel.subscribe(ComicReaderViewModel.OPEN_ALERT, (key, payload) -> {
+            PopupHelper.showErrorPopup(this.mainImageContainer.getScene(), (String) payload[0], Arrays.toString((StackTraceElement[])payload[1]));
+        });
     }
 
     private void initImageViewer() {
@@ -355,8 +362,13 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     }
 
     public void openFile(String path) {
-        viewModel.getFilePathProperty().setValue(path);
-        viewModel.getOpenFileCommand().execute();
+        try {
+            viewModel.getFilePathProperty().setValue(path);
+            viewModel.getOpenFileCommand().execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @FXML

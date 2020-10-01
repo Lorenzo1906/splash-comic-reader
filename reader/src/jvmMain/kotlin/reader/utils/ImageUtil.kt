@@ -69,7 +69,7 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
         return ""
     }
 
-    var result = ""
+    var result: String
     val imagePath = Paths.get(cleanPathBeginning(path))
 
     try {
@@ -86,6 +86,7 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
         result = previewImagePath.toUri().toURL().toString()
     } catch (e: IOException) {
         logger.error(e) { e.message }
+        throw IOException("Error while trying to open file")
     }
 
     return result
@@ -96,12 +97,13 @@ private fun generatePreviewPath(path: Path?): Path? {
         return null
     }
 
-    var previewFolderPath: Path? = null
+    val previewFolderPath: Path?
     try {
         previewFolderPath = Files.createTempDirectory(path, "preview")
         previewFolderPath.toFile().deleteOnExit()
     } catch (e: IOException) {
         logger.error(e) { e.message }
+        throw IOException("Error while trying to open file")
     }
 
     return previewFolderPath
@@ -131,6 +133,7 @@ actual fun getPageSize(path: String): Dimension {
         }
     } catch (e: IOException) {
         logger.error(e) { e.message }
+        throw IOException("Error while trying to open file")
     }
 
     return dimension

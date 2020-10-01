@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
  * animation icon 'spinner' is provided by loading.io
  */
 public class LoadingView implements FxmlView<LoadingViewModel>, Initializable {
-    private static Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
 
     @FXML
     private ImageView loadingImage;

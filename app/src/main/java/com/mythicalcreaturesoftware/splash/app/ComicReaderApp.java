@@ -9,6 +9,8 @@ import com.mythicalcreaturesoftware.splash.ui.LoadingView;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.FullscreenViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.LoadingViewModel;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
@@ -19,13 +21,21 @@ import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +56,7 @@ public class ComicReaderApp extends Application {
     private ViewTuple<FullscreenView, FullscreenViewModel> fullscreenViewTuple;
     private StackPane stackPane;
     private BorderlessScene scene;
-    private String path;
+    private String path = "";
 
     public static ComicReaderApp instance() {
         return instance;
@@ -113,7 +123,7 @@ public class ComicReaderApp extends Application {
             scene.maximizeStage();
             scene.removeDefaultCSS();
 
-            if (!path.isEmpty()) {
+            if (path != null && !path.isEmpty()) {
                 readerViewTuple.getCodeBehind().openFile(path);
             }
         } catch (Exception e) {
@@ -125,7 +135,9 @@ public class ComicReaderApp extends Application {
 
         Map<String, String> params = this.getParameters().getNamed();
         path = params.get("file");
-        path = path.replaceFirst("^~", Matcher.quoteReplacement(System.getProperty("user.home")));
+        if (path != null && !path.isEmpty()) {
+            path = path.replaceFirst("^~", Matcher.quoteReplacement(System.getProperty("user.home")));
+        }
     }
 
     private void setKeysShortcuts() {

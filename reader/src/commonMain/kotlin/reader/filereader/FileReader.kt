@@ -2,6 +2,7 @@ package reader.filereader
 
 import mu.KotlinLogging
 import reader.exception.InsufficientDataException
+import reader.exception.UnsupportedFileTypeException
 import reader.model.Dimension
 import reader.model.Spread
 import reader.utils.generatePreviewImages
@@ -32,6 +33,7 @@ abstract class FileReader (val filePath: String) {
             fileEntries = groupPages()
         } catch (e: InsufficientDataException) {
             logger.error(e) { e.message }
+            throw UnsupportedFileTypeException("Error while trying to open file")
         }
     }
 

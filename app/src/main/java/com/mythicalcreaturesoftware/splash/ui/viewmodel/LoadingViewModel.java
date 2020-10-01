@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoadingViewModel implements ViewModel {
 
-    private static Logger logger = LoggerFactory.getLogger(LoadingViewModel.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoadingViewModel.class);
 
     public LoadingViewModel() {
         logger.info("Initializing loading view model");

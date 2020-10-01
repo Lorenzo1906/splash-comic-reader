@@ -5,14 +5,12 @@ import de.innosystec.unrar.rarfile.FileHeader
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import reader.filereader.FileReader
-import reader.utils.cleanPath
 import reader.utils.getPageSize
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.stream.Collectors
 
 /**
@@ -51,6 +49,7 @@ actual class CbrFileReader actual constructor(filePath: String) : FileReader(fil
             }
         } catch (e: IOException) {
             logger.error(e) { e.message }
+            throw IOException("Error while trying to open file")
         }
 
         val stopTime = System.currentTimeMillis()

@@ -32,6 +32,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
             processFileEntries()
         } catch (e: IOException) {
             logger.error(e) { e.message }
+            throw IOException("Error while trying to open file")
         } finally {
             zipIs?.close()
         }

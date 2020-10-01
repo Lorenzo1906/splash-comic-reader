@@ -28,7 +28,13 @@ abstract class FileService {
     fun loadFile(path: String): String {
         logger.info { "Loading file" }
 
-        fileReader = getFileReaderTypeFromPath(path)?.let { buildFileReader(it, path) }
+        fileReader = getFileReaderTypeFromPath(path)?.let {
+            try {
+                buildFileReader(it, path)
+            } catch (e: Exception) {
+                throw Exception(e)
+            }
+        }
 
         return getFilenameFromPath(path)
     }

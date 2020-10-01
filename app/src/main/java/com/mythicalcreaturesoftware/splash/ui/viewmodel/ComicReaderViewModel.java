@@ -1,6 +1,7 @@
 package com.mythicalcreaturesoftware.splash.ui.viewmodel;
 
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
+import com.mythicalcreaturesoftware.splash.utils.PopupHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -28,6 +29,8 @@ import reader.utils.MathUtilKt;
 
 public class ComicReaderViewModel implements ViewModel {
     private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
+
+    public final static String OPEN_ALERT = "OPEN_ALERT";
 
     private Command readingDirectionCommand;
     private Command zoomInCommand;
@@ -203,13 +206,19 @@ public class ComicReaderViewModel implements ViewModel {
                     FileServiceImpl.INSTANCE.unloadFile();
                 }
 
-                fileLoaded.setValue(false);
-                openFile();
-                loadImages();
-                updateTotalPages();
-                updateCurrentPage();
-                calculateScale();
-                fileLoaded.setValue(true);
+                try {
+                    fileLoaded.setValue(false);
+                    openFile();
+                    loadImages();
+                    updateTotalPages();
+                    updateCurrentPage();
+                    calculateScale();
+                    fileLoaded.setValue(true);
+                } catch (Exception e) {
+                    Platform.runLater(() -> resetToDefaultProperties());
+                    publish(OPEN_ALERT, e.getCause().getMessage(), e.getStackTrace());
+                }
+
             }
         }, true);
 

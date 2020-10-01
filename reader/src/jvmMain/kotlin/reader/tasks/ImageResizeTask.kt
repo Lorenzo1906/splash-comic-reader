@@ -25,6 +25,7 @@ class ImageResizeTask (private var inputImagePath: String?,
             resize(inputImagePath, outputImagePath, percent)
         } catch (e: IOException) {
             logger.error("Error starting thread", e)
+            throw IOException("Error while trying to open file")
         }
     }
 

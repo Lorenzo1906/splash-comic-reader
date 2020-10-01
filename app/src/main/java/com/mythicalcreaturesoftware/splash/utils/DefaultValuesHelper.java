@@ -14,6 +14,4 @@ public class DefaultValuesHelper {
     public static final int MAXIMUM_SCALE_LEVEL = 2;
     public static final double MINIMUM_SCALE_LEVEL = .01;
     public static final double SCALE_DELTA = .01;
-    public static final double WIDTH_PERCENTAGE = 98.85;
-    public static final double HEIGHT_PERCENTAGE = 86.52;
 }
