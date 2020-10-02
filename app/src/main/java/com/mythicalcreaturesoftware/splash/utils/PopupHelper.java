@@ -16,9 +16,11 @@ import org.slf4j.LoggerFactory;
 
 public class PopupHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(PopupHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(PopupHelper.class);
 
     public static void showErrorPopup(Scene scene, String message, String detail) {
+        logger.debug("Showing error popup");
+
         Alert dlg = createAlert(scene, Alert.AlertType.ERROR);
         dlg.setTitle("Error");
 

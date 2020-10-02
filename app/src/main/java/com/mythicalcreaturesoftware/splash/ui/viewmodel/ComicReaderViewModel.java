@@ -1,7 +1,6 @@
 package com.mythicalcreaturesoftware.splash.ui.viewmodel;
 
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
-import com.mythicalcreaturesoftware.splash.utils.PopupHelper;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;

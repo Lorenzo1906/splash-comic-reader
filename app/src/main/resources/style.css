@@ -148,9 +148,3 @@
   -fx-text-fill: white;
   -fx-font-size: 25;
 }
-
-.alert {
-    -fx-max-width:33%;
-    -fx-max-height:33%;
-    -fx-background-color: rgb(42, 49, 58);
-}
