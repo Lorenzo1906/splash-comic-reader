@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -127,6 +128,11 @@ public class ComicReaderApp extends Application {
         path = params.get("file");
         if (path != null && !path.isEmpty()) {
             path = path.replaceFirst("^~", Matcher.quoteReplacement(System.getProperty("user.home")));
+        }
+
+        List<String> unnamedParams = this.getParameters().getUnnamed();
+        for (String param : unnamedParams) {
+            path = param;
         }
     }
 

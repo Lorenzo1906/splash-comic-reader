@@ -77,6 +77,8 @@ task generateExec(type: Exec) {
                 '--vendor "Mythical Creature Software" ' +
                 '--copyright "Copyright 2020, All rights reserved" ' +
                 '--icon ../generalResources/icon.png ' +
+                '--file-associations ../generalResources/cbrFile.properties ' +
+                '--file-associations ../generalResources/cbzFile.properties ' +
                 '--app-version '  + version
     } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('mac'))) {
         def jPackage = '/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home' + "/bin/jpackage"
