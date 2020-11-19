@@ -32,6 +32,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -340,11 +341,12 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void openFileAction() {
+
+        String initialFolder = validatePath(FilenameUtils.getFullPathNoEndSeparator(viewModel.getFilePathProperty().getValue()));
+
         FileChooser chooser = new FileChooser();
         chooser.setTitle(resourceBundle.getString(DefaultValuesHelper.FILE_CHOOSER_TEXT_KEY));
-        chooser.setInitialDirectory(
-            new File(System.getProperty(DefaultValuesHelper.HOME_FOLDER_KEY))
-        );
+        chooser.setInitialDirectory(new File(initialFolder));
         chooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter(resourceBundle.getString("fileChooser.allFiles"), "*.cbr", "*.cbr", "*.cbz", "*.cbt", "*.cb7", "*.cba", "*.CBR", "*.CBZ", "*.CBT", "*.CB7", "*.CBA"),
             new FileChooser.ExtensionFilter("CBR", "*.cbr", "*.CBR"),
@@ -357,6 +359,20 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
         if (file != null) {
             openFile(file.getAbsolutePath());
+        }
+    }
+
+    private String validatePath (String path) {
+        if (path.isEmpty()) {
+            return System.getProperty(DefaultValuesHelper.HOME_FOLDER_KEY);
+        }
+
+        File file = new File(path);
+
+        if (!file.exists()) {
+            return validatePath(file.getParent());
+        } else {
+            return file.getAbsolutePath();
         }
     }
 
