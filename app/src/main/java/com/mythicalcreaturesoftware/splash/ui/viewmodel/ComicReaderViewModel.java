@@ -556,6 +556,11 @@ public class ComicReaderViewModel implements ViewModel {
         logger.debug("Updating preview image");
 
         String path = FileServiceImpl.INSTANCE.getCurrentPreviewByPageNumber(currentPagePreviewProperty.getValue());
-        previewImageProperty.set(new Image(path, true));
+
+        if (!path.isEmpty()) {
+            previewImageProperty.set(new Image(path, true));
+        } else {
+            previewImageProperty.set(new Image(DefaultValuesHelper.DEFAULT_IMAGE_PATH, true));
+        }
     }
 }
