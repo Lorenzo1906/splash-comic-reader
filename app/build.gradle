@@ -62,13 +62,15 @@ task generateExec(type: Exec) {
                 '--vendor "Mythical Creature Software" ' +
                 '--copyright "Copyright 2020, All rights reserved" ' +
                 '--icon ../generalResources/icon.ico ' +
+                '--file-associations ../generalResources/cbrFile.properties ' +
+                '--file-associations ../generalResources/cbzFile.properties ' +
                 '--win-shortcut ' +
                 '--win-dir-chooser ' +
                 '--win-menu ' +
                 '--win-menu-group "Mythical Creature Software"'
                 '--app-version ' + version + ' '
     } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux'))) {
-        def jPackage = System.getenv('JAVA_HOME') + "/bin/jpackage"
+        def jPackage = "jpackage"
         commandLine 'sh', '-c', jPackage +
                 ' --input libs ' +
                 '--main-jar app-' + version + '-all.jar ' +
@@ -92,6 +94,8 @@ task generateExec(type: Exec) {
                 '--vendor "Mythical Creature Software" ' +
                 '--copyright "Copyright 2020, All rights reserved" ' +
                 '--icon ../generalResources/icon.icns ' +
+                '--file-associations ../generalResources/cbrFile.properties ' +
+                '--file-associations ../generalResources/cbzFile.properties ' +
                 '--app-version '  + version
     }
 }

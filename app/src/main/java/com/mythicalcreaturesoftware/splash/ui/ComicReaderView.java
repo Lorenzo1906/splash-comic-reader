@@ -456,7 +456,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
 
     @FXML
     public void closeAction() {
-        Platform.exit();
         System.exit(0);
     }
 
