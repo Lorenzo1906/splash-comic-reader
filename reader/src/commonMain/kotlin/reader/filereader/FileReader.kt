@@ -1,6 +1,5 @@
 package reader.filereader
 
-import mu.KotlinLogging
 import reader.exception.InsufficientDataException
 import reader.exception.UnsupportedFileTypeException
 import reader.model.Dimension
@@ -11,7 +10,6 @@ import reader.utils.generatePreviewImages
  * This class opens a file, group the pages in different spreads, and manage the number pages, dimensions and current page for the file
  */
 abstract class FileReader (val filePath: String) {
-    private val logger = KotlinLogging.logger {}
 
     private lateinit var fileEntries: MutableMap<Int, Spread>
     private lateinit var previews: MutableMap<Int, String>
@@ -32,7 +30,6 @@ abstract class FileReader (val filePath: String) {
             previews = generatePreviewImages(pages, tempFolderPath)
             fileEntries = groupPages()
         } catch (e: InsufficientDataException) {
-            logger.error(e) { e.message }
             throw UnsupportedFileTypeException("Error while trying to open file")
         }
     }
@@ -104,11 +101,11 @@ abstract class FileReader (val filePath: String) {
         previews = invertMap(previews)
         dimensions = invertDimensionsMap(dimensions)
 
-        var result: MutableMap<Int, Spread> = mutableMapOf()
+        val result: MutableMap<Int, Spread>
         try {
             result = groupPages()
         } catch (e: InsufficientDataException) {
-            logger.error(e) { e.message }
+            throw InsufficientDataException("Error while trying to open file")
         }
 
         return result

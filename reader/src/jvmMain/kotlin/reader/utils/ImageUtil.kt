@@ -69,7 +69,7 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
         return ""
     }
 
-    var result: String
+    val result: String
     val imagePath = Paths.get(cleanPathBeginning(path))
 
     try {

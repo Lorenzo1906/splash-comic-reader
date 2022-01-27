@@ -25,7 +25,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
      */
     override fun construct() {
         val startTime = System.currentTimeMillis()
-        logger.info("Constructing cbz file")
+        logger.info ("Constructing cbz file")
 
         val zipIs:ZipInputStream? = null
         try {

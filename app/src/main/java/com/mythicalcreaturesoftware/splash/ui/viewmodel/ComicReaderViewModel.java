@@ -475,11 +475,17 @@ public class ComicReaderViewModel implements ViewModel {
     private void openFile() {
         logger.debug("Opening file");
 
-        String filename = FileServiceImpl.INSTANCE.loadFile(filePathProperty.getValue());
-        Platform.runLater(() -> fileNameProperty.setValue(filename));
-        Platform.runLater(() -> readingDirectionRightProperty.setValue(!FileServiceImpl.INSTANCE.isReverseReadingDirection()));
-        Platform.runLater(() -> firstPageDimensionProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageSize()));
-        enableAll.setValue(true);
+        try {
+            String filename = FileServiceImpl.INSTANCE.loadFile(filePathProperty.getValue());
+            Platform.runLater(() -> fileNameProperty.setValue(filename));
+            Platform.runLater(() -> readingDirectionRightProperty.setValue(!FileServiceImpl.INSTANCE.isReverseReadingDirection()));
+            Platform.runLater(() -> firstPageDimensionProperty.setValue(FileServiceImpl.INSTANCE.getCurrentPageSize()));
+            enableAll.setValue(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         logger.debug("Finished opening file");
     }

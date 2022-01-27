@@ -5,12 +5,18 @@ plugins {
 group 'com.mythicalcreaturesoftware'
 version '0.1.0'
 
-sourceCompatibility = 12
+sourceCompatibility = 17
 
 repositories {
     mavenCentral()
 }
 
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 dependencies {
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 }

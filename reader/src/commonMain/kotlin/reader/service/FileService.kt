@@ -1,6 +1,5 @@
 package reader.service
 
-import mu.KotlinLogging
 import reader.filereader.FileReader
 import reader.filereader.FileReaderType
 import reader.filereader.buildFileReader
@@ -10,7 +9,6 @@ import reader.model.Dimension
  * Service class to serve as interface between the graphical part and the reader
  */
 abstract class FileService {
-    private val logger = KotlinLogging.logger {}
 
     private var fileReader: FileReader? = null
 
@@ -18,7 +16,6 @@ abstract class FileService {
      * Cleans the current [fileReader]
      */
     fun unloadFile() {
-        logger.info { "Unloading file" }
         fileReader = null
     }
 
@@ -26,7 +23,6 @@ abstract class FileService {
      * Loads a new [FileReader] using the given [path]. Returns the filename of the archive
      */
     fun loadFile(path: String): String {
-        logger.info { "Loading file" }
 
         fileReader = getFileReaderTypeFromPath(path)?.let {
             try {
