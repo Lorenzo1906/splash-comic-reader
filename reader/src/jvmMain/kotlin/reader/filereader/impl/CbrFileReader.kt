@@ -5,12 +5,16 @@ import de.innosystec.unrar.rarfile.FileHeader
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import reader.filereader.FileReader
+import reader.utils.cleanPathBeginning
 import reader.utils.getPageSize
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.stream.Collectors
 
 /**
@@ -55,6 +59,24 @@ actual class CbrFileReader actual constructor(filePath: String) : FileReader(fil
         val stopTime = System.currentTimeMillis()
         val elapsedTime = stopTime - startTime
         logger.info("File loaded in {} milliseconds", elapsedTime)
+    }
+
+    override fun deleteFiles() {
+        try {
+            for (filePreview: String in previews.values) {
+                val cleanedPath = URLDecoder.decode(cleanPathBeginning(filePreview), StandardCharsets.UTF_8.toString())
+                val filePath: Path = Paths.get(cleanedPath)
+                filePath.toFile().delete()
+            }
+            for (file: String in pages.values) {
+                val cleanedPath = URLDecoder.decode(cleanPathBeginning(file), StandardCharsets.UTF_8.toString())
+                val filePath: Path = Paths.get(cleanedPath)
+                filePath.toFile().delete()
+            }
+        } catch (e: IOException) {
+            logger.error(e) { e.message }
+            throw IOException("Error while trying to open file")
+        }
     }
 
     private fun sortFileHeaderList(list: List<FileHeader>): List<FileHeader>  {

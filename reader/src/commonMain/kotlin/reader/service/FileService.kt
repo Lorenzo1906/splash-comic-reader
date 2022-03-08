@@ -16,6 +16,7 @@ abstract class FileService {
      * Cleans the current [fileReader]
      */
     fun unloadFile() {
+        fileReader?.deleteFiles()
         fileReader = null
     }
 
