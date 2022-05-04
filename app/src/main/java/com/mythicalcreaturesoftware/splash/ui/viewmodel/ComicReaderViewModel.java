@@ -27,7 +27,7 @@ import reader.service.impl.FileServiceImpl;
 import reader.utils.MathUtilKt;
 
 public class ComicReaderViewModel implements ViewModel {
-    private static Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
 
     public final static String OPEN_ALERT = "OPEN_ALERT";
 

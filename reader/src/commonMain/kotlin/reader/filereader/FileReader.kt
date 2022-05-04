@@ -12,7 +12,7 @@ import reader.utils.generatePreviewImages
 abstract class FileReader (val filePath: String) {
 
     private lateinit var fileEntries: MutableMap<Int, Spread>
-    private lateinit var previews: MutableMap<Int, String>
+    protected lateinit var previews: MutableMap<Int, String>
     protected lateinit var pages: MutableMap<Int, String>
     protected lateinit var dimensions: MutableMap<Int, Dimension>
     protected lateinit var tempFolderPath: String
@@ -38,6 +38,11 @@ abstract class FileReader (val filePath: String) {
      * Abstract method to read the file from the disk and save the paths on memory
      */
     abstract fun construct()
+
+    /**
+     * Deletes the unzipped images when the file is unloaded
+     */
+    abstract fun deleteFiles()
 
     /**
      * Returns the current [Spread] based in the current [index] set on the instance
