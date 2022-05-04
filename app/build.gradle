@@ -24,9 +24,9 @@ application {
 
 dependencies {
     implementation 'de.saxsys:mvvmfx:1.8.0'
-    implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.0'
-    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.2'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.controlsfx:controlsfx:11.1.1'
@@ -40,56 +40,4 @@ dependencies {
     annotationProcessor 'de.saxsys:mvvmfx:1.8.0'
 
     testImplementation 'junit:junit:4.13.2'
-}
-
-task generateExec(type: Exec) {
-    dependsOn build
-
-    workingDir "$projectDir/build"
-
-    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'jPackage ' +
-                ' --input libs ' +
-                '--main-jar app-' + version + '-all.jar ' +
-                '--name SplashComicReader ' +
-                '--description "Application to read .cbr and .cbz files" ' +
-                '--vendor "Mythical Creature Software" ' +
-                '--copyright "Copyright 2020, All rights reserved" ' +
-                '--icon ../generalResources/icon.ico ' +
-                '--file-associations ../generalResources/cbrFile.properties ' +
-                '--file-associations ../generalResources/cbzFile.properties ' +
-                '--win-shortcut ' +
-                '--win-dir-chooser ' +
-                '--win-menu ' +
-                '--win-menu-group "Mythical Creature Software"'
-                '--app-version ' + version + ' '
-    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux'))) {
-        def jPackage = "jpackage"
-        commandLine 'sh', '-c', jPackage +
-                ' --input libs ' +
-                '--main-jar app-' + version + '-all.jar ' +
-                '--name SplashComicReader ' +
-                '--linux-package-name splash-comic-reader ' +
-                '--description "Application to read .cbr and .cbz files" ' +
-                '--vendor "Mythical Creature Software" ' +
-                '--copyright "Copyright 2020, All rights reserved" ' +
-                '--icon ../generalResources/icon.png ' +
-                '--file-associations ../generalResources/cbrFile.properties ' +
-                '--file-associations ../generalResources/cbzFile.properties ' +
-                '--app-version '  + version
-    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('mac'))) {
-        def jPackage = '/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home' + "/bin/jpackage"
-        commandLine 'sh', '-c', jPackage +
-                ' --input libs ' +
-                '--main-jar app-' + version + '-all.jar ' +
-                '--name SplashComicReader ' +
-                '--mac-package-name splash-comic-reader ' +
-                '--description "Application to read .cbr and .cbz files" ' +
-                '--vendor "Mythical Creature Software" ' +
-                '--copyright "Copyright 2020, All rights reserved" ' +
-                '--icon ../generalResources/icon.icns ' +
-                '--file-associations ../generalResources/cbrFile.properties ' +
-                '--file-associations ../generalResources/cbzFile.properties ' +
-                '--app-version '  + version
-    }
 }

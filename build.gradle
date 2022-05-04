@@ -20,3 +20,64 @@ allprojects {
 dependencies {
     testImplementation 'junit:junit:4.13.2'
 }
+
+build.dependsOn ':reader:publishToMavenLocal'
+build.dependsOn ':reader:build'
+
+task runAll(type: GradleBuild) {
+    tasks = [
+            ':reader:publishToMavenLocal',
+            ':app:run'
+    ]
+}
+
+task generateExecutable(type: Exec) {
+    dependsOn ':reader:publishToMavenLocal'
+    dependsOn ':app:build'
+
+    workingDir "$projectDir/app/build"
+
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', 'jPackage ' +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../../generalResources/icon.ico ' +
+                '--file-associations ../../generalResources/cbrFile.properties ' +
+                '--file-associations ../../generalResources/cbzFile.properties ' +
+                '--win-shortcut ' +
+                '--win-dir-chooser ' +
+                '--win-menu ' +
+                '--win-menu-group "Mythical Creature Software"'
+        '--app-version ' + version + ' '
+    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('linux'))) {
+        def jPackage = "jpackage"
+        commandLine 'sh', '-c', jPackage +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader.AppImage ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../../generalResources/icon.png ' +
+                '--type app-image ' +
+                '--app-version '  + version
+    } else if ((System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('mac'))) {
+        def jPackage = '/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home' + "/bin/jpackage"
+        commandLine 'sh', '-c', jPackage +
+                ' --input libs ' +
+                '--main-jar app-' + version + '-all.jar ' +
+                '--name SplashComicReader ' +
+                '--mac-package-name splash-comic-reader ' +
+                '--description "Application to read .cbr and .cbz files" ' +
+                '--vendor "Mythical Creature Software" ' +
+                '--copyright "Copyright 2020, All rights reserved" ' +
+                '--icon ../../generalResources/icon.icns ' +
+                '--file-associations ../../generalResources/cbrFile.properties ' +
+                '--file-associations ../../generalResources/cbzFile.properties ' +
+                '--app-version '  + version
+    }
+}

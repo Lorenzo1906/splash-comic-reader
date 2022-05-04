@@ -131,9 +131,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         wrapper.setFocusTraversable(true);
         wrapper.requestFocus();
 
-        viewModel.subscribe(ComicReaderViewModel.OPEN_ALERT, (key, payload) -> {
-            PopupHelper.showErrorPopup(this.mainImageContainer.getScene(), (String) payload[0], Arrays.toString((StackTraceElement[])payload[1]));
-        });
+        viewModel.subscribe(ComicReaderViewModel.OPEN_ALERT, (key, payload) -> PopupHelper.showErrorPopup(this.mainImageContainer.getScene(), (String) payload[0], Arrays.toString((StackTraceElement[])payload[1])));
     }
 
     private void initImageViewer() {
