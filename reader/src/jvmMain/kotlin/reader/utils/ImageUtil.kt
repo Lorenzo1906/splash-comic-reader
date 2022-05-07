@@ -1,6 +1,6 @@
 package reader.utils
 
-import mu.KotlinLogging
+import io.github.aakira.napier.Napier
 import org.apache.commons.io.FilenameUtils
 import org.apache.commons.lang3.SystemUtils
 import reader.exception.InsufficientDataException
@@ -17,15 +17,13 @@ import javax.imageio.ImageIO
 import javax.imageio.ImageReader
 import javax.imageio.stream.ImageInputStream
 
-private val logger = KotlinLogging.logger {}
-
 /**
  * Generate the previews images on the temp folder. Receives the [Map] with the paths of the files and the [String] with
  * the path of the temp folder and returns a new map with the paths of the previews
  */
 actual fun generatePreviewImages(pages: Map<Int, String>?, tempFolderPath: String): MutableMap<Int, String> {
     val startTime = System.currentTimeMillis()
-    logger.info("Constructing preview images")
+    Napier.i("Constructing preview images")
 
     if (pages == null || pages.isEmpty()) {
         throw InsufficientDataException("Insufficient data to generate previews")
@@ -42,7 +40,7 @@ actual fun generatePreviewImages(pages: Map<Int, String>?, tempFolderPath: Strin
 
     val stopTime = System.currentTimeMillis()
     val elapsedTime = stopTime - startTime
-    logger.info("Constructed preview images in {} milliseconds", elapsedTime)
+    Napier.i("Constructed preview images in {} milliseconds $elapsedTime")
 
     return previews
 }
@@ -85,7 +83,7 @@ private fun generatePreviewImagePath(path: String, folderPath: Path?): String {
 
         result = previewImagePath.toUri().toURL().toString()
     } catch (e: IOException) {
-        logger.error(e) { e.message }
+        e.message?.let { Napier.e(it, e) }
         throw IOException("Error while trying to open file")
     }
 
@@ -102,7 +100,7 @@ private fun generatePreviewPath(path: Path?): Path? {
         previewFolderPath = Files.createTempDirectory(path, "preview")
         previewFolderPath.toFile().deleteOnExit()
     } catch (e: IOException) {
-        logger.error(e) { e.message }
+        e.message?.let { Napier.e(it, e) }
         throw IOException("Error while trying to open file")
     }
 
@@ -132,7 +130,7 @@ actual fun getPageSize(path: String): Dimension {
             dimension.width = width
         }
     } catch (e: IOException) {
-        logger.error(e) { e.message }
+        e.message?.let { Napier.e(it, e) }
         throw IOException("Error while trying to open file")
     }
 

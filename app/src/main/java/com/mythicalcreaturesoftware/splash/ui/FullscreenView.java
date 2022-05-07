@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializable {
-    private static Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
 
     @FXML
     private HBox hintPanel;

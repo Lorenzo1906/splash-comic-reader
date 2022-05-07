@@ -1,5 +1,0 @@
-rootProject.name = 'splash-comic-reader'
-
-include 'app'
-include 'reader'
-

@@ -1,6 +1,6 @@
 package reader.filereader.impl
 
-import mu.KotlinLogging
+import io.github.aakira.napier.Napier
 import org.apache.commons.io.FilenameUtils
 import reader.filereader.FileReader
 import reader.model.Dimension
@@ -22,20 +22,18 @@ import java.util.zip.ZipInputStream
  * in that folder. After that initialize pages and dimensions maps to store the values
  */
 actual class CbzFileReader actual constructor(filePath: String) : FileReader(filePath) {
-    private val logger = KotlinLogging.logger {}
-
     /**
      * Reads the cbz and initialize the maps
      */
     override fun construct() {
         val startTime = System.currentTimeMillis()
-        logger.info ("Constructing cbz file")
+        Napier.i("Constructing cbz file")
 
         val zipIs:ZipInputStream? = null
         try {
             processFileEntries()
         } catch (e: IOException) {
-            logger.error(e) { e.message }
+            e.message?.let { Napier.e(it, e) }
             throw IOException("Error while trying to open file")
         } finally {
             zipIs?.close()
@@ -43,7 +41,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
 
         val stopTime = System.currentTimeMillis()
         val elapsedTime = stopTime - startTime
-        logger.info("File loaded in {} milliseconds", elapsedTime)
+        Napier.i("File loaded in {} milliseconds $elapsedTime")
     }
 
     override fun deleteFiles() {
@@ -59,7 +57,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
                 filePath.toFile().delete()
             }
         } catch (e: IOException) {
-            logger.error(e) { e.message }
+            e.message?.let { Napier.e(it, e) }
             throw IOException("Error while trying to open file")
         }
     }
@@ -68,7 +66,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         val tempFolder = Files.createTempDirectory(FilenameUtils.getBaseName(filePath))
         tempFolderPath = tempFolder.toUri().toString()
         tempFolder.toFile().deleteOnExit()
-        logger.info("Temp folder created at " + tempFolder.toUri())
+        Napier.i("Temp folder created at $tempFolder.toUri()")
 
         val fis = FileInputStream(filePath)
         val bis = BufferedInputStream(fis)
@@ -79,7 +77,7 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         dimensions = mutableMapOf()
 
         do {
-            val entry:ZipEntry? = stream.nextEntry ?: break
+            val entry: ZipEntry = stream.nextEntry ?: break
             val result = checkProcessEntry(tempFolder, entry, stream, pageIndex)
             if (result) {
                 pageIndex++
@@ -87,9 +85,9 @@ actual class CbzFileReader actual constructor(filePath: String) : FileReader(fil
         } while (true)
     }
 
-    private fun checkProcessEntry (directory: Path, entry: ZipEntry?, stream: ZipInputStream, pageIndex: Int ): Boolean {
+    private fun checkProcessEntry (directory: Path, entry: ZipEntry, stream: ZipInputStream, pageIndex: Int ): Boolean {
         var result = false
-        if (entry != null && !entry.isDirectory) {
+        if (!entry.isDirectory) {
             val filePath: Path = processFileEntry(directory, entry, stream)
             val url: String  = filePath.toUri().toURL().toString()
             val dimension: Dimension = getPageSize(filePath.toUri().toString())

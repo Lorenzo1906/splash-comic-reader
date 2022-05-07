@@ -2,7 +2,7 @@ package reader.filereader.impl
 
 import de.innosystec.unrar.Archive
 import de.innosystec.unrar.rarfile.FileHeader
-import mu.KotlinLogging
+import io.github.aakira.napier.Napier
 import org.apache.commons.io.FilenameUtils
 import reader.filereader.FileReader
 import reader.utils.cleanPathBeginning
@@ -22,20 +22,18 @@ import java.util.stream.Collectors
  * in that folder. After that initialize pages and dimensions maps to store the values
  */
 actual class CbrFileReader actual constructor(filePath: String) : FileReader(filePath) {
-    private val logger = KotlinLogging.logger {}
-
     /**
      * Reads the cbr and initialize the maps
      */
     override fun construct() {
         val startTime = System.currentTimeMillis()
-        logger.info("Constructing cbr file")
+        Napier.i("Constructing cbr file")
 
         try {
             val tempFolder = Files.createTempDirectory(FilenameUtils.getBaseName(filePath))
             tempFolderPath = tempFolder.toUri().toString()
             tempFolder.toFile().deleteOnExit()
-            logger.info("Temp folder created at " + tempFolder.toUri())
+            Napier.i("Temp folder created at $tempFolder.toUri()")
 
             val local = File(filePath)
             val archive = Archive(local)
@@ -52,13 +50,13 @@ actual class CbrFileReader actual constructor(filePath: String) : FileReader(fil
                 }
             }
         } catch (e: IOException) {
-            logger.error(e) { e.message }
+            e.message?.let { Napier.e(it, e) }
             throw IOException("Error while trying to open file")
         }
 
         val stopTime = System.currentTimeMillis()
         val elapsedTime = stopTime - startTime
-        logger.info("File loaded in {} milliseconds", elapsedTime)
+        Napier.i("File loaded in {} milliseconds $elapsedTime")
     }
 
     override fun deleteFiles() {
@@ -74,7 +72,7 @@ actual class CbrFileReader actual constructor(filePath: String) : FileReader(fil
                 filePath.toFile().delete()
             }
         } catch (e: IOException) {
-            logger.error(e) { e.message }
+            e.message?.let { Napier.e(it, e) }
             throw IOException("Error while trying to open file")
         }
     }

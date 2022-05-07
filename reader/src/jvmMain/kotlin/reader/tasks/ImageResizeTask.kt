@@ -1,6 +1,6 @@
 package reader.tasks
 
-import mu.KotlinLogging
+import io.github.aakira.napier.Napier
 import reader.utils.cleanPath
 import reader.utils.percentageValue
 import java.awt.image.BufferedImage
@@ -18,13 +18,11 @@ class ImageResizeTask (private var inputImagePath: String?,
                        private var outputImagePath: String?,
                        private var percent: Double) : Runnable {
 
-    private val logger = KotlinLogging.logger {}
-
     override fun run() {
         try {
             resize(inputImagePath, outputImagePath, percent)
         } catch (e: IOException) {
-            logger.error("Error starting thread", e)
+            Napier.e("Error starting thread", e)
             throw IOException("Error while trying to open file")
         }
     }
