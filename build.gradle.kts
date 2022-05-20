@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.mythicalcreaturesoftware"
-version = "0.1.0"
+version = "0.1.2"
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ tasks.jpackage {
     dependsOn("buildAll")
 
     input  = "$projectDir/app/build/libs"
-    destination = "$projectDir/app/build/libs"
+    destination = "$projectDir/app/build/tmp"
     verbose = true
 
     vendor = "Mythical Creature Software"
@@ -35,7 +35,7 @@ tasks.jpackage {
     copyright = "Copyright 2020, All rights reserved"
     version = "$version"
 
-    mainJar = "$projectDir/app/build/libs/app-$version-all.jar"
+    mainJar = "$projectDir/app/build/libs/app-all.jar"
     mainClass = "com.mythicalcreaturesoftware.splash.Main"
 
     windows {
