@@ -19,8 +19,13 @@ allprojects {
     }
 }
 
+
+tasks.register<GradleBuild>("buildExec") {
+    tasks = listOf("buildAll", "jpackage")
+}
+
 tasks.register<GradleBuild>("buildAll") {
-    tasks = listOf(":reader:build", ":app:build")
+    tasks = listOf(":reader:clean", ":app:clean", ":reader:build", ":app:shadowJar")
 }
 
 tasks.jpackage {
