@@ -58,7 +58,7 @@ tasks.jpackage {
     }
 
     linux {
-        appName = "scr.AppImage"
+        appName = "SplashComicReader"
         icon = "$projectDir/generalResources/icon.png"
         type = org.panteleyev.jpackage.ImageType.APP_IMAGE
     }
