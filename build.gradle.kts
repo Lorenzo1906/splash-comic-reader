@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     java
     id("org.panteleyev.jpackageplugin") version "1.3.1"
@@ -19,13 +21,8 @@ allprojects {
     }
 }
 
-
-tasks.register<GradleBuild>("buildExec") {
-    tasks = listOf("buildAll", "jpackage")
-}
-
 tasks.register<GradleBuild>("buildAll") {
-    tasks = listOf(":reader:clean", ":app:clean", ":reader:build", ":app:shadowJar")
+    tasks = listOf("clean", ":app:shadowJar")
 }
 
 tasks.jpackage {
@@ -72,4 +69,17 @@ tasks.jpackage {
             "$projectDir/generalResources/cbzFile.properties",
         )
     }
+
+    doLast {
+        if (Os.isFamily(Os.FAMILY_UNIX)) {
+            copy {
+                from("$projectDir/generalResources/buildAppImage.sh")
+                into("$projectDir/app/build/tmp/")
+            }
+            exec {
+                commandLine = "/bin/bash $projectDir/app/build/tmp/buildAppImage.sh".split(" ")
+            }
+        }
+    }
 }
+
