@@ -1,10 +1,10 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
-import com.goxr3plus.fxborderlessscene.borderless.BorderlessScene;
 import com.mythicalcreaturesoftware.splash.app.ComicReaderApp;
 import com.mythicalcreaturesoftware.splash.controls.PreviewPopOver;
 import com.mythicalcreaturesoftware.splash.event.MessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.RootView;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import com.mythicalcreaturesoftware.splash.utils.IconHelper;
@@ -26,10 +26,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -40,15 +38,9 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initializable {
+public class ComicReaderView extends RootView implements FxmlView<ComicReaderViewModel>, Initializable {
 
     private static final Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
-
-    @FXML
-    private VBox wrapper;
-
-    @FXML
-    private AnchorPane mainBar;
 
     @FXML
     private StackPane mainImageContainer;
@@ -75,9 +67,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     private Label pageIndicatorLabel;
 
     @FXML
-    private Button headerButton;
-
-    @FXML
     private Button previousPage;
 
     @FXML
@@ -99,12 +88,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     private Button fullscreen;
 
     @FXML
-    private Button minimizeButton;
-
-    @FXML
-    private Button maximizeButton;
-
-    @FXML
     private Button defaultScale;
 
     @InjectViewModel
@@ -114,7 +97,6 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
     private ResourceBundle resourceBundle;
 
     private PreviewPopOver popOver;
-    private boolean isActive = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -336,7 +318,7 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         });
     }
 
-    @FXML
+    @Override
     public void openFileAction() {
 
         String initialFolder = validatePath(FilenameUtils.getFullPathNoEndSeparator(viewModel.getFilePathProperty().getValue()));
@@ -345,12 +327,12 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         chooser.setTitle(resourceBundle.getString(DefaultValuesHelper.FILE_CHOOSER_TEXT_KEY));
         chooser.setInitialDirectory(new File(initialFolder));
         chooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter(resourceBundle.getString("fileChooser.allFiles"), "*.cbr", "*.cbr", "*.cbz", "*.cbt", "*.cb7", "*.cba", "*.CBR", "*.CBZ", "*.CBT", "*.CB7", "*.CBA"),
-            new FileChooser.ExtensionFilter("CBR", "*.cbr", "*.CBR"),
-            new FileChooser.ExtensionFilter("CBZ", "*.cbz", "*.CBZ"),
-            new FileChooser.ExtensionFilter("CBT", "*.cbt", "*.CBT"),
-            new FileChooser.ExtensionFilter("CB7", "*.cb7", "*.CB7"),
-            new FileChooser.ExtensionFilter("CBA", "*.cba", "*.CBA")
+                new FileChooser.ExtensionFilter(resourceBundle.getString("fileChooser.allFiles"), "*.cbr", "*.cbr", "*.cbz", "*.cbt", "*.cb7", "*.cba", "*.CBR", "*.CBZ", "*.CBT", "*.CB7", "*.CBA"),
+                new FileChooser.ExtensionFilter("CBR", "*.cbr", "*.CBR"),
+                new FileChooser.ExtensionFilter("CBZ", "*.cbz", "*.CBZ"),
+                new FileChooser.ExtensionFilter("CBT", "*.cbt", "*.CBT"),
+                new FileChooser.ExtensionFilter("CB7", "*.cb7", "*.CB7"),
+                new FileChooser.ExtensionFilter("CBA", "*.cba", "*.CBA")
         );
 
         File file =  chooser.showOpenDialog(headerButton.getScene().getWindow());
@@ -437,30 +419,5 @@ public class ComicReaderView implements FxmlView<ComicReaderViewModel>, Initiali
         if (!fullscreen.isDisabled()) {
             ComicReaderApp.instance().showFullscreen();
         }
-    }
-
-    @FXML
-    public void minimizeAction() {
-        BorderlessScene scene = (BorderlessScene) minimizeButton.getScene();
-        scene.minimizeStage();
-    }
-
-    @FXML
-    public void maximizeAction() {
-        BorderlessScene scene = (BorderlessScene) maximizeButton.getScene();
-        scene.maximizeStage();
-    }
-
-    @FXML
-    public void closeAction() {
-        System.exit(0);
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public Node getMainBar() {
-        return mainBar;
     }
 }

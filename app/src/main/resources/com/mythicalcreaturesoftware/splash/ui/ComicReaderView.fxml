@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 
-<?import javafx.scene.image.ImageView?>
-<VBox fx:id="wrapper" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView" >
+<VBox fx:id="wrapper" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.ComicReaderView">
     <children>
         <AnchorPane fx:id="mainBar" prefHeight="23.0" prefWidth="790.0">
             <children>
                 <HBox alignment="CENTER_LEFT" layoutY="-29.0" prefHeight="25.0" prefWidth="800.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Button fx:id="headerButton" onMouseClicked="#openFileAction" >
+                        <Button fx:id="headerButton" onMouseClicked="#openFileAction">
                             <tooltip>
                                 <Tooltip text="%header.tooltip.text" />
                             </tooltip>
                         </Button>
                     </children>
                 </HBox>
-                <HBox alignment="TOP_RIGHT" layoutX="576.0" layoutY="13.0" prefHeight="25.0" prefWidth="69.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                <HBox alignment="TOP_RIGHT" layoutX="576.0" layoutY="13.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Button fx:id="minimizeButton" mnemonicParsing="false" onMouseClicked="#minimizeAction" >
+                        <Button fx:id="libraryButton" mnemonicParsing="false" text="%header.library.text" onMouseClicked="#libraryAction" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                        <HBox.margin>
+                            <Insets left="30.0" />
+                        </HBox.margin>
+                        </Separator>
+                        <Button fx:id="minimizeButton" mnemonicParsing="false" onMouseClicked="#minimizeAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="WINDOW_MINIMIZE" size="18px" />
                             </graphic>
                         </Button>
-                        <Button fx:id="maximizeButton" mnemonicParsing="false" onMouseClicked="#maximizeAction" >
+                        <Button fx:id="maximizeButton" mnemonicParsing="false" onMouseClicked="#maximizeAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="WINDOW_MAXIMIZE" size="18px" />
                             </graphic>
                         </Button>
-                        <Button fx:id="closeButton" mnemonicParsing="false" onMouseClicked="#closeAction" >
+                        <Button fx:id="closeButton" mnemonicParsing="false" onMouseClicked="#closeAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="WINDOW_CLOSE" size="18px" />
                             </graphic>
@@ -46,7 +60,7 @@
             <children>
                 <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="110.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="10.0">
                     <children>
-                        <Button fx:id="previousPage" onMouseClicked="#previousPageAction" >
+                        <Button fx:id="previousPage" onMouseClicked="#previousPageAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="CHEVRON_LEFT" size="18px" />
                             </graphic>
@@ -54,7 +68,7 @@
                                 <Tooltip text="%previousPage.tooltip.text" />
                             </tooltip>
                         </Button>
-                        <Button fx:id="nextPage" onMouseClicked="#nextPageAction" >
+                        <Button fx:id="nextPage" onMouseClicked="#nextPageAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="CHEVRON_RIGHT" size="18px" />
                             </graphic>
@@ -63,7 +77,7 @@
                             </tooltip>
                         </Button>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <Button fx:id="readingDirection" mnemonicParsing="false" onMouseClicked="#readingDirectionAction" >
+                        <Button fx:id="readingDirection" mnemonicParsing="false" onMouseClicked="#readingDirectionAction">
                             <tooltip>
                                 <Tooltip text="%readingDirection.tooltip.text" />
                             </tooltip>
@@ -72,13 +86,13 @@
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" layoutX="634.0" layoutY="39.0" prefHeight="25.0" prefWidth="208.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                     <children>
-                        <Button fx:id="pagePerView" mnemonicParsing="false" onMouseClicked="#pagePerViewAction" >
+                        <Button fx:id="pagePerView" mnemonicParsing="false" onMouseClicked="#pagePerViewAction">
                             <tooltip>
                                 <Tooltip text="%pagePerView.tooltip.text" />
                             </tooltip>
                         </Button>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <Button fx:id="zoomIn" onMouseClicked="#zoomInAction" >
+                        <Button fx:id="zoomIn" onMouseClicked="#zoomInAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="MAGNIFY_PLUS" size="18px" />
                             </graphic>
@@ -87,7 +101,7 @@
                             </tooltip>
                         </Button>
                         <Label fx:id="zoomPercentageLabel" prefWidth="42.0" />
-                        <Button fx:id="zoomOut" onMouseClicked="#zoomOutAction" >
+                        <Button fx:id="zoomOut" onMouseClicked="#zoomOutAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="MAGNIFY_MINUS" size="18px" />
                             </graphic>
@@ -95,7 +109,7 @@
                                 <Tooltip text="%zoomOut.tooltip.text" />
                             </tooltip>
                         </Button>
-                        <Button fx:id="defaultScale" onMouseClicked="#setDefaultScale" >
+                        <Button fx:id="defaultScale" onMouseClicked="#setDefaultScale">
                             <tooltip>
                                 <Tooltip text="%defaultScale.tooltip.text" />
                             </tooltip>
@@ -107,9 +121,9 @@
         <AnchorPane VBox.vgrow="ALWAYS">
             <children>
                 <StackPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                    <ScrollPane fx:id="scrollPane" VBox.vgrow="ALWAYS" pannable="true" >
-                        <StackPane fx:id="mainImageContainer" styleClass="imageView" >
-                            <BorderPane fx:id="borderPane" maxWidth="0" maxHeight="0">
+                    <ScrollPane fx:id="scrollPane" pannable="true" VBox.vgrow="ALWAYS">
+                        <StackPane fx:id="mainImageContainer" styleClass="imageView">
+                            <BorderPane fx:id="borderPane" maxHeight="0" maxWidth="0">
                                 <left>
                                     <ImageView fx:id="leftImageViewer" preserveRatio="true">
                                     </ImageView>
@@ -128,17 +142,17 @@
             <children>
                 <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="170.0" prefHeight="25.0" prefWidth="268.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Label fx:id="pageIndicatorLabel" prefWidth="108.0" >
+                        <Label fx:id="pageIndicatorLabel" prefWidth="108.0">
                             <HBox.margin>
                                 <Insets right="4.0" />
                             </HBox.margin>
                         </Label>
-                        <Slider fx:id="pageSelector" min="1" blockIncrement="1" prefHeight="16.0" prefWidth="190.0" />
+                        <Slider fx:id="pageSelector" blockIncrement="1" min="1" prefHeight="16.0" prefWidth="190.0" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" layoutX="749.0" layoutY="161.0" prefHeight="25.0" prefWidth="30.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <Button fx:id="fullscreen" onMouseClicked="#fullscreenAction" >
+                        <Button fx:id="fullscreen" onMouseClicked="#fullscreenAction">
                             <graphic>
                                 <MaterialDesignIconView glyphName="FULLSCREEN" size="18px" />
                             </graphic>

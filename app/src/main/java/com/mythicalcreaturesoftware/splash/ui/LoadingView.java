@@ -1,6 +1,7 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.LoadingViewModel;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.RootView;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
@@ -22,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * animation icon 'spinner' is provided by loading.io
  */
-public class LoadingView implements FxmlView<LoadingViewModel>, Initializable {
+public class LoadingView extends RootView implements FxmlView<LoadingViewModel>, Initializable {
     private static final Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
 
     @FXML
@@ -61,5 +62,10 @@ public class LoadingView implements FxmlView<LoadingViewModel>, Initializable {
             }
         };
         animation.play();
+    }
+
+    @Override
+    public void openFileAction() {
+        throw new UnsupportedOperationException();
     }
 }

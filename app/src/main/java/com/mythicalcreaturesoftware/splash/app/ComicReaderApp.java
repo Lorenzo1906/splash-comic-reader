@@ -5,10 +5,9 @@ import com.mythicalcreaturesoftware.splash.event.ActionMessageEvent;
 import com.mythicalcreaturesoftware.splash.event.MessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.ComicReaderView;
 import com.mythicalcreaturesoftware.splash.ui.FullscreenView;
+import com.mythicalcreaturesoftware.splash.ui.LibraryView;
 import com.mythicalcreaturesoftware.splash.ui.LoadingView;
-import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
-import com.mythicalcreaturesoftware.splash.ui.viewmodel.FullscreenViewModel;
-import com.mythicalcreaturesoftware.splash.ui.viewmodel.LoadingViewModel;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.*;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.MvvmFX;
 import de.saxsys.mvvmfx.ViewTuple;
@@ -45,6 +44,7 @@ public class ComicReaderApp extends Application {
     private ViewTuple<LoadingView, LoadingViewModel> loadingViewTuple;
     private ViewTuple<ComicReaderView, ComicReaderViewModel> readerViewTuple;
     private ViewTuple<FullscreenView, FullscreenViewModel> fullscreenViewTuple;
+    private ViewTuple<LibraryView, LibraryViewModel> libraryViewTuple;
     private StackPane stackPane;
     private BorderlessScene scene;
     private String path = "";
@@ -78,9 +78,14 @@ public class ComicReaderApp extends Application {
             Parent fullscreenRoot = fullscreenViewTuple.getView();
             fullscreenRoot.setVisible(false);
 
+            libraryViewTuple = FluentViewLoader.fxmlView(LibraryView.class).load();
+            Parent libraryRoot = libraryViewTuple.getView();
+            libraryRoot.setVisible(false);
+
             readerViewTuple = FluentViewLoader.fxmlView(ComicReaderView.class).load();
             Parent root = readerViewTuple.getView();
 
+            stackPane.getChildren().add(libraryRoot);
             stackPane.getChildren().add(fullscreenRoot);
             stackPane.getChildren().add(loadingRoot);
             stackPane.getChildren().add(root);
@@ -180,6 +185,25 @@ public class ComicReaderApp extends Application {
 
     public void fireEvent(EventType<MessageEvent> type) {
         Event.fireEvent(scene, new ActionMessageEvent(type));
+    }
+
+    public void showLibrary() {
+        switchView(readerViewTuple, libraryViewTuple);
+    }
+
+    public void showReader() {
+        switchView(libraryViewTuple, readerViewTuple);
+    }
+
+    private void switchView(ViewTuple<? extends RootView, ?> oldView, ViewTuple<? extends RootView, ?> newView) {
+        oldView.getCodeBehind().setActive(false);
+        oldView.getView().setVisible(false);
+
+        newView.getView().setVisible(true);
+        newView.getCodeBehind().setActive(true);
+        setNodeToFront(newView.getView());
+
+        scene.setMoveControl(newView.getCodeBehind().getMainBar());
     }
 
     public void showFullscreen() {

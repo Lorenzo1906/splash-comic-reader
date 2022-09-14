@@ -2,6 +2,7 @@ package com.mythicalcreaturesoftware.splash.ui;
 
 import com.mythicalcreaturesoftware.splash.event.MessageEvent;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.FullscreenViewModel;
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.RootView;
 import com.mythicalcreaturesoftware.splash.utils.ComponentHelper;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
 import de.saxsys.mvvmfx.FxmlView;
@@ -25,7 +26,7 @@ import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializable {
+public class FullscreenView extends RootView implements FxmlView<FullscreenViewModel>, Initializable {
     private static final Logger logger = LoggerFactory.getLogger(ComicReaderView.class);
 
     @FXML
@@ -51,8 +52,6 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
 
     @InjectResourceBundle
     private ResourceBundle resourceBundle;
-
-    private boolean isActive = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -175,7 +174,8 @@ public class FullscreenView implements FxmlView<FullscreenViewModel>, Initializa
         fade.play();
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    @Override
+    public void openFileAction() {
+        throw new UnsupportedOperationException();
     }
 }

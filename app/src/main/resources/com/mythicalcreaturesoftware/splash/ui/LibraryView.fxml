@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+
+<VBox fx:id="wrapper" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mythicalcreaturesoftware.splash.ui.LibraryView" >
+    <children>
+        <AnchorPane fx:id="mainBar" prefHeight="23.0" prefWidth="790.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" layoutY="-29.0" prefHeight="25.0" prefWidth="800.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <children>
+                        <Label text="%window.title" />
+                    </children>
+                </HBox>
+                <HBox alignment="TOP_RIGHT" layoutX="576.0" layoutY="13.0" prefHeight="25.0" prefWidth="212.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <children>
+                        <Button fx:id="readerButton" mnemonicParsing="false" text="%header.reader.text" onMouseClicked="#readerAction" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                            <HBox.margin>
+                                <Insets left="30.0" />
+                            </HBox.margin>
+                        </Separator>
+                        <Button fx:id="minimizeButton" mnemonicParsing="false" onMouseClicked="#minimizeAction">
+                            <graphic>
+                                <MaterialDesignIconView glyphName="WINDOW_MINIMIZE" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Button fx:id="maximizeButton" mnemonicParsing="false" onMouseClicked="#maximizeAction">
+                            <graphic>
+                                <MaterialDesignIconView glyphName="WINDOW_MAXIMIZE" size="18px" />
+                            </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onMouseClicked="#closeAction">
+                            <graphic>
+                                <MaterialDesignIconView glyphName="WINDOW_CLOSE" size="18px" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+</VBox>
