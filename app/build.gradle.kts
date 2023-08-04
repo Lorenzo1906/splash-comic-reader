@@ -1,17 +1,17 @@
 plugins {
     java
     application
-    id("org.openjfx.javafxplugin") version "0.0.13"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.openjfx.javafxplugin") version "0.0.14"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_20
+    targetCompatibility = JavaVersion.VERSION_20
 }
 
 javafx {
-    version = "18"
+    version = "20"
     modules = listOf(
         "javafx.controls",
         "javafx.fxml"
@@ -41,6 +41,7 @@ dependencies {
     implementation("de.jensd:fontawesomefx-materialstackicons:2.1-5-9.1.2")
     implementation("com.github.goxr3plus:FX-BorderlessScene:4.4.0")
     implementation(project(":reader"))
+    implementation(project(":library"))
 
     annotationProcessor("de.saxsys:mvvmfx:1.8.0")
 

@@ -2,6 +2,8 @@ package com.mythicalcreaturesoftware.splash;
 
 import com.mythicalcreaturesoftware.splash.app.ComicReaderApp;
 import javafx.application.Application;
+import library.service.LibraryService;
+import library.service.impl.LibraryServiceImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -20,6 +22,9 @@ public class Main {
         for (String arg : args) {
             processArg(arg);
         }
+
+        LibraryService libraryService = new LibraryServiceImpl();
+        libraryService.indexFolder("/home/lorenzo/Downloads/Spawn 001-010 (1992-1993) (Digital)");
 
         Application.launch(ComicReaderApp.class, args);
     }

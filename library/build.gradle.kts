@@ -2,6 +2,9 @@ plugins {
     kotlin("multiplatform") version "1.9.0"
 }
 
+group = "com.mythicalcreaturesoftware"
+version = "0.1.2"
+
 repositories {
     mavenCentral()
 }
@@ -20,6 +23,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
 
+                implementation("org.apache.lucene:lucene-queryparser:9.4.1")
+                implementation("org.apache.lucene:lucene-core:9.4.1")
                 implementation("io.github.aakira:napier:1.4.1")
                 implementation("commons-io:commons-io:2.6")
                 implementation("com.github.axet:java-unrar:1.7.0-1")

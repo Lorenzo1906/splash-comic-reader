@@ -1,4 +1,4 @@
-rootProject.name = "splash-comic-reader"
+rootProject.name = "library"
 
 pluginManagement {
     repositories {
@@ -8,7 +8,4 @@ pluginManagement {
     }
 }
 
-include(":app")
-include(":reader")
-
-include("library")
+enableFeaturePreview("VERSION_CATALOGS")
