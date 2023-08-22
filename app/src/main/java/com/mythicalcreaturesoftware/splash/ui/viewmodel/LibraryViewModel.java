@@ -5,5 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LibraryViewModel implements ViewModel {
-    private static final Logger logger = LoggerFactory.getLogger(ComicReaderViewModel.class);
+    private static final Logger logger = LoggerFactory.getLogger(LibraryViewModel.class);
+
+    public final static String OPEN_ALERT = "OPEN_ALERT";
 }

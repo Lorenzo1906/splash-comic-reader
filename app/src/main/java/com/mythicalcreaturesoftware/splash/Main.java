@@ -23,8 +23,8 @@ public class Main {
             processArg(arg);
         }
 
-        LibraryService libraryService = new LibraryServiceImpl();
-        libraryService.indexFolder("/home/lorenzo/Downloads/Spawn 001-010 (1992-1993) (Digital)");
+        //LibraryService libraryService = new LibraryServiceImpl();
+        //libraryService.indexFolder("/home/lorenzo/Downloads/Spawn 001-010 (1992-1993) (Digital)");
 
         Application.launch(ComicReaderApp.class, args);
     }
