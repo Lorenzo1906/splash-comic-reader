@@ -4,10 +4,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
@@ -27,7 +24,11 @@ public class LibraryViewModel implements ViewModel {
     private final StringProperty valueToRemoveProperty;
     private final StringProperty defaultTextScannedFolderProperty;
 
+    private final BooleanProperty seriesInstructionsVisible;
+    private final BooleanProperty seriesVisible;
+
     private final ObjectProperty<ObservableList<String>> scannedFoldersList;
+    private final ObjectProperty<ObservableList<String>> seriesList;
 
     public LibraryViewModel() {
         logger.info("Initializing library view model");
@@ -37,6 +38,10 @@ public class LibraryViewModel implements ViewModel {
         defaultTextScannedFolderProperty = new SimpleStringProperty("");
 
         scannedFoldersList = new SimpleObjectProperty<>(FXCollections.observableArrayList(valueToAddProperty.get()));
+        seriesList = new SimpleObjectProperty<>(FXCollections.observableArrayList(valueToAddProperty.get()));
+
+        seriesInstructionsVisible = new SimpleBooleanProperty(true);
+        seriesVisible = new SimpleBooleanProperty(false);
 
         updateScannedFoldersListCommand = new DelegateCommand(() -> new Action() {
             @Override
@@ -53,19 +58,8 @@ public class LibraryViewModel implements ViewModel {
         }, false);
     }
 
-    private void removeItemFromScannedFoldersList() {
-        logger.info("Removing folder to list");
-
-        ObservableList<String> list = scannedFoldersList.get();
-
-        list.removeAll(valueToRemoveProperty.get());
-
-        scannedFoldersList.set(list);
-    }
-
-    private void updateScannedFoldersList() {
-        logger.info("Adding folder to list");
-
+    private boolean listHaveDefaultValue() {
+        boolean result = false;
         ObservableList<String> list = scannedFoldersList.get();
 
         Optional<String> firstItem = list.stream().findFirst();
@@ -73,16 +67,60 @@ public class LibraryViewModel implements ViewModel {
         boolean isDefaultValue = firstItem.isPresent() && firstItem.get().equals(defaultTextScannedFolderProperty.get());
 
         if (isEmptyValue || isDefaultValue) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    private void checkVisibilitySeries() {
+        logger.debug("Checking visibility of series list");
+
+        if (listHaveDefaultValue()) {
+            seriesInstructionsVisible.set(true);
+            seriesVisible.set(false);
+        } else {
+            seriesInstructionsVisible.set(false);
+            seriesVisible.set(true);
+        }
+    }
+
+    private void removeItemFromScannedFoldersList() {
+        logger.debug("Removing folder to list");
+
+        ObservableList<String> list = scannedFoldersList.get();
+
+        list.removeAll(valueToRemoveProperty.get());
+
+        if (list.size() == 0) {
+            list.add(defaultTextScannedFolderProperty.get());
+        }
+
+        scannedFoldersList.set(list);
+        checkVisibilitySeries();
+    }
+
+    private void updateScannedFoldersList() {
+        logger.debug("Adding folder to list");
+
+        ObservableList<String> list = scannedFoldersList.get();
+
+        if (listHaveDefaultValue()) {
             list.set(0, valueToAddProperty.get());
         } else {
             list.add(valueToAddProperty.get());
         }
 
         scannedFoldersList.set(list);
+        checkVisibilitySeries();
     }
 
     public ObjectProperty<ObservableList<String>> getScannedFoldersList() {
         return scannedFoldersList;
+    }
+
+    public ObjectProperty<ObservableList<String>> seriesListProperty() {
+        return seriesList;
     }
 
     public StringProperty getValueToAddProperty() {
@@ -95,6 +133,14 @@ public class LibraryViewModel implements ViewModel {
 
     public StringProperty getDefaultTextScannedFolderProperty() {
         return defaultTextScannedFolderProperty;
+    }
+
+    public BooleanProperty seriesInstructionsVisibleProperty() {
+        return seriesInstructionsVisible;
+    }
+
+    public BooleanProperty seriesVisibleProperty() {
+        return seriesVisible;
     }
 
     public Command getUpdateScannedFoldersListCommand() {

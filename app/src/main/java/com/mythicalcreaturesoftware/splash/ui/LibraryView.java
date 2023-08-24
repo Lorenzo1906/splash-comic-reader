@@ -7,8 +7,6 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,6 +36,12 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
     protected ListView<String> scannedFoldersList;
 
     @FXML
+    protected ListView<String> seriesList;
+
+    @FXML
+    protected VBox instructionSeriesPanel;
+
+    @FXML
     protected Button addFolder;
 
     @FXML
@@ -57,6 +61,12 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
         viewModel.getDefaultTextScannedFolderProperty().set(resourceBundle.getString(DefaultValuesHelper.SCANNED_FOLDERS_LIST_DEFAULT));
         scannedFoldersList.itemsProperty().bind(viewModel.getScannedFoldersList());
         scannedFoldersList.prefHeightProperty().bind(Bindings.size(viewModel.getScannedFoldersList().getValue()).multiply(LIST_CELL_HEIGHT));
+        seriesList.itemsProperty().bind(viewModel.seriesListProperty());
+
+        seriesList.visibleProperty().bind(viewModel.seriesVisibleProperty());
+        seriesList.managedProperty().bind(viewModel.seriesVisibleProperty());
+        instructionSeriesPanel.visibleProperty().bind(viewModel.seriesInstructionsVisibleProperty());
+        instructionSeriesPanel.managedProperty().bind(viewModel.seriesInstructionsVisibleProperty());
 
         viewModel.getUpdateScannedFoldersListCommand().execute();
     }
@@ -81,7 +91,7 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
 
         File selectedDirectory = chooser.showDialog(wrapper.getScene().getWindow());
 
-        if (selectedDirectory != null) {
+        if (selectedDirectory != null && !scannedFoldersList.getItems().contains(selectedDirectory.getAbsolutePath())) {
             viewModel.getValueToAddProperty().set(selectedDirectory.getAbsolutePath());
             viewModel.getUpdateScannedFoldersListCommand().execute();
         }

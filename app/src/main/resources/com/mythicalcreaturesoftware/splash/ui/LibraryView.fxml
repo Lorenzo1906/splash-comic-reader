@@ -92,7 +92,21 @@
                             <Insets bottom="10.0"/>
                         </VBox.margin>
                     </Label>
-                    <TreeView VBox.vgrow="ALWAYS"/>
+                    <ListView fx:id="seriesList" VBox.vgrow="ALWAYS" />
+                    <VBox fx:id="instructionSeriesPanel" VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                        </padding>
+                        <Label text="%library.instruction.series1"/>
+                        <Label text="%library.instruction.series2"/>
+                        <Label/>
+                        <Label text="%library.instruction.series3" style="-fx-font-weight: bold"/>
+                        <Label text="%library.instruction.series4"/>
+                        <Label text="%library.instruction.series5"/>
+                        <Label/>
+                        <Label text="%library.instruction.series6"/>
+                        <Label text="%library.instruction.series7"/>
+                    </VBox>
                 </VBox>
             </VBox>
             <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS">
