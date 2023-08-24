@@ -49,16 +49,16 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
     @InjectResourceBundle
     private ResourceBundle resourceBundle;
 
-    final ObservableList<String> scannedFoldersItems = FXCollections.observableArrayList("Default");
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("Initializing comic reader view");
 
-        scannedFoldersItems.set(0, resourceBundle.getString(DefaultValuesHelper.SCANNED_FOLDERS_LIST_DEFAULT));
+        viewModel.getValueToAddProperty().set(resourceBundle.getString(DefaultValuesHelper.SCANNED_FOLDERS_LIST_DEFAULT));
+        viewModel.getDefaultTextScannedFolderProperty().set(resourceBundle.getString(DefaultValuesHelper.SCANNED_FOLDERS_LIST_DEFAULT));
+        scannedFoldersList.itemsProperty().bind(viewModel.getScannedFoldersList());
+        scannedFoldersList.prefHeightProperty().bind(Bindings.size(viewModel.getScannedFoldersList().getValue()).multiply(LIST_CELL_HEIGHT));
 
-        scannedFoldersList.setItems(scannedFoldersItems);
-        scannedFoldersList.prefHeightProperty().bind(Bindings.size(scannedFoldersItems).multiply(LIST_CELL_HEIGHT));
+        viewModel.getUpdateScannedFoldersListCommand().execute();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
 
     @FXML
     public void addFolder(){
-        Optional<String> firstValue = scannedFoldersItems.stream().reduce((first, second) -> second);
+        Optional<String> firstValue = viewModel.getScannedFoldersList().get().stream().reduce((first, second) -> second);
 
         File initialFolder = null;
         if (firstValue.isPresent()) {
@@ -82,23 +82,19 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
         File selectedDirectory = chooser.showDialog(wrapper.getScene().getWindow());
 
         if (selectedDirectory != null) {
-            addFolderToScan(selectedDirectory.getAbsolutePath());
+            viewModel.getValueToAddProperty().set(selectedDirectory.getAbsolutePath());
+            viewModel.getUpdateScannedFoldersListCommand().execute();
         }
     }
 
     @FXML
     public void removeFolder(ActionEvent actionEvent) {
         int selectedItem = scannedFoldersList.getSelectionModel().getSelectedIndex();
-        scannedFoldersItems.remove(selectedItem);
-    }
 
-    private void addFolderToScan (String path) {
-        Optional<String> firstItem = scannedFoldersItems.stream().findFirst();
-        if (firstItem.isPresent() && firstItem.get().equals(resourceBundle.getString(DefaultValuesHelper.SCANNED_FOLDERS_LIST_DEFAULT))) {
-            scannedFoldersItems.set(0, path);
-        } else {
-            scannedFoldersItems.add(path);
-        }
+        String valueToRemove = viewModel.getScannedFoldersList().get().get(selectedItem);
+        viewModel.getValueToRemoveProperty().set(valueToRemove);
+
+        viewModel.getDeleteIndexScannedFoldersListCommand().execute();
     }
 
     private File validatePath (String path) {
