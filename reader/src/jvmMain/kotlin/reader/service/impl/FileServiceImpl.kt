@@ -3,6 +3,7 @@ package reader.service.impl
 import org.apache.commons.io.FilenameUtils
 import reader.filereader.FileReaderType
 import reader.service.FileService
+import java.util.*
 
 /**
  * Service class to serve as interface between the graphical part and the reader
@@ -20,7 +21,7 @@ actual object FileServiceImpl : FileService() {
      * Returns the file type from the give [path]
      */
     override fun getFileReaderTypeFromPath(path: String): FileReaderType? {
-        val extension = FilenameUtils.getExtension(path).toLowerCase()
+        val extension = FilenameUtils.getExtension(path).lowercase(Locale.getDefault())
         var type: FileReaderType? = null
 
         when (extension) {

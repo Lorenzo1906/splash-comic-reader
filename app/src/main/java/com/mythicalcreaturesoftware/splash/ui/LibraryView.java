@@ -1,11 +1,14 @@
 package com.mythicalcreaturesoftware.splash.ui;
 
+import com.mythicalcreaturesoftware.splash.ui.viewmodel.ComicReaderViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.LibraryViewModel;
 import com.mythicalcreaturesoftware.splash.ui.viewmodel.RootView;
 import com.mythicalcreaturesoftware.splash.utils.DefaultValuesHelper;
+import com.mythicalcreaturesoftware.splash.utils.PopupHelper;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectResourceBundle;
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.MvvmFX;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -69,6 +73,11 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
         instructionSeriesPanel.managedProperty().bind(viewModel.seriesInstructionsVisibleProperty());
 
         viewModel.getUpdateScannedFoldersListCommand().execute();
+
+        viewModel.subscribe(LibraryViewModel.OPEN_ALERT, (key, payload) -> {
+                PopupHelper.showErrorPopup(this.scannedFoldersList.getScene(), (String) payload[0], Arrays.toString((StackTraceElement[])payload[1]));
+            }
+        );
     }
 
     @Override
@@ -94,6 +103,7 @@ public class LibraryView extends RootView implements FxmlView<LibraryViewModel>,
         if (selectedDirectory != null && !scannedFoldersList.getItems().contains(selectedDirectory.getAbsolutePath())) {
             viewModel.getValueToAddProperty().set(selectedDirectory.getAbsolutePath());
             viewModel.getUpdateScannedFoldersListCommand().execute();
+            viewModel.getScanFolderCommand().execute();
         }
     }
 

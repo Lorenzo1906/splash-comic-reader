@@ -4,9 +4,16 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
-import javafx.beans.property.*;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import library.service.impl.IndexerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +26,7 @@ public class LibraryViewModel implements ViewModel {
 
     private final Command updateScannedFoldersListCommand;
     private final Command deleteIndexScannedFoldersListCommand;
+    private final Command scanFolderCommand;
 
     private final StringProperty valueToAddProperty;
     private final StringProperty valueToRemoveProperty;
@@ -26,6 +34,7 @@ public class LibraryViewModel implements ViewModel {
 
     private final BooleanProperty seriesInstructionsVisible;
     private final BooleanProperty seriesVisible;
+    private final BooleanProperty folderScanning;
 
     private final ObjectProperty<ObservableList<String>> scannedFoldersList;
     private final ObjectProperty<ObservableList<String>> seriesList;
@@ -42,6 +51,7 @@ public class LibraryViewModel implements ViewModel {
 
         seriesInstructionsVisible = new SimpleBooleanProperty(true);
         seriesVisible = new SimpleBooleanProperty(false);
+        folderScanning = new SimpleBooleanProperty(false);
 
         updateScannedFoldersListCommand = new DelegateCommand(() -> new Action() {
             @Override
@@ -56,6 +66,30 @@ public class LibraryViewModel implements ViewModel {
                removeItemFromScannedFoldersList();
             }
         }, false);
+
+        scanFolderCommand = new DelegateCommand(() -> new Action() {
+            @Override
+            protected void action() {
+                try {
+                    folderScanning.setValue(true);
+                    scanFolder();
+                    Platform.runLater(() -> seriesList.set(FXCollections.observableArrayList(IndexerServiceImpl.INSTANCE.retrieveAllSeries())));
+                    folderScanning.setValue(false);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    publish(OPEN_ALERT, e.getMessage(), e.getStackTrace());
+                }
+
+            }
+        }, true);
+    }
+
+    private void scanFolder () {
+        logger.debug("Start scanning folder");
+
+        Optional<String> lastPath = scannedFoldersList.get().stream().reduce((first, second) -> second);
+
+        lastPath.ifPresent(IndexerServiceImpl.INSTANCE::indexFolder);
     }
 
     private boolean listHaveDefaultValue() {
@@ -143,11 +177,19 @@ public class LibraryViewModel implements ViewModel {
         return seriesVisible;
     }
 
+    public BooleanProperty getFolderScanningProperty() {
+        return folderScanning;
+    }
+
     public Command getUpdateScannedFoldersListCommand() {
         return updateScannedFoldersListCommand;
     }
 
     public Command getDeleteIndexScannedFoldersListCommand() {
         return deleteIndexScannedFoldersListCommand;
+    }
+
+    public Command getScanFolderCommand() {
+        return scanFolderCommand;
     }
 }

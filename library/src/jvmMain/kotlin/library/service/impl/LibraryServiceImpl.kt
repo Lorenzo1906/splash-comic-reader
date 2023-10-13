@@ -5,10 +5,6 @@ import library.utils.FileUtils
 
 actual class LibraryServiceImpl : LibraryService {
     override fun indexFolder(path: String): String {
-        var files = FileUtils.listAllFilesByPath(path)
-
-        
-
         return "test"
     }
 
